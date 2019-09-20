@@ -1,0 +1,14 @@
+TASKS
+
+1. Design database overview -- Nick and Erin
+    -> What tables?
+    -> What relationships between tables?
+2. Basic UI -- Ian
+    -> What views will we need?
+    -> Dummy screen for each page
+    -> All navigation buttons working & linked
+3. Write database code -- David
+    -> http://www.activeandroid.com/
+    -> class for each table
+3. Add a medication to list 
+4. Delete medication from list
