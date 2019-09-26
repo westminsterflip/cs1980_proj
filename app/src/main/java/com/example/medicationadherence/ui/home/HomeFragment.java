@@ -17,13 +17,14 @@ import java.util.Calendar;
 
 public class HomeFragment extends Fragment {
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
-        /*if (MainActivity.calHeight == -1){
+    private CalendarView mainCal;
+    //TODO: figure out calendar state saving
 
-        }*/
-        final CalendarView mainCal = root.findViewById(R.id.calendarView);
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_home, container, false);
+
+        mainCal = root.findViewById(R.id.calendarView);
         mainCal.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
@@ -39,6 +40,10 @@ public class HomeFragment extends Fragment {
                 mainCal.setDate(Calendar.getInstance().getTimeInMillis());
             }
         });
+        if (savedInstanceState != null)
+            mainCal.setDate(savedInstanceState.getLong("calDate"));
+        else
+            System.out.println("bundle's null");
         return root;
     }
 }
