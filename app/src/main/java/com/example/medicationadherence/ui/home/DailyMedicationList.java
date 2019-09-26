@@ -1,7 +1,10 @@
 package com.example.medicationadherence.ui.home;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,19 +43,25 @@ public class DailyMedicationList extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });*/
+        //TODO: time separators in recyclerview
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        /*Button addMed = findViewById(R.id.addMedButton);
-        addMed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //action
-            }
-        });*/
         medRecyclerView = findViewById(R.id.dailyMedRecyclerView);
         medRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         medList = new ArrayList<>();
-        populateMedList(medList);
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                populateMedList(medList);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        View progBar = findViewById(R.id.dailyMedProgress);
+                        progBar.setVisibility(View.GONE);
+                    }
+                });
+            }
+        });
 
         medAdapter = new DailyMedicationListAdapter(medList, this, this);
         medRecyclerView.setAdapter(medAdapter);
@@ -67,11 +76,28 @@ public class DailyMedicationList extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void updateMedList() {
+        medAdapter.notifyDataSetChanged();
+        medRecyclerView.invalidate();
+    }
+
     public void populateMedList(List<Medication> medList){
         //TODO: actual data population
+        System.out.println("Population start time: "+Calendar.getInstance().getTime());
         for(int i=0; i<20; i++){
+            long time = Calendar.getInstance().getTimeInMillis();
+            while (Calendar.getInstance().getTimeInMillis()<time+1000);
+            //TODO: add wait to test non-instant population
             medList.add(new Medication(R.mipmap.ic_launcher_round, "Medication "+i, "Doctor "+i, i+" pill(s)", new Time(Calendar.getInstance().getTimeInMillis()+i*60000)));
+            //TODO: may want to move up, not great to call each time
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateMedList();
+                }
+            });
         }
+        System.out.println("Population end time: "+Calendar.getInstance().getTime());
     }
 
 }

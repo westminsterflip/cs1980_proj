@@ -54,6 +54,7 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter {
                 mainActivity.showPopup(medicationList.get(position));
             }
         });
+        System.out.println("bindview");
     }
 
     @Override
