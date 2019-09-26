@@ -19,9 +19,10 @@ import com.example.medicationadherence.R;
 import com.example.medicationadherence.model.Medication;
 import com.example.medicationadherence.ui.home.DailyMedicationList;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class DailyMedicationListAdapter extends RecyclerView.Adapter {
+public class DailyMedicationListAdapter extends RecyclerView.Adapter implements Serializable {
     private List<Medication> medicationList;
     private Context context;
     DailyMedicationList mainActivity;

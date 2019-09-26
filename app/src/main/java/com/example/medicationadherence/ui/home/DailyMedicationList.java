@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,7 +26,7 @@ public class DailyMedicationList extends AppCompatActivity {
 
     private RecyclerView medRecyclerView;
     private DailyMedicationListAdapter medAdapter;
-    private List<Medication> medList;
+    private ArrayList<Medication> medList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,22 +49,20 @@ public class DailyMedicationList extends AppCompatActivity {
         medRecyclerView = findViewById(R.id.dailyMedRecyclerView);
         medRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        medList = new ArrayList<>();
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                populateMedList(medList);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        View progBar = findViewById(R.id.dailyMedProgress);
-                        progBar.setVisibility(View.GONE);
-                    }
-                });
-            }
-        });
+        if(savedInstanceState != null){
+            medList = (ArrayList<Medication>) savedInstanceState.getSerializable("medList");
+            medAdapter = (DailyMedicationListAdapter) savedInstanceState.getSerializable("medAdapter");
+        } else{
+            medList = new ArrayList<>();
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    populateMedList(medList);
+                }
+            });
+            medAdapter = new DailyMedicationListAdapter(medList, this, this);
+        }
 
-        medAdapter = new DailyMedicationListAdapter(medList, this, this);
         medRecyclerView.setAdapter(medAdapter);
     }
 
@@ -81,13 +80,17 @@ public class DailyMedicationList extends AppCompatActivity {
         medRecyclerView.invalidate();
     }
 
+    public void hideBar(){
+        View progBar = findViewById(R.id.dailyMedProgress);
+        progBar.setVisibility(View.GONE);
+    }
+
     public void populateMedList(List<Medication> medList){
         //TODO: actual data population
         System.out.println("Population start time: "+Calendar.getInstance().getTime());
         for(int i=0; i<20; i++){
             long time = Calendar.getInstance().getTimeInMillis();
             while (Calendar.getInstance().getTimeInMillis()<time+1000);
-            //TODO: add wait to test non-instant population
             medList.add(new Medication(R.mipmap.ic_launcher_round, "Medication "+i, "Doctor "+i, i+" pill(s)", new Time(Calendar.getInstance().getTimeInMillis()+i*60000)));
             //TODO: may want to move up, not great to call each time
             runOnUiThread(new Runnable() {
@@ -98,6 +101,13 @@ public class DailyMedicationList extends AppCompatActivity {
             });
         }
         System.out.println("Population end time: "+Calendar.getInstance().getTime());
+        hideBar();
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putSerializable("medList", medList);
+        outState.putSerializable("medAdapter", medAdapter);
+        super.onSaveInstanceState(outState);
+    }
 }

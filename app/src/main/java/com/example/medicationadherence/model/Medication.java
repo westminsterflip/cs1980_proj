@@ -1,8 +1,9 @@
 package com.example.medicationadherence.model;
 
+import java.io.Serializable;
 import java.sql.Time;
 
-public class Medication {
+public class Medication implements Serializable {
     private int medImage;
     private String medName;
     private String doctorName;
