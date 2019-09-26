@@ -101,7 +101,12 @@ public class DailyMedicationList extends AppCompatActivity {
             });
         }
         System.out.println("Population end time: "+Calendar.getInstance().getTime());
-        hideBar();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                hideBar();
+            }
+        });
     }
 
     @Override
