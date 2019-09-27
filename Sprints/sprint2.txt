@@ -7,8 +7,10 @@ TASKS
     -> What views will we need?
     -> Dummy screen for each page
     -> All navigation buttons working & linked
-3. Write database code -- David
-    -> http://www.activeandroid.com/
-    -> class for each table
-3. Add a medication to list 
-4. Delete medication from list
+3. Start database code -- David
+    -> Android Room
+    -> class for medication table
+    -> database holder class
+4. Medication ORM -- Erin
+    -> CRUD
+5. List of pages & description
