@@ -27,6 +27,8 @@ public class DailyMedicationList extends AppCompatActivity {
     private DailyMedicationListAdapter medAdapter;
     private ArrayList<Medication> medList;
 
+
+    //TODO: add as needed meds at bottom
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

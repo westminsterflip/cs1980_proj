@@ -28,16 +28,16 @@ public class DisableableScrollView extends NestedScrollView {
     }
 
     public void setScrollEnabled(boolean scrollEnabled) {
+        if(!scrollEnabled)
+            scrollTo(0,0);
         this.scrollEnabled = scrollEnabled;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        switch(ev.getAction()){
-            case MotionEvent.ACTION_DOWN: return false;
-            case MotionEvent.ACTION_UP: return false;
-            default: return super.onTouchEvent(ev);
-        }
+        if(ev.getAction() == MotionEvent.ACTION_MOVE && !scrollEnabled)
+            return false;
+        return super.onTouchEvent(ev);
     }
 
     @Override
