@@ -6,4 +6,18 @@
         <item>"Month"</item>
         <!--TODO: year?-->
     </string-array>
+
+    <string-array name="latePreferenceItems">
+        <item>0hrs</item>
+        <item>1hrs</item>
+        <item>2hrs</item>
+        <item>3hrs</item>
+    </string-array>
+
+    <string-array name="latePreferenceValues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 </resources>

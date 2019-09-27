@@ -38,9 +38,10 @@ public class SummaryFragment extends Fragment {
     private SummaryDetailAdapter detailAdapter;
     private List<DetailSummary> detailList;
     private DisableableScrollView summaryScroll;
-
     ImageButton next;
 
+
+    //TODO: block scrolling before earliest scheduled thing
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             timeToView = Calendar.getInstance().getTimeInMillis();
@@ -154,12 +155,15 @@ public class SummaryFragment extends Fragment {
     }
 
     //negative = back, 0 = scale changed, positive = forward
-    public void updateTimeToView(int dir){
+    private void updateTimeToView(int dir){
         if(dir > 0){
             System.out.println("next");
             cal.add(Calendar.DAY_OF_YEAR, ((viewScale==0) ? 1 : 0));
             cal.add(Calendar.DAY_OF_YEAR, ((viewScale==1) ? 7 : 0));
             cal.add(Calendar.MONTH, ((viewScale==2) ? 1 : 0));
+            if (cal.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()){
+                cal.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+            }
         }else if (dir < 0){
             System.out.println("prev");
             cal.add(Calendar.DAY_OF_YEAR, ((viewScale==0) ? -1 : 0));
@@ -169,14 +173,19 @@ public class SummaryFragment extends Fragment {
         Calendar temp = Calendar.getInstance();
         temp.setTimeInMillis(cal.getTimeInMillis());
         temp.add(Calendar.MONTH, 1);
+        temp.set(Calendar.DAY_OF_MONTH, 0);
         if (cal.getTimeInMillis() + TimeUnit.DAYS.toMillis(1) > Calendar.getInstance().getTimeInMillis()){
             next.setEnabled(false);
+            next.setVisibility(View.INVISIBLE);
         } else if (cal.getTimeInMillis() + TimeUnit.DAYS.toMillis(7) > Calendar.getInstance().getTimeInMillis() && viewScale > 0){
             next.setEnabled(false);
+            next.setVisibility(View.INVISIBLE);
         } else if (temp.getTimeInMillis() > Calendar.getInstance().getTimeInMillis() && viewScale > 1){
             next.setEnabled(false);
+            next.setVisibility(View.INVISIBLE);
         } else {
             next.setEnabled(true);
+            next.setVisibility(View.VISIBLE);
         }
         System.out.println(cal.getTime());
         changeScale();
@@ -184,7 +193,7 @@ public class SummaryFragment extends Fragment {
         updateMainGraph();
     }
 
-    public void changeScale(){
+    private void changeScale(){
         int year = cal.get(Calendar.YEAR);
         int day = cal.get(Calendar.DAY_OF_MONTH);
         String dayName = new SimpleDateFormat("EEE").format(cal.getTime());
