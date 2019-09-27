@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,6 +26,7 @@ public class DailyMedicationList extends AppCompatActivity {
     private RecyclerView medRecyclerView;
     private DailyMedicationListAdapter medAdapter;
     private ArrayList<Medication> medList;
+    private AsyncTask task;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +34,6 @@ public class DailyMedicationList extends AppCompatActivity {
         setContentView(R.layout.activity_daily_medication_list);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         //TODO: Add med button?
         /*FloatingActionButton fab = findViewById(R.id.addMedButton);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -50,11 +49,11 @@ public class DailyMedicationList extends AppCompatActivity {
         medRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         if(savedInstanceState != null){
-            medList = (ArrayList<Medication>) savedInstanceState.getSerializable("medList");
+            //medList = (ArrayList<Medication>) savedInstanceState.getSerializable("medList");
             medAdapter = (DailyMedicationListAdapter) savedInstanceState.getSerializable("medAdapter");
         } else{
             medList = new ArrayList<>();
-            AsyncTask.execute(new Runnable() {
+            task.execute(new Runnable() {
                 @Override
                 public void run() {
                     populateMedList(medList);
@@ -62,8 +61,14 @@ public class DailyMedicationList extends AppCompatActivity {
             });
             medAdapter = new DailyMedicationListAdapter(medList, this, this);
         }
-
         medRecyclerView.setAdapter(medAdapter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        //TODO: this is wrong
+        //task.cancel(true);
+        super.onDestroy();
     }
 
     public void showPopup(Medication med){
@@ -80,13 +85,16 @@ public class DailyMedicationList extends AppCompatActivity {
         medRecyclerView.invalidate();
     }
 
+    //TODO: progressbar doesn't work right
     public void hideBar(){
         View progBar = findViewById(R.id.dailyMedProgress);
-        progBar.setVisibility(View.GONE);
+        progBar.setVisibility(View.INVISIBLE);
     }
 
     public void populateMedList(List<Medication> medList){
         //TODO: actual data population
+        //TODO: pause task?
+        //TODO: stop task when activity ends
         System.out.println("Population start time: "+Calendar.getInstance().getTime());
         for(int i=0; i<20; i++){
             long time = Calendar.getInstance().getTimeInMillis();
@@ -99,20 +107,19 @@ public class DailyMedicationList extends AppCompatActivity {
                     updateMedList();
                 }
             });
+            System.out.println("looped");
         }
         System.out.println("Population end time: "+Calendar.getInstance().getTime());
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                hideBar();
-            }
-        });
+        hideBar();
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putSerializable("medList", medList);
         outState.putSerializable("medAdapter", medAdapter);
+        hideBar();
         super.onSaveInstanceState(outState);
     }
+
+
 }

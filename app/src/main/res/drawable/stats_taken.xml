@@ -3,10 +3,10 @@
     android:fromDegrees="270"
     android:toDegrees="270">
     <shape
-        android:innerRadius="100dp"
+        android:innerRadiusRatio="3"
         android:shape="ring"
-        android:thickness="30dp"
+        android:thicknessRatio="10"
         android:useLevel="true">
-        <solid android:color="@color/colorPrimaryDark" />
+        <solid android:color="@color/summaryTaken" />
     </shape>
 </rotate>

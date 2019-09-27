@@ -40,10 +40,6 @@ public class HomeFragment extends Fragment {
                 mainCal.setDate(Calendar.getInstance().getTimeInMillis());
             }
         });
-        if (savedInstanceState != null)
-            mainCal.setDate(savedInstanceState.getLong("calDate"));
-        else
-            System.out.println("bundle's null");
         return root;
     }
 }

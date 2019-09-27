@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="summarySpinnerItems">
+        <item>"Day"</item>
+        <item>"Week"</item>
+        <item>"Month"</item>
+        <!--TODO: year?-->
+    </string-array>
+</resources>
