@@ -15,22 +15,24 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.medicationadherence.MainActivity;
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.model.Medication;
-import com.example.medicationadherence.ui.home.DailyMedicationList;
 
 import java.util.List;
 //TODO: this is a copy of the daily adapter, needs to be changed
 public class MedicationListAdapter extends RecyclerView.Adapter {
     private List<Medication> medicationList;
     private Context context;
-    DailyMedicationList mainActivity;
+    MainActivity mainActivity;
 
-    public MedicationListAdapter(List<Medication> medicationList, Context context, DailyMedicationList mainActivity){
+    public MedicationListAdapter(List<Medication> medicationList, Context context, MainActivity mainActivity){
         this.medicationList = medicationList;
         this.context = context;
         this.mainActivity = mainActivity;
     }
+
+
 
     @NonNull
     @Override
@@ -51,13 +53,16 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
         holderm.medImage.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                mainActivity.showPopup(medicationList.get(position));
+                //mainActivity.showPopup(medicationList.get(position));
             }
         });
     }
 
     @Override
     public int getItemCount() {
+        if (medicationList == null){
+            return -1;
+        }
         return medicationList.size();
     }
 

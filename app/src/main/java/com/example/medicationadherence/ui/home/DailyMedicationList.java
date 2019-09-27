@@ -26,7 +26,6 @@ public class DailyMedicationList extends AppCompatActivity {
     private RecyclerView medRecyclerView;
     private DailyMedicationListAdapter medAdapter;
     private ArrayList<Medication> medList;
-    private AsyncTask task;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +42,7 @@ public class DailyMedicationList extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });*/
+        //TODO: coloring for past events?
         //TODO: time separators in recyclerview
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         medRecyclerView = findViewById(R.id.dailyMedRecyclerView);
@@ -50,10 +50,12 @@ public class DailyMedicationList extends AppCompatActivity {
 
         if(savedInstanceState != null){
             //medList = (ArrayList<Medication>) savedInstanceState.getSerializable("medList");
+            //medlist still exists for some reason?
             medAdapter = (DailyMedicationListAdapter) savedInstanceState.getSerializable("medAdapter");
+            hideBar();
         } else{
             medList = new ArrayList<>();
-            task.execute(new Runnable() {
+            AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
                     populateMedList(medList);
@@ -67,7 +69,6 @@ public class DailyMedicationList extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         //TODO: this is wrong
-        //task.cancel(true);
         super.onDestroy();
     }
 
@@ -82,7 +83,7 @@ public class DailyMedicationList extends AppCompatActivity {
 
     public void updateMedList() {
         medAdapter.notifyDataSetChanged();
-        medRecyclerView.invalidate();
+        //medRecyclerView.invalidate();
     }
 
     //TODO: progressbar doesn't work right
@@ -98,7 +99,7 @@ public class DailyMedicationList extends AppCompatActivity {
         System.out.println("Population start time: "+Calendar.getInstance().getTime());
         for(int i=0; i<20; i++){
             long time = Calendar.getInstance().getTimeInMillis();
-            while (Calendar.getInstance().getTimeInMillis()<time+1000);
+            //while (Calendar.getInstance().getTimeInMillis()<time+1000);
             medList.add(new Medication(R.mipmap.ic_launcher_round, "Medication "+i, "Doctor "+i, i+" pill(s)", new Time(Calendar.getInstance().getTimeInMillis()+i*60000)));
             //TODO: may want to move up, not great to call each time
             runOnUiThread(new Runnable() {
@@ -120,6 +121,4 @@ public class DailyMedicationList extends AppCompatActivity {
         hideBar();
         super.onSaveInstanceState(outState);
     }
-
-
 }

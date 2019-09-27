@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.adapter.SummaryDetailAdapter;
 import com.example.medicationadherence.model.DetailSummary;
+import com.example.medicationadherence.ui.DisableableScrollView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class SummaryFragment extends Fragment {
     private Calendar cal = Calendar.getInstance();
     private SummaryDetailAdapter detailAdapter;
     private List<DetailSummary> detailList;
+    private DisableableScrollView summaryScroll;
 
     ImageButton next;
 
@@ -103,15 +105,19 @@ public class SummaryFragment extends Fragment {
                 if (detailView.getVisibility() == View.VISIBLE) {
                     detailView.setVisibility(View.INVISIBLE);
                     summaryExpander.setRotation(0);
+                    summaryScroll.setScrollEnabled(false);
                 } else {
                     detailView.setVisibility(View.VISIBLE);
                     summaryExpander.setRotation(180);
+                    summaryScroll.setScrollEnabled(true);
                 }
             }
         });
+
+        summaryScroll = root.findViewById(R.id.summaryScroll);
+
         detailView.setLayoutManager(new LinearLayoutManager(getContext()));
         detailList = new ArrayList<>();
-
 
         //TODO: actual data population
         for (int i=0; i<20; i++){
@@ -210,4 +216,6 @@ public class SummaryFragment extends Fragment {
     public void updateMainGraph(){
         //TODO: move graph/text values to reflect data from database
     }
+
+
 }

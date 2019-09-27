@@ -45,7 +45,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/summaryUnitSelect" />
 
-    <androidx.core.widget.NestedScrollView
+    <com.example.medicationadherence.ui.DisableableScrollView
+        android:id="@+id/summaryScroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
@@ -161,7 +162,7 @@
                 android:visibility="invisible" />
 
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+    </com.example.medicationadherence.ui.DisableableScrollView>
 
     <!--TODO: make this do something; should be bottom menu/page-->
 
