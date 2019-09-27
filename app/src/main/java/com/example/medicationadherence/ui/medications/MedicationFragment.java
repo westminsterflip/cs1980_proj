@@ -24,7 +24,7 @@ import java.util.List;
 
 public class MedicationFragment extends Fragment {
     private MedicationViewModel model;
-    private MedicationListAdapter medAdapter;
+    private MedicationListAdapter medAdapter;//TODO: move to viewmodel
     private RecyclerView medRecyclerView;
     private List<Medication> medicationList = new ArrayList<>();
 
