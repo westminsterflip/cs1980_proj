@@ -12,12 +12,6 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".ui.summary.SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
-        <activity
-            android:name=".ui.home.MedPopup"
-            android:theme="@style/AppTheme.Dialog"></activity>
-        <activity
             android:name=".ui.home.DailyMedicationList"
             android:label="@string/title_activity_daily_medication_list"
             android:parentActivityName=".MainActivity"

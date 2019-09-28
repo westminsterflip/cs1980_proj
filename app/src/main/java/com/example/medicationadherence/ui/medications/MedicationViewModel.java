@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.medicationadherence.R;
+import com.example.medicationadherence.adapter.MedicationListAdapter;
 import com.example.medicationadherence.model.Medication;
 
 import java.sql.Time;
@@ -15,6 +16,8 @@ import java.util.List;
 public class MedicationViewModel extends ViewModel {
 
     private MutableLiveData<List<Medication>> medications;
+
+    private MedicationListAdapter medAdapter;
 
     public LiveData<List<Medication>> getMedications(){
         if (medications == null){
@@ -32,5 +35,19 @@ public class MedicationViewModel extends ViewModel {
             medList.add(new Medication(R.mipmap.ic_launcher_round, "Medication " + i, "Doctor " + i, i + " pill(s)", new Time(Calendar.getInstance().getTimeInMillis() + i * 60000)));
         }
         medications.setValue(medList);
+    }
+
+    public MedicationListAdapter getMedAdapter() {
+        return medAdapter;
+    }
+
+    public void setMedAdapter(MedicationListAdapter medAdapter) {
+        this.medAdapter = medAdapter;
+    }
+
+    @Override
+    protected void onCleared() {
+        System.out.println("//////////////////////////////CLEARED MEDLIST/////////////////////////////////");
+        super.onCleared();
     }
 }
