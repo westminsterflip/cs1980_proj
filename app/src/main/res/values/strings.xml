@@ -16,4 +16,6 @@
 
     <string name="late_setting_title">Late Time</string>
     <string name="late_setting_summary">Time after which to consider dose late</string>
+    <string name="data_delete_title">Delete App Data</string>
+    <string name="data_delete_summary">Delete all medicines, schedules, and adherence</string>
 </resources>

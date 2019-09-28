@@ -100,7 +100,7 @@ public class SummaryFragment extends Fragment {
         final RecyclerView detailView = root.findViewById(R.id.summaryDetail);
 
         final ImageButton summaryExpander = root.findViewById(R.id.summaryExpand);
-        summaryExpander.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener expand = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (detailView.getVisibility() == View.VISIBLE) {
@@ -113,7 +113,10 @@ public class SummaryFragment extends Fragment {
                     summaryScroll.setScrollEnabled(true);
                 }
             }
-        });
+        };
+        summaryExpander.setOnClickListener(expand);
+        View summaryCL = root.findViewById(R.id.summaryPieConstraintLayout);
+        summaryCL.setOnClickListener(expand);
 
         summaryScroll = root.findViewById(R.id.summaryScroll);
 
