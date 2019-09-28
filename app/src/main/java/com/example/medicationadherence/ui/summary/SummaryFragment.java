@@ -128,7 +128,7 @@ public class SummaryFragment extends Fragment {
             double percTaken = new Random().nextDouble()*100%100.0;
             double percLate = new Random().nextDouble()*100%(100.0-percTaken);
             System.out.println("Taken: "+percTaken+" Late: "+percLate+" Missed: "+(100.0-percLate-percTaken));
-            detailList.add(new DetailSummary("Medication " + i, percTaken, percLate));
+            detailList.add(new DetailSummary("DailyMedication " + i, percTaken, percLate));
         }
         detailAdapter = new SummaryDetailAdapter(detailList, getContext());
         detailView.setAdapter(detailAdapter);
@@ -184,7 +184,6 @@ public class SummaryFragment extends Fragment {
         System.out.println(cal.getTime());
         model.setTimeToView(cal.getTimeInMillis());
         changeScale();
-        //TODO: move time based on value in spinner
         updateMainGraph();
     }
 

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 import java.util.Calendar;
 
 
-//TODO: fragments are destroyed by navcontroller upon switcthing, so either make mainactivity viewmodel or custom NavController class
+//TODO: fragments are destroyed by navcontroller upon switcthing, so make mainactivity viewmodel
 public class SummaryViewModel extends ViewModel {
     private long timeToView = -1; //probably won't schedule for before the epoch
     private int viewScale = 0;

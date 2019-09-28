@@ -1,5 +1,7 @@
 package com.example.medicationadherence.ui.home;
 
-public class DailyMedListViewModel {
+import androidx.lifecycle.ViewModel;
+
+public class DailyMedListViewModel extends ViewModel {
     //TODO; this
 }

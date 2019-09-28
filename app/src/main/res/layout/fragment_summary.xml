@@ -166,8 +166,6 @@
         </LinearLayout>
     </com.example.medicationadherence.ui.DisableableScrollView>
 
-    <!--TODO: make this do something; should be bottom menu/page-->
-
     <!-- Doughnut chart ends here -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

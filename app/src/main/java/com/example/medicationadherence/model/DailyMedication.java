@@ -2,39 +2,20 @@ package com.example.medicationadherence.model;
 
 import java.sql.Time;
 
-public class Medication {
+public class DailyMedication {
     private int medImage;
     private String medName;
     private String medDosage;
+    private Time dosageTime;
     private String instructions;
-    private boolean active;
-    private String doctorName;
-    private long startDate;
-    private long endDate; //set to -1 to not show
 
-    public Medication(int medImage, String medName, String medDosage, String instructions, String doctorName, long startDate, long endDate) {
+    public DailyMedication(int medImage, String medName, String medDosage, Time dosageTime, String instructions){
         this.medImage = medImage;
         this.medName = medName;
         this.medDosage = medDosage;
+        this.dosageTime = dosageTime;
         this.instructions = instructions;
-        this.doctorName = doctorName;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        active = true;
     }
-
-    public Medication(int medImage, String medName, String medDosage, String instructions, boolean active, String doctorName, long startDate, long endDate) {
-        this.medImage = medImage;
-        this.medName = medName;
-        this.medDosage = medDosage;
-        this.instructions = instructions;
-        this.active = active;
-        this.doctorName = doctorName;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
-
-
 
     public String getMedName() {
         return medName;
@@ -58,6 +39,14 @@ public class Medication {
 
     public void setMedImage(int medImage) {
         this.medImage = medImage;
+    }
+
+    public Time getDosageTime() {
+        return dosageTime;
+    }
+
+    public void setDosageTime(Time dosageTime) {
+        this.dosageTime = dosageTime;
     }
 
     public String getInstructions() {

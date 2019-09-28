@@ -14,18 +14,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.adapter.DailyMedicationListAdapter;
-import com.example.medicationadherence.model.Medication;
+import com.example.medicationadherence.model.DailyMedication;
 
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 public class DailyMedicationList extends AppCompatActivity {
 
     private RecyclerView medRecyclerView;
     private DailyMedicationListAdapter medAdapter;
-    private ArrayList<Medication> medList;
+    private ArrayList<DailyMedication> medList;
 
 
     //TODO: add as needed meds at bottom
@@ -35,7 +36,6 @@ public class DailyMedicationList extends AppCompatActivity {
         setContentView(R.layout.activity_daily_medication_list);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //TODO: Add med button?
         /*FloatingActionButton fab = findViewById(R.id.addMedButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,7 +51,7 @@ public class DailyMedicationList extends AppCompatActivity {
         medRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         if(savedInstanceState != null){
-            //medList = (ArrayList<Medication>) savedInstanceState.getSerializable("medList");
+            //medList = (ArrayList<DailyMedication>) savedInstanceState.getSerializable("medList");
             //medlist still exists for some reason?
             medAdapter = (DailyMedicationListAdapter) savedInstanceState.getSerializable("medAdapter");
             hideBar();
@@ -68,15 +68,8 @@ public class DailyMedicationList extends AppCompatActivity {
         medRecyclerView.setAdapter(medAdapter);
     }
 
-    @Override
-    protected void onDestroy() {
-        //TODO: this is wrong
-        super.onDestroy();
-    }
-
-    public void showPopup(Medication med){
+    public void showPopup(DailyMedication med){
         //TODO: fix, make real popup
-        //TODO: can be same popup for daily and overall list
         TextView popupMedName = findViewById(R.id.popupMedName);
         if (popupMedName != null) popupMedName.setText(med.getMedName());
         Intent intent = new Intent(this, MedPopup.class);
@@ -94,15 +87,13 @@ public class DailyMedicationList extends AppCompatActivity {
         progBar.setVisibility(View.INVISIBLE);
     }
 
-    public void populateMedList(List<Medication> medList){
+    public void populateMedList(List<DailyMedication> medList){
         //TODO: actual data population
-        //TODO: pause task?
-        //TODO: stop task when activity ends
         System.out.println("Population start time: "+Calendar.getInstance().getTime());
         for(int i=0; i<20; i++){
             long time = Calendar.getInstance().getTimeInMillis();
             //while (Calendar.getInstance().getTimeInMillis()<time+1000);
-            medList.add(new Medication(R.mipmap.ic_launcher_round, "Medication "+i, "Doctor "+i, i+" pill(s)", new Time(Calendar.getInstance().getTimeInMillis()+i*60000)));
+            medList.add(new DailyMedication((new Random().nextBoolean()) ? R.mipmap.ic_launcher_round: -1, "DailyMedication "+i, i+" pill(s)", new Time(Calendar.getInstance().getTimeInMillis()+i*60000), ""));
             //TODO: may want to move up, not great to call each time
             runOnUiThread(new Runnable() {
                 @Override

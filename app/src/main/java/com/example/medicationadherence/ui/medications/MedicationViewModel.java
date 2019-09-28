@@ -8,9 +8,7 @@ import com.example.medicationadherence.R;
 import com.example.medicationadherence.adapter.MedicationListAdapter;
 import com.example.medicationadherence.model.Medication;
 
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class MedicationViewModel extends ViewModel {
@@ -19,7 +17,7 @@ public class MedicationViewModel extends ViewModel {
 
     private MedicationListAdapter medAdapter;
 
-    public LiveData<List<Medication>> getMedications(){
+    LiveData<List<Medication>> getMedications(){
         if (medications == null){
             medications = new MutableLiveData<>();
             loadMeds();
@@ -32,16 +30,16 @@ public class MedicationViewModel extends ViewModel {
         System.out.println("filling list");
         List<Medication> medList = new ArrayList<>();
         for(int i=0; i<20; i++) {
-            medList.add(new Medication(R.mipmap.ic_launcher_round, "Medication " + i, "Doctor " + i, i + " pill(s)", new Time(Calendar.getInstance().getTimeInMillis() + i * 60000)));
+            medList.add(new Medication(R.mipmap.ic_launcher_round, "DailyMedication " + i, i + " pill(s)", "", "Doctor" + 1, 5, -1));
         }
         medications.setValue(medList);
     }
 
-    public MedicationListAdapter getMedAdapter() {
+    MedicationListAdapter getMedAdapter() {
         return medAdapter;
     }
 
-    public void setMedAdapter(MedicationListAdapter medAdapter) {
+    void setMedAdapter(MedicationListAdapter medAdapter) {
         this.medAdapter = medAdapter;
     }
 

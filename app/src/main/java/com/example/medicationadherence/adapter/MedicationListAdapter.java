@@ -20,11 +20,10 @@ import com.example.medicationadherence.R;
 import com.example.medicationadherence.model.Medication;
 
 import java.util.List;
-//TODO: this is a copy of the daily adapter, needs to be changed
 public class MedicationListAdapter extends RecyclerView.Adapter {
     private List<Medication> medicationList;
     private Context context;
-    MainActivity mainActivity;
+    private MainActivity mainActivity;
 
     public MedicationListAdapter(List<Medication> medicationList, Context context, MainActivity mainActivity){
         this.medicationList = medicationList;
@@ -37,19 +36,16 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public MedicationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View medicationView = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_medication_card, parent, false);
+        View medicationView = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_daily_medication_card, parent, false);
         return new MedicationViewHolder(medicationView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
-        //TODO: make method in main to fill based on day/info from database
         MedicationViewHolder holderm = (MedicationViewHolder) holder;
         holderm.medImage.setImageResource(medicationList.get(position).getMedImage());
         holderm.medName.setText(medicationList.get(position).getMedName());
-        holderm.doctorName.setText(medicationList.get(position).getDoctorName());
         holderm.medDosage.setText(medicationList.get(position).getMedDosage());
-        holderm.dosageTime.setText(medicationList.get(position).getDosageTime().toString());
         holderm.medImage.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
