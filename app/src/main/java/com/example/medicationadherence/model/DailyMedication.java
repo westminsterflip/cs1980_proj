@@ -2,14 +2,14 @@ package com.example.medicationadherence.model;
 
 import java.sql.Time;
 
-public class DailyMedication {
+public class DailyMedication implements Comparable{
     private int medImage;
     private String medName;
     private String medDosage;
-    private Time dosageTime;
+    private long dosageTime;
     private String instructions;
 
-    public DailyMedication(int medImage, String medName, String medDosage, Time dosageTime, String instructions){
+    public DailyMedication(int medImage, String medName, String medDosage, long dosageTime, String instructions){
         this.medImage = medImage;
         this.medName = medName;
         this.medDosage = medDosage;
@@ -41,11 +41,11 @@ public class DailyMedication {
         this.medImage = medImage;
     }
 
-    public Time getDosageTime() {
+    public long getDosageTime() {
         return dosageTime;
     }
 
-    public void setDosageTime(Time dosageTime) {
+    public void setDosageTime(long dosageTime) {
         this.dosageTime = dosageTime;
     }
 
@@ -55,5 +55,15 @@ public class DailyMedication {
 
     public void setInstructions(String instructions) {
         this.instructions = instructions;
+    }
+
+
+    @Override
+    public int compareTo(Object o) {
+        if (this.getDosageTime() > ((DailyMedication)o).getDosageTime())
+            return 1;
+        if (this.getDosageTime() < ((DailyMedication)o).getDosageTime())
+            return -1;
+        return 0;
     }
 }

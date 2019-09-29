@@ -10,6 +10,7 @@ import com.example.medicationadherence.model.Medication;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MedicationViewModel extends ViewModel {
 
@@ -30,7 +31,7 @@ public class MedicationViewModel extends ViewModel {
         System.out.println("filling list");
         List<Medication> medList = new ArrayList<>();
         for(int i=0; i<20; i++) {
-            medList.add(new Medication(R.mipmap.ic_launcher_round, "DailyMedication " + i, i + " pill(s)", "", "Doctor" + 1, 5, -1));
+            medList.add(new Medication((new Random().nextBoolean()) ? R.mipmap.ic_launcher_round: -1, "Medication " + i, i + " pill(s)", "", "Doctor" + 1, 5, -1));
         }
         medications.setValue(medList);
     }

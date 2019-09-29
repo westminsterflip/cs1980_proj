@@ -20,6 +20,7 @@ import com.example.medicationadherence.model.DailyMedication;
 import com.example.medicationadherence.ui.home.DailyMedicationList;
 
 import java.io.Serializable;
+import java.sql.Time;
 import java.util.List;
 
 public class DailyMedicationListAdapter extends RecyclerView.Adapter implements Serializable {
@@ -51,7 +52,7 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
         holderm.medName.setText(medicationList.get(position).getMedName());
         //holderm.instructions.setText(medicationList.get(position).getInstructions());
         holderm.medDosage.setText(medicationList.get(position).getMedDosage());
-        holderm.dosageTime.setText(medicationList.get(position).getDosageTime().toString());
+        holderm.dosageTime.setText(new Time(medicationList.get(position).getDosageTime()).toString());
         holderm.medImage.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){

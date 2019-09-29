@@ -8,6 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class DisableableScrollView extends NestedScrollView {
     private boolean scrollEnabled = false;
 
@@ -35,13 +38,8 @@ public class DisableableScrollView extends NestedScrollView {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        if(ev.getAction() == MotionEvent.ACTION_MOVE && !scrollEnabled)
+        if(ev.getAction() > 0 && ev.getAction() < 4 && !scrollEnabled)
             return false;
         return super.onTouchEvent(ev);
-    }
-
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return super.onInterceptTouchEvent(ev);
     }
 }

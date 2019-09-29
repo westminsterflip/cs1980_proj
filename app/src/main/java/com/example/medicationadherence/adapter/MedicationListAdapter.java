@@ -43,7 +43,11 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         MedicationViewHolder holderm = (MedicationViewHolder) holder;
-        holderm.medImage.setImageResource(medicationList.get(position).getMedImage());
+        if(medicationList.get(position).getMedImage() != -1){ //If an image is specified it will load, otherwise the default is a pill on a background
+            holderm.medImage.setImageResource(medicationList.get(position).getMedImage());
+            holderm.medImage.setBackgroundColor(Integer.parseInt("00FFFFFF",16));
+            holderm.medImage.setImageTintList(null);
+        }
         holderm.medName.setText(medicationList.get(position).getMedName());
         holderm.medDosage.setText(medicationList.get(position).getMedDosage());
         holderm.medImage.setOnClickListener(new View.OnClickListener(){
