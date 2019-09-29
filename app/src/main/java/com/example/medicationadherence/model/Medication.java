@@ -1,7 +1,5 @@
 package com.example.medicationadherence.model;
 
-import java.sql.Time;
-
 public class Medication {
     private int medImage;
     private String medName;
@@ -66,5 +64,37 @@ public class Medication {
 
     public void setInstructions(String instructions) {
         this.instructions = instructions;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public String getDoctorName() {
+        return doctorName;
+    }
+
+    public void setDoctorName(String doctorName) {
+        this.doctorName = doctorName;
+    }
+
+    public long getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(long startDate) {
+        this.startDate = startDate;
+    }
+
+    public long getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(long endDate) {
+        this.endDate = endDate;
     }
 }

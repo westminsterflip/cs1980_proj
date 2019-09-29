@@ -18,7 +18,6 @@ import java.util.Calendar;
 public class HomeFragment extends Fragment {
 
     private CalendarView mainCal;
-    //TODO: figure out calendar state saving
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
