@@ -1,5 +1,6 @@
 package com.example.medicationadherence.ui.summary;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.os.ConfigurationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,17 +24,17 @@ import com.example.medicationadherence.ui.DisableableScrollView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 //TODO: add today button
 //TODO: won't rotate after detail view is opened
 public class SummaryFragment extends Fragment {
     private TextView graphLabel;
-    private Calendar cal = Calendar.getInstance(); //TODO: move cal to viewmodel?
-    private SummaryDetailAdapter detailAdapter;
+    private final Calendar cal = Calendar.getInstance(); //TODO: move cal to viewmodel?
     private DisableableScrollView summaryScroll;
-    ImageButton next;
-    SummaryViewModel model;
+    private ImageButton next;
+    private SummaryViewModel model;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState){
@@ -51,7 +53,6 @@ public class SummaryFragment extends Fragment {
         cal.clear(Calendar.SECOND);
         cal.clear(Calendar.MILLISECOND);
         model.setTimeToView(cal.getTimeInMillis());
-        System.out.println(cal.getTime());
         graphLabel = root.findViewById(R.id.summaryDWM);
         changeScale();
 
@@ -86,7 +87,7 @@ public class SummaryFragment extends Fragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                System.out.println("This shouldn't happen probably");
+                //This probably shouldn't occur
             }
         });
 
@@ -122,7 +123,7 @@ public class SummaryFragment extends Fragment {
             summaryExpander.setRotation(180);
             summaryScroll.setScrollEnabled(true);
         }
-        detailAdapter = new SummaryDetailAdapter(model.getDetailList(), getContext());
+        SummaryDetailAdapter detailAdapter = new SummaryDetailAdapter(model.getDetailList());
         detailView.setAdapter(detailAdapter);
 
         return root;
@@ -131,7 +132,6 @@ public class SummaryFragment extends Fragment {
     //negative = back, 0 = scale changed, positive = forward
     private void updateTimeToView(int dir){
         if(dir > 0){
-            System.out.println("next");
             cal.add(Calendar.DAY_OF_YEAR, ((model.getViewScale()==0) ? 1 : 0));
             cal.add(Calendar.DAY_OF_YEAR, ((model.getViewScale()==1) ? 7 : 0));
             cal.add(Calendar.MONTH, ((model.getViewScale()==2) ? 1 : 0));
@@ -139,7 +139,6 @@ public class SummaryFragment extends Fragment {
                 cal.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
             }
         }else if (dir < 0){
-            System.out.println("prev");
             cal.add(Calendar.DAY_OF_YEAR, ((model.getViewScale()==0) ? -1 : 0));
             cal.add(Calendar.DAY_OF_YEAR, ((model.getViewScale()==1) ? -7 : 0));
             cal.add(Calendar.MONTH, ((model.getViewScale()==2) ? -1 : 0));
@@ -161,7 +160,6 @@ public class SummaryFragment extends Fragment {
             next.setEnabled(true);
             next.setVisibility(View.VISIBLE);
         }
-        System.out.println(cal.getTime());
         model.setTimeToView(cal.getTimeInMillis());
         changeScale();
         updateMainGraph();
@@ -170,8 +168,9 @@ public class SummaryFragment extends Fragment {
     private void changeScale(){
         int year = cal.get(Calendar.YEAR);
         int day = cal.get(Calendar.DAY_OF_MONTH);
-        String dayName = new SimpleDateFormat("EEE").format(cal.getTime());
-        String monthName = new SimpleDateFormat("MMM").format(cal.getTime());
+        Locale syslocale = ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0);
+        String dayName = new SimpleDateFormat("EEE", syslocale).format(cal.getTime());
+        String monthName = new SimpleDateFormat("MMM", syslocale).format(cal.getTime());
         String label = "unchanged";
         switch (model.getViewScale()){
             case 0:
@@ -185,8 +184,8 @@ public class SummaryFragment extends Fragment {
                 calt.setTimeInMillis(cal.getTimeInMillis());
                 calt.add(Calendar.DAY_OF_YEAR, 6);
                 int dayt = calt.get(Calendar.DAY_OF_MONTH);
-                String dayNamet = new SimpleDateFormat("EEE").format(calt.getTime());
-                String monthNamet = new SimpleDateFormat("MMM").format(calt.getTime());
+                String dayNamet = new SimpleDateFormat("EEE", syslocale).format(calt.getTime());
+                String monthNamet = new SimpleDateFormat("MMM", syslocale).format(calt.getTime());
                 label += dayNamet+", "+monthNamet+" "+dayt;
                 break;
             case 2:
@@ -196,7 +195,7 @@ public class SummaryFragment extends Fragment {
         graphLabel.setText(label);
     }
 
-    public void updateMainGraph(){
+    private void updateMainGraph(){
         //TODO: move graph/text values to reflect data from database
     }
 }

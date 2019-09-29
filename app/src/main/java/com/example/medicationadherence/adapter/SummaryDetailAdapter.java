@@ -1,6 +1,5 @@
 package com.example.medicationadherence.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +16,10 @@ import java.util.List;
 import java.util.Locale;
 
 public class SummaryDetailAdapter extends RecyclerView.Adapter {
-    private List<DetailSummary> detailList;
-    private Context context;
+    private final List<DetailSummary> detailList;
 
-    public SummaryDetailAdapter(List<DetailSummary> detailList, Context context) {
+    public SummaryDetailAdapter(List<DetailSummary> detailList) {
         this.detailList = detailList;
-        this.context = context;
     }
 
     @NonNull
@@ -53,15 +50,15 @@ public class SummaryDetailAdapter extends RecyclerView.Adapter {
         return detailList.size();
     }
 
-    public class DetailViewHolder extends RecyclerView.ViewHolder{
-        TextView medName;
-        TextView percTaken;
-        TextView percLate;
-        TextView percMissed;
-        ProgressBar percTakenBar;
-        ProgressBar percLateBar;
+    class DetailViewHolder extends RecyclerView.ViewHolder{
+        final TextView medName;
+        final TextView percTaken;
+        final TextView percLate;
+        final TextView percMissed;
+        final ProgressBar percTakenBar;
+        final ProgressBar percLateBar;
 
-        public DetailViewHolder(View view){
+        DetailViewHolder(View view){
             super(view);
             medName=view.findViewById(R.id.detailCardMedicineName);
             percTaken=view.findViewById(R.id.detailCardTaken);

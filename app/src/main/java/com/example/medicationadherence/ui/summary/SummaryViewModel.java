@@ -35,12 +35,6 @@ public class SummaryViewModel extends ViewModel {
         this.viewScale = viewScale;
     }
 
-    @Override
-    protected void onCleared() {
-        System.out.println("//////////////////////////////////SUMMARY CLEARED//////////////////////////////");
-        super.onCleared();
-    }
-
     boolean isExpand() {
         return expand;
     }
@@ -65,7 +59,6 @@ public class SummaryViewModel extends ViewModel {
         for (int i=0; i<20; i++){
             double percTaken = new Random().nextDouble()*100%100.0;
             double percLate = new Random().nextDouble()*100%(100.0-percTaken);
-            System.out.println("Taken: "+percTaken+" Late: "+percLate+" Missed: "+(100.0-percLate-percTaken));
             detailList.add(new DetailSummary("DailyMedication " + i, percTaken, percLate));
         }
     }

@@ -1,6 +1,6 @@
 package com.example.medicationadherence.model;
 
-import java.sql.Time;
+import androidx.annotation.NonNull;
 
 public class DailyMedication implements Comparable{
     private int medImage;
@@ -59,11 +59,7 @@ public class DailyMedication implements Comparable{
 
 
     @Override
-    public int compareTo(Object o) {
-        if (this.getDosageTime() > ((DailyMedication)o).getDosageTime())
-            return 1;
-        if (this.getDosageTime() < ((DailyMedication)o).getDosageTime())
-            return -1;
-        return 0;
+    public int compareTo(@NonNull Object o) {
+        return Long.compare(this.getDosageTime(), ((DailyMedication) o).getDosageTime());
     }
 }

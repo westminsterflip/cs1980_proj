@@ -27,7 +27,6 @@ public class HomeFragment extends Fragment {
         mainCal.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                System.out.println(month+1 + "/" + dayOfMonth + "/" + year);
                 Intent intent = new Intent(getActivity(), DailyMedicationList.class);
                 Calendar cal = Calendar.getInstance();
                 cal.clear();

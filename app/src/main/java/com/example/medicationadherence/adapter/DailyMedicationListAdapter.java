@@ -3,10 +3,12 @@ package com.example.medicationadherence.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.medicationadherence.R;
@@ -17,7 +19,7 @@ import java.sql.Time;
 import java.util.List;
 
 public class DailyMedicationListAdapter extends RecyclerView.Adapter implements Serializable {
-    private List<DailyMedication> medicationList;
+    private final List<DailyMedication> medicationList;
 
     public DailyMedicationListAdapter(List<DailyMedication> medicationList){
         this.medicationList = medicationList;
@@ -32,22 +34,35 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
-        DailyMedicationViewHolder holderm = (DailyMedicationViewHolder) holder;
+        final DailyMedicationViewHolder holderm = (DailyMedicationViewHolder) holder;
         if(medicationList.get(position).getMedImage() != -1){ //If an image is specified it will load, otherwise the default is a pill on a background
             holderm.medImage.setImageResource(medicationList.get(position).getMedImage());
             holderm.medImage.setBackgroundColor(Integer.parseInt("00FFFFFF",16));
             holderm.medImage.setImageTintList(null);
         }
         holderm.medName.setText(medicationList.get(position).getMedName());
-        //holderm.instructions.setText(medicationList.get(position).getInstructions());
+        String instr = medicationList.get(position).getInstructions();
+        if(instr != null){
+            holderm.instructions.setText(medicationList.get(position).getInstructions());
+            View.OnClickListener expand = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(holderm.expand.getRotation() == 180){
+                        holderm.expand.setRotation(0);
+                        holderm.instructions.setVisibility(View.GONE);
+                    } else {
+                        holderm.expand.setRotation(180);
+                        holderm.instructions.setVisibility(View.VISIBLE);
+                    }
+                }
+            };
+            holderm.card.setOnClickListener(expand);
+            holderm.expand.setOnClickListener(expand);
+        } else {
+            holderm.expand.setVisibility(View.GONE);
+        }
         holderm.medDosage.setText(medicationList.get(position).getMedDosage());
         holderm.dosageTime.setText(new Time(medicationList.get(position).getDosageTime()).toString());
-        holderm.medImage.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                //TODO: this is a bad way to do it; every time a card is loaded on screen it'll run this
-            }
-        });
     }
 
     @Override
@@ -56,19 +71,23 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
     }
 
     public class DailyMedicationViewHolder extends RecyclerView.ViewHolder{
-        ImageView medImage;
-        TextView medName;
-        TextView instructions;
-        TextView medDosage;
-        TextView dosageTime;
+        final ImageView medImage;
+        final TextView medName;
+        final TextView instructions;
+        final TextView medDosage;
+        final TextView dosageTime;
+        final ImageButton expand;
+        final CardView card;
 
         DailyMedicationViewHolder(View view){
             super(view);
             medImage=view.findViewById(R.id.medImage);
             medName=view.findViewById(R.id.textViewMedName);
-            //instructions=view.findViewById(R.id.textViewInstructions);
+            instructions=view.findViewById(R.id.dailyInstructions);
             medDosage=view.findViewById(R.id.textViewMedDosage);
             dosageTime=view.findViewById(R.id.textViewDosageTime);
+            expand=view.findViewById(R.id.dailyMedicationExpand);
+            card=view.findViewById(R.id.dailyCard);
         }
     }
 }

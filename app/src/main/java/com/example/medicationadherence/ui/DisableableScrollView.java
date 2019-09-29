@@ -8,9 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class DisableableScrollView extends NestedScrollView {
     private boolean scrollEnabled = false;
 

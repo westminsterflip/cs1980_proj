@@ -9,6 +9,7 @@ import com.example.medicationadherence.model.DailyMedication;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class DailyMedListViewModel extends ViewModel {
@@ -34,12 +35,11 @@ public class DailyMedListViewModel extends ViewModel {
 
     private void loadMeds(){
         //TODO: load from db
-        System.out.println("filling daily list");
         List<List<DailyMedication>> bigMedList = new ArrayList<>();
         for(int o = 0; o < 3; o++){
             List<DailyMedication> medList = new ArrayList<>();
             for(int i = 0; i < 20; i++){
-                medList.add(new DailyMedication((new Random().nextBoolean()) ? R.mipmap.ic_launcher_round : -1, "DailyMedication" + i, i + " pill(s)", dateList.get(o) + i * 60000, ""));
+                medList.add(new DailyMedication((new Random().nextBoolean()) ? R.mipmap.ic_launcher_round : -1, "DailyMedication" + i, i + " pill(s)", dateList.get(o) + i * 60000, (new Random().nextBoolean())? null : "test"));
             }
             bigMedList.add(medList);
         }
@@ -54,7 +54,7 @@ public class DailyMedListViewModel extends ViewModel {
         dateList.set(1,date);
     }
 
-    public long getPrevDate() {
+    long getPrevDate() {
         return dateList.get(0);
     }
 
@@ -72,7 +72,7 @@ public class DailyMedListViewModel extends ViewModel {
 
     public void loadNextMeds(){
         List<List<DailyMedication>> medList = medications.getValue();
-        medList.remove(0);
+        Objects.requireNonNull(medList).remove(0);
         List<DailyMedication> medList1 = new ArrayList<>();
         for(int i = 0; i < 20; i++){
             medList1.add(new DailyMedication((new Random().nextBoolean()) ? R.mipmap.ic_launcher_round : -1, "DailyMedication" + i, i + " pill(s)", dateList.get(2) + i * 60000, ""));
@@ -82,9 +82,8 @@ public class DailyMedListViewModel extends ViewModel {
     }
 
     public void loadPrevMeds(){
-        System.out.println("previous loaded");
         List<List<DailyMedication>> medList = medications.getValue();
-        medList.remove(2);
+        Objects.requireNonNull(medList).remove(2);
         List<DailyMedication> medList1 = new ArrayList<>();
         for(int i = 0; i < 20; i++){
             medList1.add(new DailyMedication((new Random().nextBoolean()) ? R.mipmap.ic_launcher_round : -1, "DailyMedication" + i, i + " pill(s)", dateList.get(0) + i * 60000, ""));

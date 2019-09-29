@@ -1,5 +1,6 @@
 package com.example.medicationadherence.ui.home;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -7,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.os.ConfigurationCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager2.widget.ViewPager2;
@@ -18,6 +20,7 @@ import com.example.medicationadherence.model.DailyMedication;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 public class DailyMedicationList extends AppCompatActivity{
     private DailyMedListViewModel model;
@@ -78,7 +81,7 @@ public class DailyMedicationList extends AppCompatActivity{
         //TODO: scroll to current time upon opening list
         //TODO: coloring for past events?
         //TODO: time separators in recyclerview
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         dailyViewPager = findViewById(R.id.dailyViewPager);
         model.setMedAdapter(new DailyViewPagerAdapter(model.getDateList(), model.getMedications().getValue()));
         dailyViewPager.setAdapter(new DailyViewPagerAdapter(model.getDateList(), model.getMedications().getValue()));
@@ -120,8 +123,8 @@ public class DailyMedicationList extends AppCompatActivity{
     }
 
     private void updateText() {
-        String dateText = new SimpleDateFormat("EEE, MMM d").format(model.getDate());
-        String year = new SimpleDateFormat("yyyy").format(model.getDate());
+        String dateText = new SimpleDateFormat("EEE, MMM d", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(model.getDate());
+        String year = new SimpleDateFormat("yyyy", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(model.getDate());
         if (!year.equals(Calendar.getInstance().get(Calendar.YEAR) + "")) {
             dateText += " " + year;
         }
