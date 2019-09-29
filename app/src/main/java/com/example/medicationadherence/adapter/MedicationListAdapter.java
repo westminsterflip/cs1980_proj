@@ -66,7 +66,7 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
                 } else {
                     holderm.expand.setRotation(180);
                     holderm.expandable.setVisibility(View.VISIBLE);
-                    String details = ""; //TODO: fill with ammount on hand/cost/container vol, anything else extra
+                    String details = ""; //TODO: fill with ammount on hand/cost/container vol/instructions, anything else extra
                     holderm.expandable.setText(details);
                 }
             }

@@ -3,10 +3,8 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView3"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/dailyRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TEST POPUP"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:layout_height="match_parent" />
 </LinearLayout>

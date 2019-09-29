@@ -29,6 +29,12 @@ public class HomeFragment extends Fragment {
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 System.out.println(month+1 + "/" + dayOfMonth + "/" + year);
                 Intent intent = new Intent(getActivity(), DailyMedicationList.class);
+                Calendar cal = Calendar.getInstance();
+                cal.clear();
+                cal.set(Calendar.YEAR, year);
+                cal.set(Calendar.MONTH, month);
+                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                intent.putExtra("date",cal.getTimeInMillis());
                 startActivity(intent);
             }
         });

@@ -9,6 +9,28 @@
     tools:layout_editor_absoluteY="56dp"
     tools:showIn="@layout/activity_daily_medication_list">
 
+    <ImageButton
+        android:id="@+id/dailyPrevButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#00FFFFFF"
+        android:scaleType="fitStart"
+        app:layout_constraintEnd_toStartOf="@+id/dailyNextButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dailyMedProgress"
+        app:srcCompat="@drawable/ic_chevron_left" />
+
+    <ImageButton
+        android:id="@+id/dailyNextButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#00FFFFFF"
+        android:scaleType="fitEnd"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/dailyPrevButton"
+        app:layout_constraintTop_toBottomOf="@+id/dailyMedProgress"
+        app:srcCompat="@drawable/ic_chevron_right" />
+
     <ProgressBar
         android:id="@+id/dailyMedProgress"
         style="?android:attr/progressBarStyleHorizontal"
@@ -20,18 +42,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/dailyMedRecyclerView"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/dailyViewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dailyMedProgress">
+        app:layout_constraintTop_toBottomOf="@+id/dailyPrevButton"/>
 
-    </androidx.recyclerview.widget.RecyclerView>
+    <TextView
+        android:id="@+id/dailyDateView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="dailyDateView"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/dailyNextButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dailyMedProgress" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
