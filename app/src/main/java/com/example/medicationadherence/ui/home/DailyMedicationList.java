@@ -27,7 +27,6 @@ public class DailyMedicationList extends AppCompatActivity{
     private TextView date;
     private ViewPager2 dailyViewPager;
 
-    //TODO: attach viewpager and buttons
     //TODO: add as needed meds at bottom
     @Override
     protected void onCreate(Bundle savedInstanceState) {

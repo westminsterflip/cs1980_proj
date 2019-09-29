@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.medicationadherence.MainViewModel;
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.adapter.SummaryDetailAdapter;
 import com.example.medicationadherence.ui.DisableableScrollView;
@@ -25,34 +26,36 @@ import com.example.medicationadherence.ui.DisableableScrollView;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 //TODO: add today button
-//TODO: won't rotate after detail view is opened
 public class SummaryFragment extends Fragment {
     private TextView graphLabel;
     private final Calendar cal = Calendar.getInstance(); //TODO: move cal to viewmodel?
     private DisableableScrollView summaryScroll;
     private ImageButton next;
     private SummaryViewModel model;
+    private MainViewModel mainModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         model = ViewModelProviders.of(this).get(SummaryViewModel.class);
+        mainModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
     }
 
 
     //TODO: block scrolling before earliest scheduled thing
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_summary, container, false);
-        cal.setTimeInMillis(model.getTimeToView());
+        cal.setTimeInMillis(mainModel.getSummaryTimeToView());
         cal.set(Calendar.HOUR_OF_DAY,0);
         cal.clear(Calendar.AM_PM);
         cal.clear(Calendar.MINUTE);
         cal.clear(Calendar.SECOND);
         cal.clear(Calendar.MILLISECOND);
-        model.setTimeToView(cal.getTimeInMillis());
+        mainModel.setSummaryTimeToView(cal.getTimeInMillis());
         graphLabel = root.findViewById(R.id.summaryDWM);
         changeScale();
 
@@ -77,11 +80,11 @@ public class SummaryFragment extends Fragment {
         });
 
         Spinner timeScaleSpinner = root.findViewById(R.id.summaryUnitSelect);
-        timeScaleSpinner.setSelection(model.getViewScale());
+        timeScaleSpinner.setSelection(mainModel.getSummaryViewScale());
         timeScaleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                model.setViewScale(position);
+                mainModel.setSummaryViewScale(position);
                 updateTimeToView(0);
             }
 
@@ -101,12 +104,12 @@ public class SummaryFragment extends Fragment {
                     detailView.setVisibility(View.INVISIBLE);
                     summaryExpander.setRotation(0);
                     summaryScroll.setScrollEnabled(false);
-                    model.setExpand(false);
+                    mainModel.setSummaryExpand(false);
                 } else {
                     detailView.setVisibility(View.VISIBLE);
                     summaryExpander.setRotation(180);
                     summaryScroll.setScrollEnabled(true);
-                    model.setExpand(true);
+                    mainModel.setSummaryExpand(true);
                 }
             }
         };
@@ -118,7 +121,7 @@ public class SummaryFragment extends Fragment {
 
         detailView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        if(model.isExpand()){
+        if(mainModel.isSummaryExpand()){
             detailView.setVisibility(View.VISIBLE);
             summaryExpander.setRotation(180);
             summaryScroll.setScrollEnabled(true);
@@ -132,16 +135,16 @@ public class SummaryFragment extends Fragment {
     //negative = back, 0 = scale changed, positive = forward
     private void updateTimeToView(int dir){
         if(dir > 0){
-            cal.add(Calendar.DAY_OF_YEAR, ((model.getViewScale()==0) ? 1 : 0));
-            cal.add(Calendar.DAY_OF_YEAR, ((model.getViewScale()==1) ? 7 : 0));
-            cal.add(Calendar.MONTH, ((model.getViewScale()==2) ? 1 : 0));
+            cal.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale()==0) ? 1 : 0));
+            cal.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale()==1) ? 7 : 0));
+            cal.add(Calendar.MONTH, ((mainModel.getSummaryViewScale()==2) ? 1 : 0));
             if (cal.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()){
                 cal.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
             }
         }else if (dir < 0){
-            cal.add(Calendar.DAY_OF_YEAR, ((model.getViewScale()==0) ? -1 : 0));
-            cal.add(Calendar.DAY_OF_YEAR, ((model.getViewScale()==1) ? -7 : 0));
-            cal.add(Calendar.MONTH, ((model.getViewScale()==2) ? -1 : 0));
+            cal.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale()==0) ? -1 : 0));
+            cal.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale()==1) ? -7 : 0));
+            cal.add(Calendar.MONTH, ((mainModel.getSummaryViewScale()==2) ? -1 : 0));
         }
         Calendar temp = Calendar.getInstance();
         temp.setTimeInMillis(cal.getTimeInMillis());
@@ -150,17 +153,17 @@ public class SummaryFragment extends Fragment {
         if (cal.getTimeInMillis() + TimeUnit.DAYS.toMillis(1) > Calendar.getInstance().getTimeInMillis()){
             next.setEnabled(false);
             next.setVisibility(View.INVISIBLE);
-        } else if (cal.getTimeInMillis() + TimeUnit.DAYS.toMillis(7) > Calendar.getInstance().getTimeInMillis() && model.getViewScale() > 0){
+        } else if (cal.getTimeInMillis() + TimeUnit.DAYS.toMillis(7) > Calendar.getInstance().getTimeInMillis() && mainModel.getSummaryViewScale() > 0){
             next.setEnabled(false);
             next.setVisibility(View.INVISIBLE);
-        } else if (temp.getTimeInMillis() > Calendar.getInstance().getTimeInMillis() && model.getViewScale() > 1){
+        } else if (temp.getTimeInMillis() > Calendar.getInstance().getTimeInMillis() && mainModel.getSummaryViewScale() > 1){
             next.setEnabled(false);
             next.setVisibility(View.INVISIBLE);
         } else {
             next.setEnabled(true);
             next.setVisibility(View.VISIBLE);
         }
-        model.setTimeToView(cal.getTimeInMillis());
+        mainModel.setSummaryTimeToView(cal.getTimeInMillis());
         changeScale();
         updateMainGraph();
     }
@@ -172,7 +175,7 @@ public class SummaryFragment extends Fragment {
         String dayName = new SimpleDateFormat("EEE", syslocale).format(cal.getTime());
         String monthName = new SimpleDateFormat("MMM", syslocale).format(cal.getTime());
         String label = "unchanged";
-        switch (model.getViewScale()){
+        switch (mainModel.getSummaryViewScale()){
             case 0:
                 label = dayName+", "+monthName+" "+day;
                 if (year != Calendar.getInstance().get(Calendar.YEAR))

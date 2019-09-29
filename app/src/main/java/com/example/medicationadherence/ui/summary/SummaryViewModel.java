@@ -5,43 +5,11 @@ import androidx.lifecycle.ViewModel;
 import com.example.medicationadherence.model.DetailSummary;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
-
-//TODO: fragments are destroyed by navcontroller upon switcthing, so make mainactivity viewmodel
 public class SummaryViewModel extends ViewModel {
-    private long timeToView = -1; //probably won't schedule for before the epoch
-    private int viewScale = 0;
-    private boolean expand = false;
     private List<DetailSummary> detailList;
-
-    long getTimeToView() {
-        if (timeToView == -1)
-            timeToView = Calendar.getInstance().getTimeInMillis();
-        return timeToView;
-    }
-
-    void setTimeToView(long timeToView) {
-        this.timeToView = timeToView;
-    }
-
-    int getViewScale() {
-        return viewScale;
-    }
-
-    void setViewScale(int viewScale) {
-        this.viewScale = viewScale;
-    }
-
-    boolean isExpand() {
-        return expand;
-    }
-
-    void setExpand(boolean expand) {
-        this.expand = expand;
-    }
 
     public List<DetailSummary> getDetailList() {
         if(detailList == null)
