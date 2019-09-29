@@ -8,16 +8,13 @@ import com.example.medicationadherence.adapter.DailyViewPagerAdapter;
 import com.example.medicationadherence.model.DailyMedication;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
 public class DailyMedListViewModel extends ViewModel {
     private DailyViewPagerAdapter medAdapter;
     private MutableLiveData<List<List<DailyMedication>>> medications;
-    private long prevDate = -1;
-    private long date = -1;
-    private long nextDate = -1;
+    private List<Long> dateList;
 
     DailyViewPagerAdapter getMedAdapter() {
         return medAdapter;
@@ -42,7 +39,7 @@ public class DailyMedListViewModel extends ViewModel {
         for(int o = 0; o < 3; o++){
             List<DailyMedication> medList = new ArrayList<>();
             for(int i = 0; i < 20; i++){
-                medList.add(new DailyMedication((new Random().nextBoolean()) ? R.mipmap.ic_launcher_round : -1, "DailyMedication" + i, i + " pill(s)", Calendar.getInstance().getTimeInMillis() + i * 60000, ""));
+                medList.add(new DailyMedication((new Random().nextBoolean()) ? R.mipmap.ic_launcher_round : -1, "DailyMedication" + i, i + " pill(s)", dateList.get(o) + i * 60000, ""));
             }
             bigMedList.add(medList);
         }
@@ -50,26 +47,63 @@ public class DailyMedListViewModel extends ViewModel {
     }
 
     long getDate() {
-        return date;
+        return dateList.get(1);
     }
 
     void setDate(long date) {
-        this.date = date;
+        dateList.set(1,date);
     }
 
     public long getPrevDate() {
-        return prevDate;
+        return dateList.get(0);
     }
 
     public void setPrevDate(long prevDate) {
-        this.prevDate = prevDate;
+        dateList.set(0,prevDate);
     }
 
     public long getNextDate() {
-        return nextDate;
+        return dateList.get(2);
     }
 
     public void setNextDate(long nextDate) {
-        this.nextDate = nextDate;
+        dateList.set(2,nextDate);
+    }
+
+    public void loadNextMeds(){
+        List<List<DailyMedication>> medList = medications.getValue();
+        medList.remove(0);
+        List<DailyMedication> medList1 = new ArrayList<>();
+        for(int i = 0; i < 20; i++){
+            medList1.add(new DailyMedication((new Random().nextBoolean()) ? R.mipmap.ic_launcher_round : -1, "DailyMedication" + i, i + " pill(s)", dateList.get(2) + i * 60000, ""));
+        }
+        medList.add(medList1);
+        medications.setValue(medList);
+    }
+
+    public void loadPrevMeds(){
+        System.out.println("previous loaded");
+        List<List<DailyMedication>> medList = medications.getValue();
+        medList.remove(2);
+        List<DailyMedication> medList1 = new ArrayList<>();
+        for(int i = 0; i < 20; i++){
+            medList1.add(new DailyMedication((new Random().nextBoolean()) ? R.mipmap.ic_launcher_round : -1, "DailyMedication" + i, i + " pill(s)", dateList.get(0) + i * 60000, ""));
+        }
+        medList.add(0,medList1);
+        medications.setValue(medList);
+    }
+
+    public List<Long> getDateList() {
+        if(dateList == null) {
+            dateList = new ArrayList<>();
+            dateList.add((long)-1);
+            dateList.add((long)-1);
+            dateList.add((long)-1);
+        }
+        return dateList;
+    }
+
+    public void setDateList(List<Long> dateList) {
+        this.dateList = dateList;
     }
 }

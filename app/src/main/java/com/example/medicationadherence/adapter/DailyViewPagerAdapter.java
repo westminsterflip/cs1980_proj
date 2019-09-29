@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.model.DailyMedication;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class DailyViewPagerAdapter extends RecyclerView.Adapter {
@@ -34,6 +36,7 @@ public class DailyViewPagerAdapter extends RecyclerView.Adapter {
         DailyViewPagerHolder holderd = (DailyViewPagerHolder) holder;
         holderd.recyclerView.setLayoutManager(new LinearLayoutManager(holderd.recyclerView.getContext()));
         holderd.recyclerView.setAdapter(new DailyMedicationListAdapter(medLists.get(position)));
+        System.out.println(new SimpleDateFormat("dd-MM-yy").format(new Date(dateList.get(position))));
     }
 
     @Override

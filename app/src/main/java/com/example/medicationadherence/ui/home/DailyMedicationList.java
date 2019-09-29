@@ -16,7 +16,6 @@ import com.example.medicationadherence.adapter.DailyViewPagerAdapter;
 import com.example.medicationadherence.model.DailyMedication;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -25,6 +24,7 @@ public class DailyMedicationList extends AppCompatActivity{
     private TextView date;
     private ViewPager2 dailyViewPager;
 
+    //TODO: attach viewpager and buttons
     //TODO: add as needed meds at bottom
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +38,17 @@ public class DailyMedicationList extends AppCompatActivity{
                 }
             }
         };
-        model.getMedications().observe(this, medicationObserver);
+        model.getDateList();
         if(model.getDate() == -1){
             model.setDate(getIntent().getLongExtra("date",0));
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(model.getDate());
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+            model.setNextDate(cal.getTimeInMillis());
+            cal.add(Calendar.DAY_OF_YEAR, -2);
+            model.setPrevDate(cal.getTimeInMillis());
         }
+        model.getMedications().observe(this, medicationObserver);
 
         setContentView(R.layout.activity_daily_medication_list);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -56,7 +63,7 @@ public class DailyMedicationList extends AppCompatActivity{
         });*/
         ImageButton next = findViewById(R.id.dailyNextButton);
         ImageButton prev = findViewById(R.id.dailyPrevButton);
-        View.OnClickListener changeDay = new View.OnClickListener() {
+        final View.OnClickListener changeDay = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeDate((v.getId()==R.id.dailyNextButton) ? 1 : -1);
@@ -72,40 +79,52 @@ public class DailyMedicationList extends AppCompatActivity{
         //TODO: coloring for past events?
         //TODO: time separators in recyclerview
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        List<Long> dateList = new ArrayList<>();
-        dateList.add(model.getPrevDate());
-        dateList.add(model.getDate());
-        dateList.add(model.getNextDate());
         dailyViewPager = findViewById(R.id.dailyViewPager);
-        model.setMedAdapter(new DailyViewPagerAdapter(dateList, model.getMedications().getValue()));
-        dailyViewPager.setAdapter(new DailyViewPagerAdapter(dateList, model.getMedications().getValue()));
+        model.setMedAdapter(new DailyViewPagerAdapter(model.getDateList(), model.getMedications().getValue()));
+        dailyViewPager.setAdapter(new DailyViewPagerAdapter(model.getDateList(), model.getMedications().getValue()));
+        dailyViewPager.setCurrentItem(1);
+        dailyViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                if (position != 1) {
+                    final int dir = position - 1;
+                    final Calendar cal2 = Calendar.getInstance();
+                    cal2.setTimeInMillis(model.getDate());
+                    cal2.add(Calendar.DAY_OF_YEAR, 2*dir);
+                    dailyViewPager.post(new Runnable() {
+                        @Override
+                        public void run() { //This is kind of bad
+                            if(dir < 0){
+                                model.setNextDate(model.getDate());
+                                model.setDate(model.getPrevDate());
+                                model.setPrevDate(cal2.getTimeInMillis());
+                                model.loadPrevMeds();
+                            } else if (dir == 1){
+                                model.setPrevDate(model.getDate());
+                                model.setDate(model.getNextDate());
+                                model.setNextDate(cal2.getTimeInMillis());
+                                model.loadNextMeds();
+                            }
+                            dailyViewPager.setAdapter(model.getMedAdapter());
+                            dailyViewPager.setCurrentItem(1);
+                            updateText();
+                        }
+                    });
+                }
+            }
+        });
     }
 
     private void changeDate(int dir){
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(model.getDate());
-        cal.add(Calendar.DAY_OF_YEAR, dir);
-        model.setDate(cal.getTimeInMillis());
-        updateText();
+        dailyViewPager.setCurrentItem(dailyViewPager.getCurrentItem()+dir);
     }
 
-    private void updateText(){
+    private void updateText() {
         String dateText = new SimpleDateFormat("EEE, MMM d").format(model.getDate());
         String year = new SimpleDateFormat("yyyy").format(model.getDate());
-        if (!year.equals(Calendar.getInstance().get(Calendar.YEAR)+"")){
+        if (!year.equals(Calendar.getInstance().get(Calendar.YEAR) + "")) {
             dateText += " " + year;
         }
         date.setText(dateText);
-        updateData();
     }
-
-    private void updateData(){
-        //TODO: modify list
-    }
-
-    /*//TODO: progressbar doesn't work right
-    public void hideBar() {
-        View progBar = findViewById(R.id.dailyMedProgress);
-        progBar.setVisibility(View.INVISIBLE);
-    }*/
 }
