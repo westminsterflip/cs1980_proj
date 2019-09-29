@@ -1,7 +1,5 @@
 package com.example.medicationadherence.ui.summary;
 
-
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,14 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.adapter.SummaryDetailAdapter;
-import com.example.medicationadherence.model.DetailSummary;
 import com.example.medicationadherence.ui.DisableableScrollView;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 //TODO: add today button
@@ -36,7 +30,6 @@ public class SummaryFragment extends Fragment {
     private TextView graphLabel;
     private Calendar cal = Calendar.getInstance(); //TODO: move cal to viewmodel?
     private SummaryDetailAdapter detailAdapter;
-    private List<DetailSummary> detailList;
     private DisableableScrollView summaryScroll;
     ImageButton next;
     SummaryViewModel model;
@@ -107,10 +100,12 @@ public class SummaryFragment extends Fragment {
                     detailView.setVisibility(View.INVISIBLE);
                     summaryExpander.setRotation(0);
                     summaryScroll.setScrollEnabled(false);
+                    model.setExpand(false);
                 } else {
                     detailView.setVisibility(View.VISIBLE);
                     summaryExpander.setRotation(180);
                     summaryScroll.setScrollEnabled(true);
+                    model.setExpand(true);
                 }
             }
         };
@@ -121,31 +116,16 @@ public class SummaryFragment extends Fragment {
         summaryScroll = root.findViewById(R.id.summaryScroll);
 
         detailView.setLayoutManager(new LinearLayoutManager(getContext()));
-        detailList = new ArrayList<>();
 
-        //TODO: actual data population
-        for (int i=0; i<20; i++){
-            double percTaken = new Random().nextDouble()*100%100.0;
-            double percLate = new Random().nextDouble()*100%(100.0-percTaken);
-            System.out.println("Taken: "+percTaken+" Late: "+percLate+" Missed: "+(100.0-percLate-percTaken));
-            detailList.add(new DetailSummary("DailyMedication " + i, percTaken, percLate));
+        if(model.isExpand()){
+            detailView.setVisibility(View.VISIBLE);
+            summaryExpander.setRotation(180);
+            summaryScroll.setScrollEnabled(true);
         }
-        detailAdapter = new SummaryDetailAdapter(detailList, getContext());
+        detailAdapter = new SummaryDetailAdapter(model.getDetailList(), getContext());
         detailView.setAdapter(detailAdapter);
 
         return root;
-    }
-
-    @Override
-    public void onResume() {
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
-        super.onPause();
     }
 
     //negative = back, 0 = scale changed, positive = forward
@@ -219,6 +199,4 @@ public class SummaryFragment extends Fragment {
     public void updateMainGraph(){
         //TODO: move graph/text values to reflect data from database
     }
-
-
 }

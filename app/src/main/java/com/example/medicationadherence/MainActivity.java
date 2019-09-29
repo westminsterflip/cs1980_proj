@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("MAIN CREATED");
         super.onCreate(savedInstanceState);
         //Allow upside-down orientation
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_USER);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
