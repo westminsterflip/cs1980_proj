@@ -32,12 +32,11 @@
 
     <PreferenceCategory app:title="Data Settings">
 
-        <!--TODO: make dialog preference, currently will crash-->
-        <!--<DialogPreference
+        <com.example.medicationadherence.ui.settings.DataDialogPreference
             app:key="deleteData"
             app:title="@string/data_delete_title"
             app:summary="@string/data_delete_summary"
-            />-->
+            />
 
     </PreferenceCategory>
 

@@ -15,4 +15,5 @@
 
     <string name="sort_az_asc">"Alphabetical Asc."</string>
     <string name="sort_az_desc">"Alphabetical Desc."</string>
+    <string name="data_dialog_warning">"Warning: this will delete all stored data, do you wish to continue?"</string>
 </resources>
