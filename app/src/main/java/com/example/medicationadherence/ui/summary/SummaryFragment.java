@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -29,10 +30,9 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-//TODO: add today button
 public class SummaryFragment extends Fragment {
     private TextView graphLabel;
-    private final Calendar cal = Calendar.getInstance(); //TODO: move cal to viewmodel?
+    private final Calendar cal = Calendar.getInstance();
     private DisableableScrollView summaryScroll;
     private ImageButton next;
     private SummaryViewModel model;
@@ -129,11 +129,27 @@ public class SummaryFragment extends Fragment {
         SummaryDetailAdapter detailAdapter = new SummaryDetailAdapter(model.getDetailList());
         detailView.setAdapter(detailAdapter);
 
+        Button todayButton = root.findViewById(R.id.summaryTodayButton);
+        todayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar todayCal = Calendar.getInstance();
+                todayCal.set(Calendar.HOUR_OF_DAY,0);
+                todayCal.clear(Calendar.AM_PM);
+                todayCal.clear(Calendar.MINUTE);
+                todayCal.clear(Calendar.SECOND);
+                todayCal.clear(Calendar.MILLISECOND);
+                mainModel.setSummaryTimeToView(todayCal.getTimeInMillis());
+                updateTimeToView(0);
+            }
+        });
+
         return root;
     }
 
     //negative = back, 0 = scale changed, positive = forward
     private void updateTimeToView(int dir){
+        cal.setTimeInMillis(mainModel.getSummaryTimeToView());
         if(dir > 0){
             cal.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale()==0) ? 1 : 0));
             cal.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale()==1) ? 7 : 0));

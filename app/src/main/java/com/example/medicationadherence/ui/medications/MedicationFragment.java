@@ -100,4 +100,50 @@ public class MedicationFragment extends Fragment {
             }
         });
     }
+
+    private void sortStartAsc(){
+        Collections.sort(Objects.requireNonNull(model.getMedications().getValue()), new Comparator<Medication>() {
+            @Override
+            public int compare(Medication o1, Medication o2) {
+                return (Long.compare(o1.getStartDate(), o2.getStartDate()));
+            }
+        });
+    }
+
+    private void sortStartDesc(){
+        Collections.sort(Objects.requireNonNull(model.getMedications().getValue()), new Comparator<Medication>() {
+            @Override
+            public int compare(Medication o1, Medication o2) {
+                return (Long.compare(o2.getStartDate(), o1.getStartDate()));
+            }
+        });
+    }
+
+    private void sortEndAsc(){
+        Collections.sort(Objects.requireNonNull(model.getMedications().getValue()), new Comparator<Medication>() {
+            @Override
+            public int compare(Medication o1, Medication o2) {
+                return (Long.compare(o1.getEndDate(), o2.getEndDate()));
+            }
+        });
+    }
+
+    private void sortEndDesc(){
+        Collections.sort(Objects.requireNonNull(model.getMedications().getValue()), new Comparator<Medication>() {
+            @Override
+            public int compare(Medication o1, Medication o2) {
+                return (Long.compare(o2.getEndDate(), o1.getEndDate()));
+            }
+        });
+    }
+
+    private void sortActive(){ //sorts active/inactive a-z
+        Collections.sort(Objects.requireNonNull(model.getMedications().getValue()), new Comparator<Medication>() {
+            @Override
+            public int compare(Medication o1, Medication o2) {
+                int compared = Boolean.compare(o2.isActive(), o1.isActive());
+                return (compared == 0) ? (o1.getMedName().compareToIgnoreCase(o2.getMedName())) : compared;
+            }
+        });
+    }
 }

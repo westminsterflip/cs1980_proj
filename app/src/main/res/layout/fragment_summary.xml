@@ -24,7 +24,7 @@
         android:layout_height="0dp"
         android:entries="@array/summarySpinnerItems"
         app:layout_constraintBottom_toBottomOf="@+id/summaryNext"
-        app:layout_constraintEnd_toStartOf="@+id/summaryNext"
+        app:layout_constraintEnd_toStartOf="@+id/summaryTodayButton"
         app:layout_constraintStart_toEndOf="@+id/summaryPrev"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -168,6 +168,16 @@
 
         </LinearLayout>
     </com.example.medicationadherence.ui.DisableableScrollView>
+
+    <Button
+        android:id="@+id/summaryTodayButton"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="Today"
+        app:layout_constraintBottom_toBottomOf="@+id/summaryUnitSelect"
+        app:layout_constraintEnd_toStartOf="@+id/summaryNext"
+        app:layout_constraintStart_toEndOf="@+id/summaryUnitSelect"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Doughnut chart ends here -->
 

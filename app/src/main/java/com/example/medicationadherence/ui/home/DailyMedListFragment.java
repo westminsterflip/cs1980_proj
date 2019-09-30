@@ -2,35 +2,40 @@ package com.example.medicationadherence.ui.home;
 
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.os.ConfigurationCompat;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
+
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.adapter.DailyViewPagerAdapter;
 import com.example.medicationadherence.model.DailyMedication;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
-//TODO: convert to fragment
-public class DailyMedicationList extends AppCompatActivity{
+public class DailyMedListFragment extends Fragment {
     private DailyMedListViewModel model;
     private TextView date;
     private ViewPager2 dailyViewPager;
 
-    //TODO: add as needed meds at bottom
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         model = ViewModelProviders.of(this).get(DailyMedListViewModel.class);
         final Observer<List<List<DailyMedication>>> medicationObserver = new Observer<List<List<DailyMedication>>>() {
@@ -42,8 +47,16 @@ public class DailyMedicationList extends AppCompatActivity{
             }
         };
         model.getDateList();
+        model.getMedications().observe(this, medicationObserver);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_daily_med_list, container, false);
+        long timeToView = DailyMedListFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getTimeToView();
         if(model.getDate() == -1){
-            model.setDate(getIntent().getLongExtra("date",0));
+            model.setDate(timeToView);
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(model.getDate());
             cal.add(Calendar.DAY_OF_YEAR, 1);
@@ -51,12 +64,7 @@ public class DailyMedicationList extends AppCompatActivity{
             cal.add(Calendar.DAY_OF_YEAR, -2);
             model.setPrevDate(cal.getTimeInMillis());
         }
-        model.getMedications().observe(this, medicationObserver);
-
-        setContentView(R.layout.activity_daily_medication_list);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        /*FloatingActionButton fab = findViewById(R.id.addMedButton);
+        /*FloatingActionButton fab = root.findViewById(R.id.addMedButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,8 +72,8 @@ public class DailyMedicationList extends AppCompatActivity{
                         .setAction("Action", null).show();
             }
         });*/
-        ImageButton next = findViewById(R.id.dailyNextButton);
-        ImageButton prev = findViewById(R.id.dailyPrevButton);
+        ImageButton next = root.findViewById(R.id.dailyNextButton);
+        ImageButton prev = root.findViewById(R.id.dailyPrevButton);
         final View.OnClickListener changeDay = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,14 +83,13 @@ public class DailyMedicationList extends AppCompatActivity{
         next.setOnClickListener(changeDay);
         prev.setOnClickListener(changeDay);
 
-        date = findViewById(R.id.dailyDateView);
+        date = root.findViewById(R.id.dailyDateView);
         updateText();
 
         //TODO: scroll to current time upon opening list
         //TODO: coloring for past events?
         //TODO: time separators in recyclerview
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        dailyViewPager = findViewById(R.id.dailyViewPager);
+        dailyViewPager = root.findViewById(R.id.dailyViewPager);
         model.setMedAdapter(new DailyViewPagerAdapter(model.getDateList(), model.getMedications().getValue()));
         dailyViewPager.setAdapter(new DailyViewPagerAdapter(model.getDateList(), model.getMedications().getValue()));
         dailyViewPager.setCurrentItem(1);
@@ -116,6 +123,7 @@ public class DailyMedicationList extends AppCompatActivity{
                 }
             }
         });
+        return root;
     }
 
     private void changeDate(int dir){
