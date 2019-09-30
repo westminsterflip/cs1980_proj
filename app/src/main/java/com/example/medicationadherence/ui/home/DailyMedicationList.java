@@ -22,6 +22,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
+//TODO: convert to fragment
 public class DailyMedicationList extends AppCompatActivity{
     private DailyMedListViewModel model;
     private TextView date;

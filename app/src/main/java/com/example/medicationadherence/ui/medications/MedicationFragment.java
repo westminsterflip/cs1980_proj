@@ -43,7 +43,7 @@ public class MedicationFragment extends Fragment {
             }
         };
         model.getMedications().observe(this, medicationObserver);
-        mainModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
+        mainModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
     }
 
 
