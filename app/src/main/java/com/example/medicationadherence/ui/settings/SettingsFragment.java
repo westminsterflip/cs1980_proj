@@ -44,7 +44,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 if(newValue.equals(true)) {
-                    if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("darkModeEnable", true))
+                    if (PreferenceManager.getDefaultSharedPreferences(Objects.requireNonNull(getActivity())).getBoolean("darkModeEnable", true))
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                     else
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);

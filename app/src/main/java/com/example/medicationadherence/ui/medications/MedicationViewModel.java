@@ -13,33 +13,31 @@ import java.util.List;
 import java.util.Random;
 
 public class MedicationViewModel extends ViewModel {
-
     private MutableLiveData<List<Medication>> medications;
-
     private MedicationListAdapter medAdapter;
 
-    LiveData<List<Medication>> getMedications(){
-        if (medications == null){
+    public LiveData<List<Medication>> getMedications() {
+        if (medications == null) {
             medications = new MutableLiveData<>();
             loadMeds();
         }
         return medications;
     }
 
-    private void loadMeds(){
+    private void loadMeds() {
         //TODO: load from DB
         List<Medication> medList = new ArrayList<>();
-        for(int i=0; i<20; i++) {
-            medList.add(new Medication((new Random().nextBoolean()) ? R.mipmap.ic_launcher_round: -1, "Medication " + i, i + " pill(s)", "", "Doctor" + 1, 5, -1));
+        for (int i = 0; i < 20; i++) {
+            medList.add(new Medication((new Random().nextBoolean()) ? R.mipmap.ic_launcher_round : -1, "Medication " + i, i + " pill(s)", "", "Doctor" + 1, 5, -1));
         }
         medications.setValue(medList);
     }
 
-    MedicationListAdapter getMedAdapter() {
+    public MedicationListAdapter getMedAdapter() {
         return medAdapter;
     }
 
-    void setMedAdapter(MedicationListAdapter medAdapter) {
+    public void setMedAdapter(MedicationListAdapter medAdapter) {
         this.medAdapter = medAdapter;
     }
 }

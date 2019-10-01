@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/wizard_navigation.xml"
+    app:startDestination="@id/wizardMedicineDetailFragment">
+    <fragment
+        android:id="@+id/wizardMedicineDetailFragment"
+        android:name="com.example.medicationadherence.ui.medications.wizard.WizardMedicineDetailFragment"
+        android:label="fragment_wizard_medicine_detail"
+        tools:layout="@layout/fragment_wizard_medicine_detail" >
+        <action
+            android:id="@+id/action_wizardMedicineDetailFragment_to_wizardDoctorDetailFragment"
+            app:destination="@id/wizardDoctorDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/wizardDoctorDetailFragment"
+        android:name="com.example.medicationadherence.ui.medications.wizard.WizardDoctorDetailFragment"
+        android:label="fragment_wizard_doctor_detail"
+        tools:layout="@layout/fragment_wizard_doctor_detail" />
+</navigation>

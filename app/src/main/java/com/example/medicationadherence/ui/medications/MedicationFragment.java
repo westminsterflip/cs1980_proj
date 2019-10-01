@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,14 +22,16 @@ import com.example.medicationadherence.MainViewModel;
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.adapter.MedicationListAdapter;
 import com.example.medicationadherence.model.Medication;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
 //TODO: open wizard
-public class MedicationFragment extends Fragment {
+public class MedicationFragment extends Fragment implements Serializable {
     private MedicationViewModel model;
     private MainViewModel mainModel;
 
@@ -41,10 +44,13 @@ public class MedicationFragment extends Fragment {
             public void onChanged(List<Medication> medList) {
                 if (model.getMedAdapter() != null)
                     model.getMedAdapter().notifyDataSetChanged();
+                System.out.println("observerd");
             }
         };
         model.getMedications().observe(this, medicationObserver);
         mainModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
+        System.out.println(this.getParentFragment().getId() + " " +  R.id.nav_host_fragment);
+        System.out.println("id: " + R.id.nav_medications);
     }
 
 
@@ -58,6 +64,16 @@ public class MedicationFragment extends Fragment {
         medRecyclerView.setAdapter(model.getMedAdapter());
         setHasOptionsMenu(true);
         sort(mainModel.getMedSortMode());
+        FloatingActionButton addMed = root.findViewById(R.id.addMedButton);
+        final MedicationFragment medicationFragment = this;
+        addMed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MedicationFragmentDirections.ActionNavMedicationsToRootWizardFragment action = MedicationFragmentDirections.actionNavMedicationsToRootWizardFragment(medicationFragment);
+                Navigation.findNavController(v).navigate(action);
+            }
+        });
+
         return root;
     }
 

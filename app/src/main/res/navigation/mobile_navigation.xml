@@ -24,7 +24,11 @@
         android:id="@+id/nav_medications"
         android:name="com.example.medicationadherence.ui.medications.MedicationFragment"
         android:label="Medications"
-        tools:layout="@layout/fragment_medication" />
+        tools:layout="@layout/fragment_medication" >
+        <action
+            android:id="@+id/action_nav_medications_to_rootWizardFragment"
+            app:destination="@id/rootWizardFragment" />
+    </fragment>
     <fragment
         android:id="@+id/nav_settings"
         android:name="com.example.medicationadherence.ui.settings.SettingsFragment"
@@ -38,5 +42,13 @@
         <argument
             android:name="timeToView"
             app:argType="long"/>
+    </fragment>
+    <fragment
+        android:id="@+id/rootWizardFragment"
+        android:name="com.example.medicationadherence.ui.medications.wizard.RootWizardFragment"
+        android:label="RootWizardFragment" >
+        <argument
+            android:name="medFragmentInst"
+            app:argType="com.example.medicationadherence.ui.medications.MedicationFragment" />
     </fragment>
 </navigation>
