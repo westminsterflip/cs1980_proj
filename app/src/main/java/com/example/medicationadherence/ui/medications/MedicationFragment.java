@@ -27,6 +27,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+//TODO: open wizard
 public class MedicationFragment extends Fragment {
     private MedicationViewModel model;
     private MainViewModel mainModel;
