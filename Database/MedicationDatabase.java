@@ -20,5 +20,9 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 @Database(version = 1, entities = {Medication.class, Instructions.class, Schedule.class, MedicationLog.class, Doctors.class})
 abstract class MedicationDatabase extends RoomDatabase{
-	public abstract MedicationDatabaseDao userDao();
+	public abstract MedicationDAO getMedicationDao();
+	public abstract MedicationLogDAO getMedicationLogDao();
+	public abstract DoctorsDAO getDoctorsDao();
+	public abstract InstructionsDAO getInstructionsDao();
+	public abstract ScheduleDao getScheduleDao();
 }
