@@ -1,14 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.medications.wizard.WizardMedicineDetailFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    android:layout_height="match_parent" >
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/frameLayout3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="medicine" />
+        tools:context=".ui.medications.wizard.WizardMedicineDetailFragment">
 
-</FrameLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <EditText
+                android:id="@+id/wizardMedName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Medication Name"
+                android:inputType="textPersonName" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/wizardMedNameRequired"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="*Medication name required"
+            android:textColor="@android:color/holo_red_light"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="@+id/textInputLayout"
+            app:layout_constraintStart_toEndOf="@+id/wizardActive"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+
+        <Switch
+            android:id="@+id/wizardActive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="Active"
+            android:textAppearance="@style/Theme.AppCompat.DayNight"
+            android:textColor="?attr/colorControlNormal"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/textInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="188dp">
+
+            <EditText
+                android:id="@+id/editText6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:gravity="start|top"
+                android:hint="Instructions"
+                android:inputType="textMultiLine" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/wizardSetStartDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Set start date"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/textInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/wizardActive" />
+
+        <TextView
+            android:id="@+id/wizardStartDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="TextView"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/wizardSetStartDate"
+            app:layout_constraintStart_toEndOf="@+id/wizardSetStartDate"
+            app:layout_constraintTop_toTopOf="@+id/wizardSetStartDate" />
+
+        <Button
+            android:id="@+id/wizardSetEndDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Set end date"
+            app:layout_constraintEnd_toEndOf="@+id/wizardSetStartDate"
+            app:layout_constraintStart_toStartOf="@+id/wizardSetStartDate"
+            app:layout_constraintTop_toBottomOf="@+id/wizardSetStartDate" />
+
+        <TextView
+            android:id="@+id/wizardEndDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/wizardSetEndDate"
+            app:layout_constraintStart_toEndOf="@+id/wizardSetEndDate"
+            app:layout_constraintTop_toTopOf="@+id/wizardSetEndDate" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@+id/wizardSetEndDate"
+            app:layout_constraintTop_toBottomOf="@+id/wizardSetEndDate">
+
+            <EditText
+                android:id="@+id/wizardPerPillDosage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Dose per pill"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Spinner
+            android:id="@+id/spinner2"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/textInputLayout5"
+            app:layout_constraintStart_toEndOf="@+id/textInputLayout5"
+            app:layout_constraintTop_toTopOf="@+id/textInputLayout5" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</ScrollView>

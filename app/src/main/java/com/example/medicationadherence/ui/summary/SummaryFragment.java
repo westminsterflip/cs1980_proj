@@ -19,10 +19,10 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.medicationadherence.MainViewModel;
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.adapter.SummaryDetailAdapter;
 import com.example.medicationadherence.ui.DisableableScrollView;
+import com.example.medicationadherence.ui.MainViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

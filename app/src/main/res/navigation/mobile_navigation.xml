@@ -24,7 +24,7 @@
         android:id="@+id/nav_medications"
         android:name="com.example.medicationadherence.ui.medications.MedicationFragment"
         android:label="Medications"
-        tools:layout="@layout/fragment_medication" >
+        tools:layout="@layout/fragment_medication">
         <action
             android:id="@+id/action_nav_medications_to_rootWizardFragment"
             app:destination="@id/rootWizardFragment" />
@@ -46,9 +46,9 @@
     <fragment
         android:id="@+id/rootWizardFragment"
         android:name="com.example.medicationadherence.ui.medications.wizard.RootWizardFragment"
-        android:label="RootWizardFragment" >
+        android:label="Add Medication">
         <argument
             android:name="medFragmentInst"
-            app:argType="com.example.medicationadherence.ui.medications.MedicationFragment" />
+            app:argType="java.util.ArrayList" />
     </fragment>
 </navigation>

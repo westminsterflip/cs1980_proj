@@ -28,7 +28,7 @@ public class MedicationViewModel extends ViewModel {
         //TODO: load from DB
         List<Medication> medList = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            medList.add(new Medication((new Random().nextBoolean()) ? R.mipmap.ic_launcher_round : -1, "Medication " + i, i + " pill(s)", "", "Doctor" + 1, 5, -1));
+            medList.add(new Medication((new Random().nextBoolean()) ? R.mipmap.ic_launcher_round : -1, "MedicationEntity " + i, i + " pill(s)", "", "Doctor" + 1, 5, -1));
         }
         medications.setValue(medList);
     }
@@ -39,5 +39,11 @@ public class MedicationViewModel extends ViewModel {
 
     public void setMedAdapter(MedicationListAdapter medAdapter) {
         this.medAdapter = medAdapter;
+    }
+
+    @Override
+    protected void onCleared() {
+        System.out.println("cleared");
+        super.onCleared();
     }
 }

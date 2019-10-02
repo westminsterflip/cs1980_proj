@@ -18,13 +18,14 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.medicationadherence.MainViewModel;
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.adapter.MedicationListAdapter;
 import com.example.medicationadherence.model.Medication;
+import com.example.medicationadherence.ui.MainViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -34,6 +35,7 @@ import java.util.Objects;
 public class MedicationFragment extends Fragment implements Serializable {
     private MedicationViewModel model;
     private MainViewModel mainModel;
+    private ArrayList<MedicationFragment> thisList = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,8 +51,10 @@ public class MedicationFragment extends Fragment implements Serializable {
         };
         model.getMedications().observe(this, medicationObserver);
         mainModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
-        System.out.println(this.getParentFragment().getId() + " " +  R.id.nav_host_fragment);
-        System.out.println("id: " + R.id.nav_medications);
+        if (thisList.isEmpty())
+            thisList.add(this);
+        else
+            thisList.set(0, this);
     }
 
 
@@ -65,11 +69,10 @@ public class MedicationFragment extends Fragment implements Serializable {
         setHasOptionsMenu(true);
         sort(mainModel.getMedSortMode());
         FloatingActionButton addMed = root.findViewById(R.id.addMedButton);
-        final MedicationFragment medicationFragment = this;
         addMed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MedicationFragmentDirections.ActionNavMedicationsToRootWizardFragment action = MedicationFragmentDirections.actionNavMedicationsToRootWizardFragment(medicationFragment);
+                MedicationFragmentDirections.ActionNavMedicationsToRootWizardFragment action = MedicationFragmentDirections.actionNavMedicationsToRootWizardFragment(thisList);
                 Navigation.findNavController(v).navigate(action);
             }
         });

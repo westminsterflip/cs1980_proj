@@ -1,4 +1,4 @@
-package com.example.medicationadherence;
+package com.example.medicationadherence.ui;
 
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -15,6 +15,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 
+import com.example.medicationadherence.R;
 import com.google.android.material.navigation.NavigationView;
 
 //TODO: https://codelabs.developers.google.com/codelabs/android-room-with-a-view/#0

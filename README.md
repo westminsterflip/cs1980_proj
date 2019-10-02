@@ -1,1 +1,1 @@
-# CS1980 Project: Medication Adherence
+# CS1980 Project: MedicationEntity Adherence

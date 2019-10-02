@@ -51,8 +51,8 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
         long ed = medicationList.get(position).getEndDate();
         holderm.endDate.setText((ed == -1) ? "" : new SimpleDateFormat("MM/dd/yyyy", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(new Date(ed)));
         holderm.expand.setVisibility(View.GONE);
-        String details = ""; //TODO: fill with ammount on hand/cost/container vol/instructions, anything else extra
-        holderm.expandable.setText(details);
+        //String details = ""; //TODO: fill with ammount on hand/cost/container vol/instructions, anything else extra
+        //holderm.expandable.setText(details);
         /*View.OnClickListener expand = new View.OnClickListener() {
             @Override
             public void onClick(View v) {

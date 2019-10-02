@@ -1,10 +1,12 @@
 package com.example.medicationadherence.ui.medications.wizard;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 
@@ -17,11 +19,14 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.medicationadherence.R;
+import com.example.medicationadherence.ui.medications.MedicationFragment;
 import com.example.medicationadherence.ui.medications.MedicationViewModel;
 
 import java.util.Arrays;
 import java.util.Objects;
 
+
+//TODO: hide keyboard when back pressed in top bar
 public class RootWizardFragment extends Fragment {
     private final Integer[] destinations = {R.id.wizardMedicineDetailFragment, R.id.wizardDoctorDetailFragment};
     private RootWizardViewModel model;
@@ -31,7 +36,12 @@ public class RootWizardFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         model = ViewModelProviders.of(this).get(RootWizardViewModel.class);
-        medModel = ViewModelProviders.of(RootWizardFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getMedFragmentInst()).get(MedicationViewModel.class);
+        MedicationFragment medicationFragment = (MedicationFragment) RootWizardFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getMedFragmentInst().get(0);
+        System.out.println(medicationFragment == null);
+        if (model.getModel() == null)
+            medModel = model.setModel(ViewModelProviders.of((MedicationFragment) RootWizardFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getMedFragmentInst().get(0)).get(MedicationViewModel.class));
+        else
+            medModel = model.getModel();
         System.out.println(medModel.getMedAdapter()==null);
     }
 
@@ -48,6 +58,8 @@ public class RootWizardFragment extends Fragment {
         cancelBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                InputMethodManager manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                manager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 int currentLoc = Objects.requireNonNull(innerNavController.getCurrentDestination()).getId();
                 if (currentLoc == destinations[0]){
                     Navigation.findNavController(root).navigateUp();
@@ -88,9 +100,12 @@ public class RootWizardFragment extends Fragment {
         nextFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                InputMethodManager manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                manager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 int currentLoc = Objects.requireNonNull(innerNavController.getCurrentDestination()).getId();
                 if(currentLoc == R.id.wizardDoctorDetailFragment){
-                    //TODO enter data into database & add to medlist
+                    //TODO enter data into database
+                    Objects.requireNonNull(medModel.getMedications().getValue()).add(model.getMedication());
                     Navigation.findNavController(v).navigateUp();
                 } else {
                     innerNavController.navigate(destinations[Arrays.asList(destinations).indexOf(currentLoc)+1]);

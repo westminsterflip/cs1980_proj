@@ -11,6 +11,6 @@ TASKS
     -> Android Room
     -> class for medication table
     -> database holder class
-4. Medication ORM -- Erin
+4. MedicationEntity ORM -- Erin
     -> CRUD
 5. List of pages & description

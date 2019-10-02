@@ -2,7 +2,10 @@ package com.example.medicationadherence.ui.settings;
 
 import android.os.Bundle;
 
+import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceDialogFragmentCompat;
+
+import com.example.medicationadherence.ui.MainViewModel;
 
 public class DataDialogPreferenceFragment extends PreferenceDialogFragmentCompat {
     public static DataDialogPreferenceFragment newInstance(String key){
@@ -15,8 +18,8 @@ public class DataDialogPreferenceFragment extends PreferenceDialogFragmentCompat
 
     @Override
     public void onDialogClosed(boolean positiveResult) {
-        if(positiveResult){
-            //TODO: clear data from room
-        }
+        MainViewModel model = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
+        if(positiveResult)
+            model.deleteAll();
     }
 }
