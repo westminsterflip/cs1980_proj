@@ -101,7 +101,9 @@ public class RootWizardFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 InputMethodManager manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                manager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                if (getActivity().getCurrentFocus() != null) {
+                    manager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                }
                 int currentLoc = Objects.requireNonNull(innerNavController.getCurrentDestination()).getId();
                 if(currentLoc == R.id.wizardDoctorDetailFragment){
                     //TODO enter data into database

@@ -7,6 +7,17 @@
         <!--TODO: year?-->
     </string-array>
 
+    <string-array name="medDosageUnits">
+        <item>mg</item>
+        <item>mL</item>
+        <!--TODO: add other units if needed-->
+    </string-array>
+
+    <string-array name="doctorChooserItems">
+        <item>leave blank</item>
+        <item>Add new…</item>
+    </string-array>
+
     <string-array name="latePreferenceItems">
         <item>0hrs</item>
         <item>1hrs</item>

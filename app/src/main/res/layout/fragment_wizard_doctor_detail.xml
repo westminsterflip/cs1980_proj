@@ -1,14 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.medications.wizard.WizardDoctorDetailFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="doctor" />
+        android:layout_height="wrap_content">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:text="Prescribing Doctor Info:"
+            android:textColor="?attr/colorControlNormal"
+            android:textSize="21sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Spinner
+            android:id="@+id/wizardDoctorChooser"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:entries="@array/doctorChooserItems"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputDoctorName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/wizardDoctorChooser"
+            app:layout_constraintStart_toStartOf="@+id/wizardDoctorChooser"
+            app:layout_constraintTop_toBottomOf="@+id/wizardDoctorChooser">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/wizardDoctorName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Doctor name"
+                android:inputType="textPersonName" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/wizardDocNameRequired"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="*doctor name required"
+            android:textColor="@android:color/holo_red_light"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/textInputDoctorName"
+            app:layout_constraintStart_toStartOf="@+id/textInputDoctorName"
+            app:layout_constraintTop_toBottomOf="@+id/textInputDoctorName" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputPracticeName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/textInputDoctorName"
+            app:layout_constraintStart_toStartOf="@+id/textInputDoctorName"
+            app:layout_constraintTop_toBottomOf="@+id/wizardDocNameRequired">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/wizardPracticeName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Practice name"
+                android:inputType="textAutoComplete" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputAddress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/textInputDoctorName"
+            app:layout_constraintStart_toStartOf="@+id/textInputDoctorName"
+            app:layout_constraintTop_toBottomOf="@+id/textInputPracticeName">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/wizardPracticeAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Practice address"
+                android:inputType="textAutoComplete|textPostalAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputPhone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/wizardDocNameRequired"
+            app:layout_constraintStart_toStartOf="@+id/textInputDoctorName"
+            app:layout_constraintTop_toBottomOf="@+id/textInputAddress">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/wizardPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Phone #"
+                android:inputType="phone" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -60,7 +60,7 @@ public class Repository {
     }
 
     public void insert(Schedule schedule){
-        new insertAsyncTask(mScheduleDAO).execute(schedule);;
+        new insertAsyncTask(mScheduleDAO).execute(schedule);
     }
 
     public void deleteAll(){
@@ -72,20 +72,45 @@ public class Repository {
     }
 
     private static class insertAsyncTask extends AsyncTask<Object, Void, Void> {
+        private DoctorsDAO doctorsDAO;
+        private InstructionsDAO instructionsDAO;
+        private MedicationDAO medicationDAO;
+        private MedicationLogDAO medicationLogDAO;
+        private ScheduleDAO scheduleDAO;
 
-        private CustomDAO mAsyncTaskDao;
-
-        insertAsyncTask(DoctorsDAO dao) {
-            mAsyncTaskDao = (CustomDAO) dao;
+        public insertAsyncTask(InstructionsDAO instructionsDAO) {
+            this.instructionsDAO = instructionsDAO;
         }
 
-        insertAsyncTask(Object o){
-            mAsyncTaskDao = (CustomDAO) o; //TODO: probably will crash
+        public insertAsyncTask(DoctorsDAO doctorsDAO) {
+            this.doctorsDAO = doctorsDAO;
+        }
+
+        public insertAsyncTask(MedicationDAO medicationDAO) {
+            this.medicationDAO = medicationDAO;
+        }
+
+        public insertAsyncTask(MedicationLogDAO medicationLogDAO) {
+            this.medicationLogDAO = medicationLogDAO;
+        }
+
+        public insertAsyncTask(ScheduleDAO scheduleDAO) {
+            this.scheduleDAO = scheduleDAO;
         }
 
         @Override
-        protected Void doInBackground(final Object... params) {
-            mAsyncTaskDao.insert(params[0]);
+        protected Void doInBackground(Object... objects) {
+            if(doctorsDAO != null){
+                doctorsDAO.insert((Doctors) objects[0]);
+            } else if (instructionsDAO != null){
+                instructionsDAO.insert((Instructions) objects[0]);
+            } else if (medicationDAO != null){
+                medicationDAO.insert((MedicationEntity) objects[0]);
+            } else if (medicationLogDAO != null){
+                medicationLogDAO.insert((MedicationLog) objects[0]);
+            } else if (scheduleDAO != null){
+                scheduleDAO.insert((Schedule) objects[0]);
+            }
             return null;
         }
     }

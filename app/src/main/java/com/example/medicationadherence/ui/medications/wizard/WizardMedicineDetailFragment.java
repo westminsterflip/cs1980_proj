@@ -15,6 +15,7 @@ import com.example.medicationadherence.R;
 import java.util.Objects;
 
 //TODO: https://developer.android.com/guide/topics/text/autofill
+//TODO: if you type text in a number field the app freezes and crashes
 public class WizardMedicineDetailFragment extends Fragment {
     private RootWizardViewModel model;
 
