@@ -21,8 +21,12 @@ public class RootWizardViewModel extends ViewModel {
     private double cost = -1;
     private boolean asNeeded = false;
     private MedicationViewModel model;
-    private boolean[] destinationExitable = {false, false};
+    private boolean[] destinationExitable = {false, true};
     private ArrayList<RootWizardFragment.ErrFragment> thisList = new ArrayList<>();
+    private int spinnerSelection = 0;
+    private String practiceName;
+    private String practiceAddress;
+    private String phone;
 
     public int getMedImage() {
         return medImage;
@@ -143,5 +147,37 @@ public class RootWizardViewModel extends ViewModel {
 
     public void setThisList(ArrayList<RootWizardFragment.ErrFragment> thisList) {
         this.thisList = thisList;
+    }
+
+    public int getSpinnerSelection() {
+        return spinnerSelection;
+    }
+
+    public void setSpinnerSelection(int spinnerSelection) {
+        this.spinnerSelection = spinnerSelection;
+    }
+
+    public String getPracticeName() {
+        return practiceName;
+    }
+
+    public void setPracticeName(String practiceName) {
+        this.practiceName = practiceName;
+    }
+
+    public String getPracticeAddress() {
+        return practiceAddress;
+    }
+
+    public void setPracticeAddress(String practiceAddress) {
+        this.practiceAddress = practiceAddress;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

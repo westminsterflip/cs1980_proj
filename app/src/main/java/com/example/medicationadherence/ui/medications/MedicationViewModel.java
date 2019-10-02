@@ -40,10 +40,4 @@ public class MedicationViewModel extends ViewModel {
     public void setMedAdapter(MedicationListAdapter medAdapter) {
         this.medAdapter = medAdapter;
     }
-
-    @Override
-    protected void onCleared() {
-        System.out.println("cleared");
-        super.onCleared();
-    }
 }

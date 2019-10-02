@@ -46,7 +46,6 @@ public class MedicationFragment extends Fragment implements Serializable {
             public void onChanged(List<Medication> medList) {
                 if (model.getMedAdapter() != null)
                     model.getMedAdapter().notifyDataSetChanged();
-                System.out.println("observerd");
             }
         };
         model.getMedications().observe(this, medicationObserver);

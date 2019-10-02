@@ -34,6 +34,7 @@ import java.util.Objects;
 
 //TODO: https://developer.android.com/guide/topics/text/autofill
 //TODO: if you type text in a number field the app freezes and crashes
+//TODO: check if medicine exists before adding
 public class WizardMedicineDetailFragment extends Fragment implements RootWizardFragment.ErrFragment {
     private RootWizardViewModel model;
     private TextInputEditText medName;
@@ -80,15 +81,13 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
 
         if(savedInstanceState != null) {
             medNameRequired.setVisibility((savedInstanceState.getBoolean("medNameRequiredVisible", false)) ? View.VISIBLE : View.INVISIBLE);
-            dosageRequired.setVisibility((savedInstanceState.getBoolean("dosageRequiredVisible", false)) ? View.VISIBLE : View.INVISIBLE);;
+            dosageRequired.setVisibility((savedInstanceState.getBoolean("dosageRequiredVisible", false)) ? View.VISIBLE : View.INVISIBLE);
         }
 
         setStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("startdate");
                 final Calendar cal = Calendar.getInstance();
-                System.out.println(cal.get(Calendar.MONTH));
                 cal.set(Calendar.HOUR_OF_DAY,0);
                 cal.clear(Calendar.AM_PM);
                 cal.clear(Calendar.MINUTE);
@@ -97,12 +96,18 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
                 DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        long currTime = cal.getTimeInMillis();
                         cal.clear();
                         cal.set(Calendar.YEAR, year);
                         cal.set(Calendar.MONTH, month);
                         cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                         startDate.setText(new SimpleDateFormat("MM/dd/yyyy", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(new Date(cal.getTimeInMillis())));
                         model.setStartDate(cal.getTimeInMillis());
+                        if (cal.getTimeInMillis() > currTime)
+                            active.setChecked(false);
+                        else
+                            active.setChecked(true);
+                        //TODO: set active or inactive based on start time;
                     }
                 };
                 datePickerDialog = new DatePickerDialog(Objects.requireNonNull(getContext()), listener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
@@ -113,7 +118,6 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
         setEnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("enddate");
                 final Calendar cal = Calendar.getInstance();
                 cal.set(Calendar.HOUR_OF_DAY,0);
                 cal.clear(Calendar.AM_PM);
@@ -123,11 +127,12 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
                 DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        long currTime = cal.getTimeInMillis();
                         cal.clear();
                         cal.set(Calendar.YEAR, year);
                         cal.set(Calendar.MONTH, month);
                         cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        if(cal.getTimeInMillis() < model.getStartDate()){
+                        if(cal.getTimeInMillis() < model.getStartDate() || cal.getTimeInMillis() < currTime){
                             model.setEndDate(-1);
                             endDate.setText("");
                             endBefore.setVisibility(View.VISIBLE);
@@ -249,8 +254,10 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putBoolean("medNameRequiredVisible", medNameRequired.getVisibility() == View.VISIBLE);
-        outState.putBoolean("dosageRequiredVisible", dosageRequired.getVisibility() == View.VISIBLE);
+        if(this.isVisible()){
+            outState.putBoolean("medNameRequiredVisible", medNameRequired.getVisibility() == View.VISIBLE);
+            outState.putBoolean("dosageRequiredVisible", dosageRequired.getVisibility() == View.VISIBLE);
+        }
         super.onSaveInstanceState(outState);
     }
 
