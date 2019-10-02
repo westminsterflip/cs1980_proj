@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel;
 import com.example.medicationadherence.model.Medication;
 import com.example.medicationadherence.ui.medications.MedicationViewModel;
 
+import java.util.ArrayList;
+
 public class RootWizardViewModel extends ViewModel {
     private int medImage = -1;
     private String medName;
@@ -12,13 +14,15 @@ public class RootWizardViewModel extends ViewModel {
     private String instructions;
     private boolean active = true;
     private String doctorName;
-    private long startDate;
+    private long startDate = -1;
     private long endDate = -1;
-    private int onHand;
-    private int containerVol;
-    private double cost;
-    private boolean asNeeded;
+    private int onHand = -1;
+    private int containerVol = -1;
+    private double cost = -1;
+    private boolean asNeeded = false;
     private MedicationViewModel model;
+    private boolean[] destinationExitable = {false, false};
+    private ArrayList<RootWizardFragment.ErrFragment> thisList = new ArrayList<>();
 
     public int getMedImage() {
         return medImage;
@@ -82,14 +86,11 @@ public class RootWizardViewModel extends ViewModel {
 
     public void setOnHand(int onHand) {
         this.onHand = onHand;
+        containerVol = onHand;
     }
 
     public int getContainerVol() {
         return containerVol;
-    }
-
-    public void setContainerVol(int containerVol) {
-        this.containerVol = containerVol;
     }
 
     public double getCost() {
@@ -122,5 +123,25 @@ public class RootWizardViewModel extends ViewModel {
 
     public MedicationViewModel setModel(MedicationViewModel model) {
         return this.model = model;
+    }
+
+    public String getMedDosage() {
+        return medDosage;
+    }
+
+    public boolean getDestinationExitable(int position){
+        return destinationExitable[position];
+    }
+
+    public void setDestinationExitable(int position, boolean isExitable){
+        destinationExitable[position] = isExitable;
+    }
+
+    public ArrayList<RootWizardFragment.ErrFragment> getThisList() {
+        return thisList;
+    }
+
+    public void setThisList(ArrayList<RootWizardFragment.ErrFragment> thisList) {
+        this.thisList = thisList;
     }
 }

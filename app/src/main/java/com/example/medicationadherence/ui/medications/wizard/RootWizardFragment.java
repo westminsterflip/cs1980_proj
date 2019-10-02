@@ -42,7 +42,6 @@ public class RootWizardFragment extends Fragment {
             medModel = model.setModel(ViewModelProviders.of((MedicationFragment) RootWizardFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getMedFragmentInst().get(0)).get(MedicationViewModel.class));
         else
             medModel = model.getModel();
-        System.out.println(medModel.getMedAdapter()==null);
     }
 
     @Nullable
@@ -59,7 +58,9 @@ public class RootWizardFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 InputMethodManager manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                manager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                if (getActivity().getCurrentFocus() != null) {
+                    manager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                }
                 int currentLoc = Objects.requireNonNull(innerNavController.getCurrentDestination()).getId();
                 if (currentLoc == destinations[0]){
                     Navigation.findNavController(root).navigateUp();
@@ -105,21 +106,31 @@ public class RootWizardFragment extends Fragment {
                     manager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 }
                 int currentLoc = Objects.requireNonNull(innerNavController.getCurrentDestination()).getId();
-                if(currentLoc == R.id.wizardDoctorDetailFragment){
+                if(currentLoc == destinations[destinations.length-1]){
                     //TODO enter data into database
                     Objects.requireNonNull(medModel.getMedications().getValue()).add(model.getMedication());
                     Navigation.findNavController(v).navigateUp();
                 } else {
-                    innerNavController.navigate(destinations[Arrays.asList(destinations).indexOf(currentLoc)+1]);
-                    if (innerNavController.getCurrentDestination().getId() == destinations[destinations.length-1]){
-                        nextFinish.setText("Finish");
-                        nextArrow.setVisibility(View.INVISIBLE);
+                    if(model.getDestinationExitable(Arrays.asList(destinations).indexOf(currentLoc))){
+                        innerNavController.navigate(destinations[Arrays.asList(destinations).indexOf(currentLoc)+1]);
+                        if (innerNavController.getCurrentDestination().getId() == destinations[destinations.length-1]){
+                            nextFinish.setText("Finish");
+                            nextArrow.setVisibility(View.INVISIBLE);
+                        }
+                        cancelBack.setText("Back");
+                        backArrow.setVisibility(View.VISIBLE);
+                    } else {
+                        ErrFragment fragment = model.getThisList().get(Arrays.asList(destinations).indexOf(currentLoc));
+                        fragment.showErrors();
+                        System.out.println("exitablecurrloc="+model.getDestinationExitable(Arrays.asList(destinations).indexOf(currentLoc)));
                     }
-                    cancelBack.setText("Back");
-                    backArrow.setVisibility(View.VISIBLE);
                 }
             }
         });
         return root;
+    }
+
+    public interface ErrFragment{
+        void showErrors();
     }
 }

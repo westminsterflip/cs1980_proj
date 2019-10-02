@@ -98,6 +98,20 @@
             app:layout_constraintStart_toEndOf="@+id/wizardSetEndDate"
             app:layout_constraintTop_toTopOf="@+id/wizardSetEndDate" />
 
+        <TextView
+            android:id="@+id/wizardEndDateBefore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="1dp"
+            android:text="invalid end date"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="18sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/wizardSetEndDate"
+            app:layout_constraintStart_toEndOf="@+id/wizardSetEndDate"
+            app:layout_constraintTop_toTopOf="@+id/wizardSetEndDate" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout5"
             android:layout_width="0dp"
@@ -129,15 +143,15 @@
             android:id="@+id/wizardPillDoseRequired"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
             android:text="*dosage per pill required"
             android:textColor="@android:color/holo_red_light"
             android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="@+id/wizardDosageSpinner"
             app:layout_constraintStart_toStartOf="@+id/textInputLayout5"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout5" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout2"
+            android:id="@+id/textInputOnHand"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:visibility="gone"
@@ -154,13 +168,13 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout3"
+            android:id="@+id/textInputCost"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@+id/wizardDosageSpinner"
             app:layout_constraintStart_toStartOf="@+id/textInputLayout"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
+            app:layout_constraintTop_toBottomOf="@+id/textInputOnHand">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/wizardCost"
@@ -177,7 +191,7 @@
             android:text="As needed"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="@+id/textInputLayout"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />
+            app:layout_constraintTop_toBottomOf="@+id/textInputCost" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="0dp"

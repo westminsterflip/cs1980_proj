@@ -45,11 +45,15 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
         }
         holderm.medName.setText(medicationList.get(position).getMedName());
         holderm.medDosage.setText(medicationList.get(position).getMedDosage());
-        holderm.doctorName.setText(medicationList.get(position).getDoctorName());
+        if(medicationList.get(position).getDoctorName() == null || medicationList.get(position).getDoctorName().equals("")){
+            holderm.doctorName.setVisibility(View.GONE);
+        } else {
+            holderm.doctorName.setText(medicationList.get(position).getDoctorName());
+        }
         holderm.active.setText(("Active: " + medicationList.get(position).isActive()));
         holderm.startDate.setText((new SimpleDateFormat("MM/dd/yy", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(new Date(medicationList.get(position).getStartDate()))+" - "));
         long ed = medicationList.get(position).getEndDate();
-        holderm.endDate.setText((ed == -1) ? "" : new SimpleDateFormat("MM/dd/yyyy", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(new Date(ed)));
+        holderm.endDate.setText((ed == -1) ? "" : new SimpleDateFormat("MM/dd/yy", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(new Date(ed)));
         holderm.expand.setVisibility(View.GONE);
         //String details = ""; //TODO: fill with ammount on hand/cost/container vol/instructions, anything else extra
         //holderm.expandable.setText(details);

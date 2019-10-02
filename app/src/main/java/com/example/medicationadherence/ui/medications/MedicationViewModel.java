@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Random;
 
 public class MedicationViewModel extends ViewModel {
-    private MutableLiveData<List<Medication>> medications;
+    private MutableLiveData<List<Medication>> medications; //TODO: replace with list from repository
     private MedicationListAdapter medAdapter;
 
     public LiveData<List<Medication>> getMedications() {
