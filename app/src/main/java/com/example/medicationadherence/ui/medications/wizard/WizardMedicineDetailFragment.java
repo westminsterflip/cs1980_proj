@@ -35,6 +35,7 @@ import java.util.Objects;
 //TODO: https://developer.android.com/guide/topics/text/autofill
 //TODO: if you type text in a number field the app freezes and crashes
 //TODO: check if medicine exists before adding
+//TODO: add image pick/take + crop ability
 public class WizardMedicineDetailFragment extends Fragment implements RootWizardFragment.ErrFragment {
     private RootWizardViewModel model;
     private TextInputEditText medName;
@@ -176,6 +177,9 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
 
             }
         });
+        String unit;
+        if(model.getMedDosage() != null && !dosageUnitSelector.getSelectedItem().equals(unit = model.getMedDosage().replaceAll("[\\d.]", "")))
+            dosageUnitSelector.setSelection(Arrays.asList(getResources().getStringArray(R.array.medDosageUnits)).indexOf(unit));
         perPillDosage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -220,9 +224,6 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
             endDate.setText(new SimpleDateFormat("MM/dd/yyyy", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(new Date(model.getEndDate())));
         if(model.getMedDosage() != null)
             perPillDosage.setText(model.getMedDosage().replaceAll("[^\\d.]",""));
-        String unit;
-        if(model.getMedDosage() != null && !dosageUnitSelector.getSelectedItem().equals(unit = model.getMedDosage().replaceAll("[\\d.]", "")))
-            dosageUnitSelector.setSelection(Arrays.asList(getResources().getStringArray(R.array.medDosageUnits)).indexOf(unit));
         if(model.getOnHand() != -1)
             onHand.setText(model.getOnHand());
         if (model.getCost() != -1)
@@ -239,16 +240,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
 
     @Override
     public void onPause() {
-        model.setMedName(medName.getText().toString());
-        model.setMedDosage(perPillDosage.getText().toString()+dosageUnitSelector.getSelectedItem());
-        if(!instructions.getText().toString().equals(""))
-            model.setInstructions(instructions.getText().toString());
-        model.setActive(active.isChecked());
-        if(!onHand.getText().toString().equals(""))
-            model.setOnHand(Integer.parseInt(onHand.getText().toString()));
-        if(!cost.getText().toString().equals(""))
-            model.setCost(Double.parseDouble(cost.getText().toString()));
-        model.setAsNeeded(asNeeded.isChecked());
+        pause();
         super.onPause();
     }
 
@@ -271,5 +263,20 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
             dosageRequired.setVisibility(View.VISIBLE);
         else
             dosageRequired.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void pause() {
+        model.setMedName(medName.getText().toString());
+        model.setMedDosage(perPillDosage.getText().toString()+dosageUnitSelector.getSelectedItem().toString());
+        System.out.println(dosageUnitSelector.getSelectedItem().toString());
+        if(!instructions.getText().toString().equals(""))
+            model.setInstructions(instructions.getText().toString());
+        model.setActive(active.isChecked());
+        if(!onHand.getText().toString().equals(""))
+            model.setOnHand(Integer.parseInt(onHand.getText().toString()));
+        if(!cost.getText().toString().equals(""))
+            model.setCost(Double.parseDouble(cost.getText().toString()));
+        model.setAsNeeded(asNeeded.isChecked());
     }
 }

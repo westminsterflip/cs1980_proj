@@ -18,9 +18,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.medicationadherence.R;
+import com.example.medicationadherence.data.room.entities.Doctor;
+import com.example.medicationadherence.ui.MainViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -38,6 +43,8 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
     private TextInputEditText practiceAddress;
     private TextInputLayout phoneLayout;
     private TextInputEditText phone;
+    private List<Doctor> doctorList;
+    private MainViewModel mainModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +54,8 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
             model.getThisList().add(this);
         else if (model.getThisList().get(1) != this)
             model.getThisList().set(1, this);
+        mainModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
+        doctorList = mainModel.getRepository().getDoctors();
     }
 
     @Override
@@ -64,8 +73,11 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
         phoneLayout = root.findViewById(R.id.textInputPhone);
         phone = root.findViewById(R.id.wizardPhone);
 
-        String[] doctors = getResources().getStringArray(R.array.doctorChooserItems);
+        ArrayList<String> doctors = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.doctorChooserItems)));
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, doctors);
+        for(Doctor doctor : doctorList){
+            adapter.add(doctor.getName());
+        }
         //TODO: add doctors from db
         doctorChooser.setAdapter(adapter);
         doctorChooser.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -153,6 +165,18 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
 
     @Override
     public void onPause() {
+        pause();
+        super.onPause();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putBoolean("showErrors", doctorNameRequired.getVisibility() == View.VISIBLE);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void pause() {
         model.setSpinnerSelection(doctorChooser.getSelectedItemPosition());
         if(!doctorName.getText().toString().equals(""))
             model.setDoctorName(doctorName.getText().toString());
@@ -162,12 +186,5 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
             model.setPracticeAddress(practiceAddress.getText().toString());
         if(!phone.getText().toString().equals(""))
             model.setPhone(phone.getText().toString());
-        super.onPause();
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putBoolean("showErrors", doctorNameRequired.getVisibility() == View.VISIBLE);
-        super.onSaveInstanceState(outState);
     }
 }

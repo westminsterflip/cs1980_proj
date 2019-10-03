@@ -19,6 +19,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.medicationadherence.R;
+import com.example.medicationadherence.ui.MainViewModel;
 import com.example.medicationadherence.ui.medications.MedicationFragment;
 import com.example.medicationadherence.ui.medications.MedicationViewModel;
 
@@ -31,6 +32,7 @@ public class RootWizardFragment extends Fragment {
     private final Integer[] destinations = {R.id.wizardMedicineDetailFragment, R.id.wizardDoctorDetailFragment};
     private RootWizardViewModel model;
     private MedicationViewModel medModel;
+    private MainViewModel mainModel;
     private Button cancelBack;
     private ImageButton backArrow;
     private Button nextFinish;
@@ -40,11 +42,11 @@ public class RootWizardFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         model = ViewModelProviders.of(this).get(RootWizardViewModel.class);
-        MedicationFragment medicationFragment = (MedicationFragment) RootWizardFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getMedFragmentInst().get(0);
         if (model.getModel() == null)
             medModel = model.setModel(ViewModelProviders.of((MedicationFragment) RootWizardFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getMedFragmentInst().get(0)).get(MedicationViewModel.class));
         else
             medModel = model.getModel();
+        mainModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
     }
 
     @Nullable
@@ -109,16 +111,20 @@ public class RootWizardFragment extends Fragment {
                 int currentLoc = Objects.requireNonNull(innerNavController.getCurrentDestination()).getId();
                 if(model.getDestinationExitable(Arrays.asList(destinations).indexOf(currentLoc))) {
                     if(currentLoc == destinations[destinations.length-1]){
-                        Navigation.findNavController(v).navigateUp();
-                        v.getRootView().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                Objects.requireNonNull(medModel.getMedications().getValue()).add(model.getMedication());
-                                //TODO enter data into database
-                            }
-                        });
+                        model.getThisList().get(model.getThisList().size()-1).pause();
+                        //Navigation.findNavController(v).navigateUp();
+                        //v.getRootView().post(new Runnable() {
+                            //@Override
+                            //public void run() {
+                                if(model.getDoctorName()!= null && !model.getDoctorName().equals("")) {
+                                    //TODO check if exists then this: AlertDialog.Builder, edit if exists, make fields editable
+                                    model.setDoctorID(mainModel.insert(model.getDoctor()));
+                                }
+                                System.out.println(model.getDoctorID());
+                                mainModel.insert(model.getMedication());
+                            //}
+                        //});
                     } else {
-
                         innerNavController.navigate(destinations[Arrays.asList(destinations).indexOf(currentLoc)+1]);
                         if (innerNavController.getCurrentDestination().getId() == destinations[destinations.length-1]){
                             nextFinish.setText("Finish");
@@ -146,6 +152,7 @@ public class RootWizardFragment extends Fragment {
 
     public interface ErrFragment{
         void showErrors();
+        void pause();
     }
 
     @Override

@@ -2,7 +2,8 @@ package com.example.medicationadherence.ui.medications.wizard;
 
 import androidx.lifecycle.ViewModel;
 
-import com.example.medicationadherence.model.Medication;
+import com.example.medicationadherence.data.room.entities.Doctor;
+import com.example.medicationadherence.data.room.entities.MedicationEntity;
 import com.example.medicationadherence.ui.medications.MedicationViewModel;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class RootWizardViewModel extends ViewModel {
     private String practiceName;
     private String practiceAddress;
     private String phone;
+    private Long doctorID = null;
 
     public int getMedImage() {
         return medImage;
@@ -113,12 +115,16 @@ public class RootWizardViewModel extends ViewModel {
         this.asNeeded = asNeeded;
     }
 
-    public Medication getMedication(){
-        return new Medication(medImage, medName, medDosage, instructions, active, doctorName, startDate, endDate, onHand, containerVol, cost, asNeeded);
+    public MedicationEntity getMedication(){
+        return new MedicationEntity(medName, active, doctorID, medDosage, startDate, endDate, containerVol, cost);
+    }
+
+    public Doctor getDoctor(){
+        return new Doctor(doctorName, practiceName, practiceAddress, phone);
     }
 
     public void setMedDosage(String medDosage) {
-        this.medDosage = medDosage;
+        System.out.println("set: " + (this.medDosage = medDosage));
     }
 
     public MedicationViewModel getModel() {
@@ -143,10 +149,6 @@ public class RootWizardViewModel extends ViewModel {
 
     public ArrayList<RootWizardFragment.ErrFragment> getThisList() {
         return thisList;
-    }
-
-    public void setThisList(ArrayList<RootWizardFragment.ErrFragment> thisList) {
-        this.thisList = thisList;
     }
 
     public int getSpinnerSelection() {
@@ -179,5 +181,13 @@ public class RootWizardViewModel extends ViewModel {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Long getDoctorID() {
+        return doctorID;
+    }
+
+    public void setDoctorID(Long doctorID) {
+        this.doctorID = doctorID;
     }
 }

@@ -17,18 +17,18 @@ import androidx.room.PrimaryKey;
 import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(foreignKeys =
-@ForeignKey(entity = Doctors.class, parentColumns = "doctorID", childColumns = "doctorID", onDelete = CASCADE), indices = {
+@ForeignKey(entity = Doctor.class, parentColumns = "doctorID", childColumns = "doctorID", onDelete = CASCADE), indices = {
 @Index("doctorID")})
 public class MedicationEntity {
-	@PrimaryKey
+	@PrimaryKey(autoGenerate = true)
 	private int medicationID;
 
 	private String name;
 	private boolean status;
-	private int doctorID;     /* FK Doctors.name */
-	private double dosage;
-	private String startDate;            /* FORMAT: YYYY-MM-DD (for now) */
-	private String endDate;              /* FORMAT: YYYY-MM-DD (for now) */
+	private Long doctorID;     /* FK Doctor.name */
+	private String dosage;
+	private long startDate;            /* FORMAT: YYYY-MM-DD (for now) */
+	private long endDate;              /* FORMAT: YYYY-MM-DD (for now) */
 	private int containerVolume;
 	private double cost;
 
@@ -56,35 +56,35 @@ public class MedicationEntity {
         this.status = status;
     }
 
-    public int getDoctorID() {
+    public Long getDoctorID() {
         return doctorID;
     }
 
-    public void setDoctorID(int doctorID) {
+    public void setDoctorID(Long doctorID) {
         this.doctorID = doctorID;
     }
 
-    public double getDosage() {
+    public String getDosage() {
         return dosage;
     }
 
-    public void setDosage(double dosage) {
+    public void setDosage(String dosage) {
         this.dosage = dosage;
     }
 
-    public String getStartDate() {
+    public long getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(long startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    public long getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(long endDate) {
         this.endDate = endDate;
     }
 
@@ -101,6 +101,17 @@ public class MedicationEntity {
     }
 
     public void setCost(double cost) {
+        this.cost = cost;
+    }
+
+    public MedicationEntity(String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost) {
+        this.name = name;
+        this.status = status;
+        this.doctorID = doctorID;
+        this.dosage = dosage;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.containerVolume = containerVolume;
         this.cost = cost;
     }
 }

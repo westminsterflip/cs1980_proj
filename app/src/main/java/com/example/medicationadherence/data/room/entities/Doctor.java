@@ -1,6 +1,6 @@
 package com.example.medicationadherence.data.room.entities;
 
-/* Doctors entity in MedicationDatabase
+/* Doctor entity in MedicationDatabase
    
    Implemented using Android Room
    
@@ -8,12 +8,13 @@ package com.example.medicationadherence.data.room.entities;
    @authors Erin Herlihy, David Stropkey, Nicholas West, Ian Patterson
 */
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class Doctors {
-	@PrimaryKey
+public class Doctor {
+	@PrimaryKey(autoGenerate = true)
 	private int doctorID;
 	
 	private String name;
@@ -59,5 +60,12 @@ public class Doctors {
 	
 	public int getDoctorID() {
         return this.doctorID;
+    }
+
+    public Doctor(@NonNull String name, String practiceName, String address, String phone) {
+        this.name = name;
+        this.practiceName = practiceName;
+        this.address = address;
+        this.phone = phone;
     }
 }

@@ -4,15 +4,14 @@ import android.app.Application;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.MutableLiveData;
-import androidx.room.Dao;
 
 import com.example.medicationadherence.data.room.MedicationDatabase;
-import com.example.medicationadherence.data.room.dao.DoctorsDAO;
+import com.example.medicationadherence.data.room.dao.DoctorDAO;
 import com.example.medicationadherence.data.room.dao.InstructionsDAO;
 import com.example.medicationadherence.data.room.dao.MedicationDAO;
 import com.example.medicationadherence.data.room.dao.MedicationLogDAO;
 import com.example.medicationadherence.data.room.dao.ScheduleDAO;
-import com.example.medicationadherence.data.room.entities.Doctors;
+import com.example.medicationadherence.data.room.entities.Doctor;
 import com.example.medicationadherence.data.room.entities.Instructions;
 import com.example.medicationadherence.data.room.entities.MedicationEntity;
 import com.example.medicationadherence.data.room.entities.MedicationLog;
@@ -20,9 +19,10 @@ import com.example.medicationadherence.data.room.entities.Schedule;
 import com.example.medicationadherence.model.Medication;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class Repository {
-    private DoctorsDAO mDoctorDAO;
+    private DoctorDAO mDoctorDAO;
     private InstructionsDAO mInstructionsDAO;
     private MedicationDAO mMedicationDAO;
     private MedicationLogDAO mMedicationLogDAO;
@@ -43,65 +43,75 @@ public class Repository {
         return medList;
     }
 
-    public void insert(Doctors doctor){
-        new insertAsyncTask(mDoctorDAO).execute(doctor);
+    public long insert(Doctor doctor){
+        try {
+            return new InsertAsyncTask(mDoctorDAO).execute(doctor).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public List<Doctor> getDoctors(){
+        try {
+            return new GetAllDoctorsAsyncTask(mDoctorDAO).execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void insert(Instructions instructions){
-        new insertAsyncTask(mInstructionsDAO).execute(instructions);
+        new InsertAsyncTask(mInstructionsDAO).execute(instructions);
     }
 
     public void insert(MedicationEntity medication){
-        new insertAsyncTask(mMedicationDAO).execute(medication);
+        new InsertAsyncTask(mMedicationDAO).execute(medication);
     }
 
     public void insert(MedicationLog medicationLog){
-        new insertAsyncTask(mMedicationLogDAO).execute(medicationLog);
+        new InsertAsyncTask(mMedicationLogDAO).execute(medicationLog);
     }
 
     public void insert(Schedule schedule){
-        new insertAsyncTask(mScheduleDAO).execute(schedule);
+        new InsertAsyncTask(mScheduleDAO).execute(schedule);
     }
 
     public void deleteAll(){
-        new deleteAsyncTask(mDoctorDAO, mInstructionsDAO, mMedicationDAO, mMedicationLogDAO, mScheduleDAO).execute();
+        new DeleteAsyncTask(mDoctorDAO, mInstructionsDAO, mMedicationDAO, mMedicationLogDAO, mScheduleDAO).execute();
     }
 
-    private interface CustomDAO extends Dao{
-        void insert(Object o);
-    }
-
-    private static class insertAsyncTask extends AsyncTask<Object, Void, Void> {
-        private DoctorsDAO doctorsDAO;
+    private static class InsertAsyncTask extends AsyncTask<Object, Void, Long> {
+        private DoctorDAO doctorDAO;
         private InstructionsDAO instructionsDAO;
         private MedicationDAO medicationDAO;
         private MedicationLogDAO medicationLogDAO;
         private ScheduleDAO scheduleDAO;
 
-        public insertAsyncTask(InstructionsDAO instructionsDAO) {
+        public InsertAsyncTask(InstructionsDAO instructionsDAO) {
             this.instructionsDAO = instructionsDAO;
         }
 
-        public insertAsyncTask(DoctorsDAO doctorsDAO) {
-            this.doctorsDAO = doctorsDAO;
+        public InsertAsyncTask(DoctorDAO doctorDAO) {
+            this.doctorDAO = doctorDAO;
         }
 
-        public insertAsyncTask(MedicationDAO medicationDAO) {
+        public InsertAsyncTask(MedicationDAO medicationDAO) {
             this.medicationDAO = medicationDAO;
         }
 
-        public insertAsyncTask(MedicationLogDAO medicationLogDAO) {
+        public InsertAsyncTask(MedicationLogDAO medicationLogDAO) {
             this.medicationLogDAO = medicationLogDAO;
         }
 
-        public insertAsyncTask(ScheduleDAO scheduleDAO) {
+        public InsertAsyncTask(ScheduleDAO scheduleDAO) {
             this.scheduleDAO = scheduleDAO;
         }
 
         @Override
-        protected Void doInBackground(Object... objects) {
-            if(doctorsDAO != null){
-                doctorsDAO.insert((Doctors) objects[0]);
+        protected Long doInBackground(Object... objects) {
+            if(doctorDAO != null){
+                return doctorDAO.insert((Doctor) objects[0]);
             } else if (instructionsDAO != null){
                 instructionsDAO.insert((Instructions) objects[0]);
             } else if (medicationDAO != null){
@@ -111,19 +121,19 @@ public class Repository {
             } else if (scheduleDAO != null){
                 scheduleDAO.insert((Schedule) objects[0]);
             }
-            return null;
+            return (long) -1;
         }
     }
 
-    private static class deleteAsyncTask extends AsyncTask<Void, Void, Void> {
-        private DoctorsDAO doctorsDAO;
+    private static class DeleteAsyncTask extends AsyncTask<Void, Void, Void> {
+        private DoctorDAO doctorDAO;
         private InstructionsDAO instructionsDAO;
         private MedicationDAO medicationDAO;
         private MedicationLogDAO medicationLogDAO;
         private ScheduleDAO scheduleDAO;
 
-        deleteAsyncTask(DoctorsDAO doctorsDAO, InstructionsDAO instructionsDAO, MedicationDAO medicationDAO, MedicationLogDAO medicationLogDAO, ScheduleDAO scheduleDAO) {
-            this.doctorsDAO = doctorsDAO;
+        DeleteAsyncTask(DoctorDAO doctorDAO, InstructionsDAO instructionsDAO, MedicationDAO medicationDAO, MedicationLogDAO medicationLogDAO, ScheduleDAO scheduleDAO) {
+            this.doctorDAO = doctorDAO;
             this.instructionsDAO = instructionsDAO;
             this.medicationDAO = medicationDAO;
             this.medicationLogDAO = medicationLogDAO;
@@ -132,12 +142,25 @@ public class Repository {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            doctorsDAO.clearTable();
+            doctorDAO.clearTable();
             instructionsDAO.clearTable();
             medicationDAO.clearTable();
             medicationLogDAO.clearTable();
             scheduleDAO.clearTable();
             return null;
+        }
+    }
+
+    private static class GetAllDoctorsAsyncTask extends AsyncTask<Void , Void, List<Doctor>>{
+        DoctorDAO doctorDAO;
+
+        public GetAllDoctorsAsyncTask(DoctorDAO doctorDAO) {
+            this.doctorDAO = doctorDAO;
+        }
+
+        @Override
+        protected List<Doctor> doInBackground(Void... voids) {
+            return doctorDAO.getAllDoctors();
         }
     }
 }

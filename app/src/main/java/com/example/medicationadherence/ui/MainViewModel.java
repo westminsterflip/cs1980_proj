@@ -7,7 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.medicationadherence.data.Repository;
-import com.example.medicationadherence.data.room.entities.Doctors;
+import com.example.medicationadherence.data.room.entities.Doctor;
 import com.example.medicationadherence.data.room.entities.Instructions;
 import com.example.medicationadherence.data.room.entities.MedicationEntity;
 import com.example.medicationadherence.data.room.entities.MedicationLog;
@@ -74,8 +74,8 @@ public class MainViewModel extends AndroidViewModel {
         this.repository = repository;
     }
 
-    public void insert(Doctors doctor){
-        repository.insert(doctor);
+    public Long insert(Doctor doctor){
+        return repository.insert(doctor);
     }
 
     public void insert(Instructions instructions){

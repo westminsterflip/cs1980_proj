@@ -7,7 +7,7 @@ package com.example.medicationadherence.data.room;
 	  -- Instructions
 	  -- Schedule
 	  -- MedicationLog
-	  -- Doctors
+	  -- Doctor
    
    Implemented using Android Room
    
@@ -21,22 +21,22 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.example.medicationadherence.data.room.dao.DoctorsDAO;
+import com.example.medicationadherence.data.room.dao.DoctorDAO;
 import com.example.medicationadherence.data.room.dao.InstructionsDAO;
 import com.example.medicationadherence.data.room.dao.MedicationDAO;
 import com.example.medicationadherence.data.room.dao.MedicationLogDAO;
 import com.example.medicationadherence.data.room.dao.ScheduleDAO;
-import com.example.medicationadherence.data.room.entities.Doctors;
+import com.example.medicationadherence.data.room.entities.Doctor;
 import com.example.medicationadherence.data.room.entities.Instructions;
 import com.example.medicationadherence.data.room.entities.MedicationEntity;
 import com.example.medicationadherence.data.room.entities.MedicationLog;
 import com.example.medicationadherence.data.room.entities.Schedule;
 
-@Database(version = 1, entities = {MedicationEntity.class, Instructions.class, Schedule.class, MedicationLog.class, Doctors.class}, exportSchema = false)
+@Database(version = 1, entities = {MedicationEntity.class, Instructions.class, Schedule.class, MedicationLog.class, Doctor.class}, exportSchema = false)
 public abstract class MedicationDatabase extends RoomDatabase {
 	public abstract MedicationDAO getMedicationDao();
 	public abstract MedicationLogDAO getMedicationLogDao();
-	public abstract DoctorsDAO getDoctorsDao();
+	public abstract DoctorDAO getDoctorsDao();
 	public abstract InstructionsDAO getInstructionsDao();
 	public abstract ScheduleDAO getScheduleDao();
 
