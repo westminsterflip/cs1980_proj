@@ -58,6 +58,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onDisplayPreferenceDialog(Preference preference) {
+        //TODO: change to alertdialog
         if (preference instanceof DataDialogPreference){
             DialogFragment dialogFragment = DataDialogPreferenceFragment.newInstance(preference.getKey());
             dialogFragment.setTargetFragment(this, 0);
