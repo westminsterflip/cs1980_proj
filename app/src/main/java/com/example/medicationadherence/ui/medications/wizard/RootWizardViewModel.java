@@ -1,12 +1,15 @@
 package com.example.medicationadherence.ui.medications.wizard;
 
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.medicationadherence.R;
 import com.example.medicationadherence.data.room.entities.Doctor;
 import com.example.medicationadherence.data.room.entities.MedicationEntity;
 import com.example.medicationadherence.ui.medications.MedicationViewModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class RootWizardViewModel extends ViewModel {
     private int medImage = -1;
@@ -29,6 +32,7 @@ public class RootWizardViewModel extends ViewModel {
     private String practiceAddress;
     private String phone;
     private Long doctorID = null;
+    private MutableLiveData<ArrayList<Integer>> destinations;
 
     public int getMedImage() {
         return medImage;
@@ -189,5 +193,19 @@ public class RootWizardViewModel extends ViewModel {
 
     public void setDoctorID(Long doctorID) {
         this.doctorID = doctorID;
+    }
+
+    public MutableLiveData<ArrayList<Integer>> getDestinations() {
+        if(destinations == null){
+            destinations = new MutableLiveData<>();
+            Integer[] destsint = {R.id.wizardMedicineDetailFragment, R.id.wizardDoctorDetailFragment};
+            ArrayList dests = new ArrayList<Integer>(Arrays.asList(destsint));
+            destinations.setValue(dests);
+        }
+        return destinations;
+    }
+
+    public void setDestinations(MutableLiveData<ArrayList<Integer>> destinations) {
+        this.destinations = destinations;
     }
 }

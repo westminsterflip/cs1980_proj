@@ -9,14 +9,15 @@ package com.example.medicationadherence.data.room.entities;
 */
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
 public class Doctor {
 	@PrimaryKey(autoGenerate = true)
-	private int doctorID;
-	
+	private Long doctorID;
+	@NonNull
 	private String name;
 	private String practiceName;
 	private String address;
@@ -54,11 +55,11 @@ public class Doctor {
         return this.phone;
     }
 	
-	public void setDoctorID(int doctorID) {
+	public void setDoctorID(Long doctorID) {
         this.doctorID = doctorID;
     }
 	
-	public int getDoctorID() {
+	public Long getDoctorID() {
         return this.doctorID;
     }
 
@@ -67,5 +68,11 @@ public class Doctor {
         this.practiceName = practiceName;
         this.address = address;
         this.phone = phone;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        Doctor doc = (Doctor)obj;
+	    return (doc.getName().equals(name)&&doc.getPracticeName().equals(practiceName)&&doc.getAddress().equals(address)&&doc.getPhone()==phone);
     }
 }

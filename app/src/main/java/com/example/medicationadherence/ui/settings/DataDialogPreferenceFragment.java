@@ -2,7 +2,7 @@ package com.example.medicationadherence.ui.settings;
 
 import android.os.Bundle;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceDialogFragmentCompat;
 
 import com.example.medicationadherence.ui.MainViewModel;
@@ -18,7 +18,7 @@ public class DataDialogPreferenceFragment extends PreferenceDialogFragmentCompat
 
     @Override
     public void onDialogClosed(boolean positiveResult) {
-        MainViewModel model = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
+        MainViewModel model = new ViewModelProvider(getActivity()).get(MainViewModel.class);
         if(positiveResult)
             model.deleteAll();
     }

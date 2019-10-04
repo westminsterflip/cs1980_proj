@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,7 +40,7 @@ public class MedicationFragment extends Fragment implements Serializable {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        model = ViewModelProviders.of(this).get(MedicationViewModel.class);
+        model = new ViewModelProvider(this).get(MedicationViewModel.class);
         final Observer<List<Medication>> medicationObserver = new Observer<List<Medication>>() {
             @Override
             public void onChanged(List<Medication> medList) {
@@ -49,7 +49,7 @@ public class MedicationFragment extends Fragment implements Serializable {
             }
         };
         model.getMedications().observe(this, medicationObserver);
-        mainModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
+        mainModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
         if (thisList.isEmpty())
             thisList.add(this);
         else

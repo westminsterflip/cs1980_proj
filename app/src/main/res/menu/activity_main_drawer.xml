@@ -7,7 +7,7 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_calendar_month"
-            android:title="@string/menu_home" />
+        android:title="@string/menu_home" />
         <item
             android:id="@+id/nav_summary"
             android:icon="@drawable/ic_donut_large_24px"

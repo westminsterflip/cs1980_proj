@@ -15,7 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.data.room.entities.Doctor;
@@ -49,12 +49,12 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        model = ViewModelProviders.of(Objects.requireNonNull(getParentFragment().getParentFragment())).get(RootWizardViewModel.class);
+        model = new ViewModelProvider(Objects.requireNonNull(getParentFragment().getParentFragment())).get(RootWizardViewModel.class);
         if(model.getThisList().size() == 1)
             model.getThisList().add(this);
         else if (model.getThisList().get(1) != this)
             model.getThisList().set(1, this);
-        mainModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
+        mainModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
         doctorList = mainModel.getRepository().getDoctors();
     }
 
@@ -89,22 +89,25 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
                     practiceNameLayout.setVisibility(View.GONE);
                     practiceAddressLayout.setVisibility(View.GONE);
                     phoneLayout.setVisibility(View.GONE);
+                    doctorName.setText("");
+                    practiceName.setText("");
+                    practiceAddress.setText("");
+                    phone.setText("");
                     model.setDoctorName(null);
                     model.setDestinationExitable(1, true);
                 } else {
                     if(position != 1){
-                        doctorName.setEnabled(false);
-                        practiceName.setEnabled(false);
-                        practiceAddress.setEnabled(false);
-                        phone.setEnabled(false);
                         doctorNameRequired.setVisibility(View.INVISIBLE);
                         model.setDestinationExitable(1, true);
-                        //TODO: fill fields with data from db
+                        doctorName.setText(doctorList.get(position-2).getName());
+                        practiceName.setText(doctorList.get(position-2).getPracticeName());
+                        practiceAddress.setText(doctorList.get(position-2).getAddress());
+                        phone.setText(doctorList.get(position-2).getPhone());
                     } else {
-                        doctorName.setEnabled(true);
-                        practiceName.setEnabled(true);
-                        practiceAddress.setEnabled(true);
-                        phone.setEnabled(true);
+                        doctorName.setText("");
+                        practiceName.setText("");
+                        practiceAddress.setText("");
+                        phone.setText("");
                         model.setDestinationExitable(1, !doctorName.getText().toString().equals(""));
                     }
                     doctorNameLayout.setVisibility(View.VISIBLE);

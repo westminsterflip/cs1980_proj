@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/scheduleCardMedName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:text="MEDICATION NAME"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/scheduleCardDose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="dosage"
+        app:layout_constraintStart_toStartOf="@+id/scheduleCardMedName"
+        app:layout_constraintTop_toBottomOf="@+id/scheduleCardMedName" />
+
+    <TextView
+        android:id="@+id/scheduleCardStartDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="start: 00/00/00"
+        app:layout_constraintStart_toStartOf="@+id/scheduleCardDose"
+        app:layout_constraintTop_toBottomOf="@+id/scheduleCardDose" />
+
+    <TextView
+        android:id="@+id/scheduleCardEndDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="end: 00/00/00"
+        app:layout_constraintStart_toEndOf="@+id/scheduleCardStartDate"
+        app:layout_constraintTop_toTopOf="@+id/scheduleCardStartDate" />
+
+    <TextView
+        android:id="@+id/scheduleCardTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="\@ 6:00pm"
+        app:layout_constraintStart_toEndOf="@+id/scheduleCardEndDate"
+        app:layout_constraintTop_toTopOf="@+id/scheduleCardEndDate" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scheduleCardStartDate">
+
+        <CheckBox
+            android:id="@+id/scheduleCardSunday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:text="Su" />
+
+        <CheckBox
+            android:id="@+id/scheduleCardMonday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:text="M" />
+
+        <CheckBox
+            android:id="@+id/scheduleCardTuesday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:text="T" />
+
+        <CheckBox
+            android:id="@+id/scheduleCardWednesday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:text="W" />
+
+        <CheckBox
+            android:id="@+id/scheduleCardThursday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:text="Th" />
+
+        <CheckBox
+            android:id="@+id/scheduleCardFriday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:text="F" />
+
+        <CheckBox
+            android:id="@+id/scheduleCardSaturday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:text="S" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="tap to edit"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout5"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout5" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

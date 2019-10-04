@@ -21,7 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.os.ConfigurationCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.medicationadherence.R;
 import com.google.android.material.textfield.TextInputEditText;
@@ -57,7 +57,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        model = ViewModelProviders.of(Objects.requireNonNull(getParentFragment().getParentFragment())).get(RootWizardViewModel.class);
+        model = new ViewModelProvider(Objects.requireNonNull(getParentFragment().getParentFragment())).get(RootWizardViewModel.class);
     }
 
     @Override

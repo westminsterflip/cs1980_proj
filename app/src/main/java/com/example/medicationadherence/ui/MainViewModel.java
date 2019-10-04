@@ -24,12 +24,13 @@ public class MainViewModel extends AndroidViewModel {
     private int medSortMode = 0; //0 = a-z, 1 = z-a
     private Repository repository;
     private MutableLiveData<List<Medication>> medList;
-
+    private MutableLiveData<List<Schedule.ScheduleCard>> cardList;
 
 
     public MainViewModel (Application application){
         super(application);
         repository = new Repository(application);
+        cardList = repository.getCardList();
     }
 
     public long getSummaryTimeToView() {
@@ -70,10 +71,6 @@ public class MainViewModel extends AndroidViewModel {
         return repository;
     }
 
-    public void setRepository(Repository repository) {
-        this.repository = repository;
-    }
-
     public Long insert(Doctor doctor){
         return repository.insert(doctor);
     }
@@ -96,5 +93,12 @@ public class MainViewModel extends AndroidViewModel {
 
     public void deleteAll(){
         repository.deleteAll();
+    }
+
+    public void updateDoctor(Long id, String doctorName, String practice, String address, String phone){
+        if(phone != null && phone.equals("")) phone = null;
+        if(address != null && address.equals("")) address = null;
+        if(practice != null && practice.equals("")) practice =null;
+        repository.updateDoctor(id, doctorName, practice, address, phone);
     }
 }

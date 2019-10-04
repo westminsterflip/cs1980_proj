@@ -6,6 +6,7 @@ package com.example.medicationadherence.data.room.dao;/* Schedule entity DAO in 
    @authors Erin Herlihy, David Stropkey, Nicholas West, Ian Patterson
 */
 
+import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -32,4 +33,11 @@ public interface ScheduleDAO {
 
     @Query("DELETE FROM SCHEDULE")
     public void clearTable();
+
+    @Query("SELECT MEDICATIONENTITY.medicationID as medicationID, MEDICATIONENTITY.name as medName,"+
+           "MEDICATIONENTITY.dosage AS dosageAmt, MEDICATIONENTITY.startDate AS startDate,"+
+           " MEDICATIONENTITY.endDate AS endDate, SCHEDULE.numDoses AS doses, SCHEDULE.time AS timeOfDay"+
+           ", SCHEDULE.weekdays AS days FROM MEDICATIONENTITY INNER JOIN "+
+           "SCHEDULE ON MEDICATIONENTITY.medicationID = SCHEDULE.medicationID")
+    public MutableLiveData<List<Schedule.ScheduleCard>> loadScheduled();
 }

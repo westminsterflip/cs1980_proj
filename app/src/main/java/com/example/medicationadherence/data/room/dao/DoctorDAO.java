@@ -34,4 +34,7 @@ public interface DoctorDAO {
 
     @Query("DELETE FROM Doctor")
     public void clearTable();
+
+    @Query("UPDATE Doctor SET name = :name, practiceName = :practiceName, address = :address, phone = :phone WHERE doctorID = :id")
+    void update(Long id, String name, String practiceName, String address, String phone);
 }

@@ -19,10 +19,10 @@ import static androidx.room.ForeignKey.CASCADE;
 public class MedicationLog {
 	private int medicationID;  /* FK MedicationEntity.medicationID */
 	@NonNull
-    private String date = "";	   /* FORMAT: YYYY-MM-DD (for now) */
+    private long date;
 	private boolean taken;     /* true if taken, false if missed */
 	@NonNull
-    private String timeLate = "";
+    private Integer timeLate;
 	
 	public int getMedicationID() {
         return this.medicationID;
@@ -32,11 +32,11 @@ public class MedicationLog {
         this.medicationID = medicationID;
     }
 	
-	public String getDate() {
+	public long getDate() {
         return this.date;
     }
  
-    public void setDate(String date) {
+    public void setDate(long date) {
         this.date = date;
     }
 	
@@ -48,11 +48,11 @@ public class MedicationLog {
         this.taken = taken;
     }
 	
-	public String getTimeLate() {
+	public Integer getTimeLate() {
         return this.timeLate;
     }
  
-    public void setTimeLate(String timeLate) {
+    public void setTimeLate(Integer timeLate) {
         this.timeLate = timeLate;
     }
 }

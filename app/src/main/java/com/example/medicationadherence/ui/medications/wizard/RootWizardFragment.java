@@ -14,7 +14,8 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -23,13 +24,13 @@ import com.example.medicationadherence.ui.MainViewModel;
 import com.example.medicationadherence.ui.medications.MedicationFragment;
 import com.example.medicationadherence.ui.medications.MedicationViewModel;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Objects;
 
 
 //TODO: hide keyboard when back pressed in top bar
 public class RootWizardFragment extends Fragment {
-    private final Integer[] destinations = {R.id.wizardMedicineDetailFragment, R.id.wizardDoctorDetailFragment};
+    private ArrayList<Integer> destinations;
     private RootWizardViewModel model;
     private MedicationViewModel medModel;
     private MainViewModel mainModel;
@@ -37,16 +38,34 @@ public class RootWizardFragment extends Fragment {
     private ImageButton backArrow;
     private Button nextFinish;
     private ImageButton nextArrow;
+    private NavController innerNavController;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        model = ViewModelProviders.of(this).get(RootWizardViewModel.class);
+        model = new ViewModelProvider(this).get(RootWizardViewModel.class);
+        final Observer<ArrayList<Integer>> destObserver = new Observer<ArrayList<Integer>>() {
+            @Override
+            public void onChanged(ArrayList<Integer> integers) {
+                if(innerNavController!=null){
+                    if(innerNavController.getCurrentDestination().getId() == destinations.get(0))
+                        setHasLast(false);
+                    else
+                        setHasLast(true);
+                    if(innerNavController.getCurrentDestination().getId() == destinations.get(destinations.size()-1))
+                        setHasNext(false);
+                    else
+                        setHasNext(true);
+                }
+            }
+        };
+        model.getDestinations().observe(this, destObserver);
+        destinations = model.getDestinations().getValue();
         if (model.getModel() == null)
-            medModel = model.setModel(ViewModelProviders.of((MedicationFragment) RootWizardFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getMedFragmentInst().get(0)).get(MedicationViewModel.class));
+            medModel = model.setModel(new ViewModelProvider((MedicationFragment) RootWizardFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getMedFragmentInst().get(0)).get(MedicationViewModel.class));
         else
             medModel = model.getModel();
-        mainModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
+        mainModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
     }
 
     @Nullable
@@ -54,11 +73,11 @@ public class RootWizardFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.fragment_root_wizard, container, false);
-        final NavController innerNavController = Navigation.findNavController(root.findViewById(R.id.wizard_nav_host_fragment));
         backArrow = root.findViewById(R.id.rootWizardBackArrow);
         cancelBack = root.findViewById(R.id.rootWizardBackCancel);
         nextArrow = root.findViewById(R.id.rootWizardNextArrow);
         nextFinish = root.findViewById(R.id.rootWizardNextFinish);
+        innerNavController = Navigation.findNavController(root.findViewById(R.id.wizard_nav_host_fragment));
         cancelBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,17 +86,15 @@ public class RootWizardFragment extends Fragment {
                     manager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 }
                 int currentLoc = Objects.requireNonNull(innerNavController.getCurrentDestination()).getId();
-                if (currentLoc == destinations[0]){
+                if (currentLoc == destinations.get(0)){
                     Navigation.findNavController(root).navigateUp();
                 } else {
                     innerNavController.navigateUp();
                     innerNavController.navigate(R.id.wizardMedicineDetailFragment);
-                    if (innerNavController.getCurrentDestination().getId() == destinations[0]){
-                        cancelBack.setText("Cancel");
-                        backArrow.setVisibility(View.INVISIBLE);
+                    if (innerNavController.getCurrentDestination().getId() == destinations.get(0)){
+                        setHasLast(false);
                     }
-                    nextFinish.setText("Next");
-                    nextArrow.setVisibility(View.VISIBLE);
+                    setHasNext(true);
                 }
             }
         });
@@ -86,16 +103,14 @@ public class RootWizardFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
                 int currentLoc = Objects.requireNonNull(innerNavController.getCurrentDestination()).getId();
-                if (currentLoc == destinations[0]){
+                if (currentLoc == destinations.get(0)){
                     Navigation.findNavController(root).navigateUp();
                 } else {
                     innerNavController.navigateUp();
-                    if (innerNavController.getCurrentDestination().getId() == destinations[0]){
-                        cancelBack.setText("Cancel");
-                        backArrow.setVisibility(View.INVISIBLE);
+                    if (innerNavController.getCurrentDestination().getId() == destinations.get(0)){
+                        setHasLast(false);
                     }
-                    nextFinish.setText("Next");
-                    nextArrow.setVisibility(View.VISIBLE);
+                    setHasNext(true);
                 }
             }
         };
@@ -109,32 +124,30 @@ public class RootWizardFragment extends Fragment {
                     manager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 }
                 int currentLoc = Objects.requireNonNull(innerNavController.getCurrentDestination()).getId();
-                if(model.getDestinationExitable(Arrays.asList(destinations).indexOf(currentLoc))) {
-                    if(currentLoc == destinations[destinations.length-1]){
+                if(model.getDestinationExitable(destinations.indexOf(currentLoc))) {
+                    if(currentLoc == destinations.get(destinations.size()-1)){
                         model.getThisList().get(model.getThisList().size()-1).pause();
                         //Navigation.findNavController(v).navigateUp();
-                        //v.getRootView().post(new Runnable() {
-                            //@Override
-                            //public void run() {
-                                if(model.getDoctorName()!= null && !model.getDoctorName().equals("")) {
-                                    //TODO check if exists then this: AlertDialog.Builder, edit if exists, make fields editable
-                                    model.setDoctorID(mainModel.insert(model.getDoctor()));
-                                }
-                                System.out.println(model.getDoctorID());
-                                mainModel.insert(model.getMedication());
-                            //}
-                        //});
-                    } else {
-                        innerNavController.navigate(destinations[Arrays.asList(destinations).indexOf(currentLoc)+1]);
-                        if (innerNavController.getCurrentDestination().getId() == destinations[destinations.length-1]){
-                            nextFinish.setText("Finish");
-                            nextArrow.setVisibility(View.INVISIBLE);
+                        if(model.getDoctorName()!= null && !model.getDoctorName().equals("")){
+                            if(model.getSpinnerSelection() == 1) {//add new doctor if doesn't exist
+                                //TODO check if exists then this: AlertDialog.Builder, edit if exists
+                                model.setDoctorID(mainModel.insert(model.getDoctor()));
+                            } else if(model.getSpinnerSelection() > 1){
+                                if(mainModel.getRepository().getDoctors().indexOf(model.getDoctor())==-1)
+                                    mainModel.updateDoctor(mainModel.getRepository().getDoctors().get(model.getSpinnerSelection()-2).getDoctorID(), model.getDoctorName(), model.getPracticeName(), model.getPracticeAddress(), model.getPhone());
+                            }
                         }
-                        cancelBack.setText("Back");
-                        backArrow.setVisibility(View.VISIBLE);
+                        System.out.println(model.getDoctorID());
+                        mainModel.insert(model.getMedication());
+                    } else {
+                        innerNavController.navigate(destinations.get(destinations.indexOf(currentLoc)+1));
+                        if (innerNavController.getCurrentDestination().getId() == destinations.get(destinations.size()-1)){
+                            setHasNext(false);
+                        }
+                        setHasLast(true);
                     }
                 } else {
-                    ErrFragment fragment = model.getThisList().get(Arrays.asList(destinations).indexOf(currentLoc));
+                    ErrFragment fragment = model.getThisList().get(destinations.indexOf(currentLoc));
                     fragment.showErrors();
                 }
 
@@ -162,5 +175,24 @@ public class RootWizardFragment extends Fragment {
         outState.putBoolean("nextVisible", nextArrow.getVisibility() == View.VISIBLE);
         outState.putBoolean("backVisible", backArrow.getVisibility() == View.VISIBLE);
         super.onSaveInstanceState(outState);
+    }
+
+    public void setHasNext(boolean hasNext){
+        nextFinish.setText(hasNext ? "Next" : "Finish");
+        nextArrow.setVisibility(hasNext ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    public void setHasLast(boolean hasLast){
+        cancelBack.setText(hasLast ? "Back" : "Cancel");
+        backArrow.setVisibility(hasLast ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
+    public void onDetach() {
+        InputMethodManager manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (getActivity().getCurrentFocus() != null) {
+            manager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+        super.onDetach();
     }
 }

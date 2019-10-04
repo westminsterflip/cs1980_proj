@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_nav_home_to_dailyMedListFragment"
             app:destination="@id/dailyMedListFragment" />
+        <action
+            android:id="@+id/action_nav_home_to_editScheduleFragment"
+            app:destination="@id/editScheduleFragment" />
     </fragment>
 
     <fragment
@@ -51,4 +54,9 @@
             android:name="medFragmentInst"
             app:argType="java.util.ArrayList" />
     </fragment>
+    <fragment
+        android:id="@+id/editScheduleFragment"
+        android:name="com.example.medicationadherence.ui.home.schedule.EditScheduleFragment"
+        android:label="fragment_edit_schedule"
+        tools:layout="@layout/fragment_edit_schedule" />
 </navigation>

@@ -28,6 +28,7 @@ public class Repository {
     private MedicationLogDAO mMedicationLogDAO;
     private ScheduleDAO mScheduleDAO;
     private MutableLiveData<List<Medication>> medList;
+    private MutableLiveData<List<Schedule.ScheduleCard>> cardList;
 
     public Repository(Application application){
         MedicationDatabase medDB = MedicationDatabase.getDatabase(application);
@@ -37,6 +38,11 @@ public class Repository {
         mMedicationLogDAO = medDB.getMedicationLogDao();
         mScheduleDAO = medDB.getScheduleDao();
         //TODO: fill medList;
+        cardList = mScheduleDAO.loadScheduled();
+    }
+
+    public MutableLiveData<List<Schedule.ScheduleCard>> getCardList() {
+        return cardList;
     }
 
     public MutableLiveData<List<Medication>> getMedList(){
@@ -79,6 +85,10 @@ public class Repository {
 
     public void deleteAll(){
         new DeleteAsyncTask(mDoctorDAO, mInstructionsDAO, mMedicationDAO, mMedicationLogDAO, mScheduleDAO).execute();
+    }
+
+    public void updateDoctor(Long id, String doctorName, String practiceName, String address, String phone){
+        new UpdateDoctorAsyncTask(mDoctorDAO, id, doctorName, practiceName, address, phone).execute();
     }
 
     private static class InsertAsyncTask extends AsyncTask<Object, Void, Long> {
@@ -161,6 +171,30 @@ public class Repository {
         @Override
         protected List<Doctor> doInBackground(Void... voids) {
             return doctorDAO.getAllDoctors();
+        }
+    }
+
+    private static class UpdateDoctorAsyncTask extends AsyncTask<Void, Void, Void>{
+        private DoctorDAO doctorDAO;
+        private Long id;
+        private String doctorName;
+        private String practice;
+        private String address;
+        private String phone;
+
+        public UpdateDoctorAsyncTask(DoctorDAO doctorDAO, Long id, String doctorName, String practice, String address, String phone) {
+            this.doctorDAO = doctorDAO;
+            this.id = id;
+            this.doctorName = doctorName;
+            this.practice = practice;
+            this.address = address;
+            this.phone = phone;
+        }
+
+        @Override
+        protected Void doInBackground(Void... objects) {
+            doctorDAO.update(id, doctorName, practice, address, phone);
+            return null;
         }
     }
 }

@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.core.os.ConfigurationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.medicationadherence.R;
@@ -33,7 +33,7 @@ public class DailyMedListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        model = ViewModelProviders.of(this).get(DailyMedListViewModel.class);
+        model = new ViewModelProvider(this).get(DailyMedListViewModel.class);
         final Observer<List<List<DailyMedication>>> medicationObserver = new Observer<List<List<DailyMedication>>>() {
             @Override
             public void onChanged(List<List<DailyMedication>> dailyMedications) {

@@ -14,15 +14,15 @@ import androidx.room.ForeignKey;
 
 import static androidx.room.ForeignKey.CASCADE;
 
-@Entity(primaryKeys = {"medicationID", "time", "weekday"}, foreignKeys =
+@Entity(primaryKeys = {"medicationID", "time", "weekdays"}, foreignKeys =
 @ForeignKey(entity = MedicationEntity.class, parentColumns = "medicationID", childColumns = "medicationID", onDelete = CASCADE))
 public class Schedule {
 	private int medicationID;       /* FK MedicationEntity.medicationID */
 	private int numDoses;
 	@NonNull
-	private String time = "";            /* FORMAT: HHMMSS (for now)*/
+	private long time;
     @NonNull
-	private String weekday = "";
+	private boolean[] weekdays;     //boolean array for scheduled on day {SMTWTFS}
 
 	public void setMedicationID(int medicationID) {
         this.medicationID = medicationID;
@@ -40,21 +40,52 @@ public class Schedule {
         return this.numDoses;
     }
 	
-	public void setTime(String time) {
+	public void setTime(long time) {
         this.time = time;
     }
 	
 	@NonNull
-    public String getTime() {
+    public long getTime() {
         return this.time;
     }
 	
-	public void setWeekday(String weekday) {
-        this.weekday = weekday;
+	public void setWeekday(boolean[] weekdays) {
+        this.weekdays = weekdays;
     }
 
     @NonNull
-	public String getWeekday() {
-        return this.weekday;
+	public boolean[] getWeekday() {
+        return this.weekdays;
+    }
+
+    public static class ScheduleCard{
+	    public int medicationID;
+	    public String medName;
+	    public String dosageAmt;
+	    public long startDate;
+	    public long endDate;
+	    public int doses;
+	    public long timeOfDay;
+	    public boolean[] days;
+
+        public ScheduleCard(String medName, String dosageAmt, long startDate, long endDate, int doses, long timeOfDay, boolean[] days) {
+            this.medName = medName;
+            this.dosageAmt = dosageAmt;
+            this.startDate = startDate;
+            this.endDate = endDate;
+            this.doses = doses;
+            this.timeOfDay = timeOfDay;
+            this.days = days;
+        }
+
+        public ScheduleCard(String medName, String dosageAmt, long startDate, int doses, long timeOfDay, boolean[] days) {
+            this.medName = medName;
+            this.dosageAmt = dosageAmt;
+            this.startDate = startDate;
+            this.doses = doses;
+            this.timeOfDay = timeOfDay;
+            this.days = days;
+            this.endDate = -1;
+        }
     }
 }
