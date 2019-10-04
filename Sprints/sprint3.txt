@@ -1,0 +1,12 @@
+Sprint 3
+
+1. Create view for doctor - Ian
+2. Connect views to database objects - Ian
+	- work down user stories list (highest priority first) for 2 & 3
+	 (not all of the user stories)
+3. Begin testing UI components - Erin
+	- Espresso framework
+4. Plan notifications - David
+	- When will we notify people? Why?
+	- How will the user interact with the notification?
+5. Midterm presentation and paper - Nick (in charge)
