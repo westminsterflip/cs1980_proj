@@ -199,7 +199,7 @@ public class RootWizardViewModel extends ViewModel {
         if(destinations == null){
             destinations = new MutableLiveData<>();
             Integer[] destsint = {R.id.wizardMedicineDetailFragment, R.id.wizardDoctorDetailFragment};
-            ArrayList dests = new ArrayList<Integer>(Arrays.asList(destsint));
+            ArrayList dests = new ArrayList<>(Arrays.asList(destsint));
             destinations.setValue(dests);
         }
         return destinations;

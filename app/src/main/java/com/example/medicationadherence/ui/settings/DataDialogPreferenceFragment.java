@@ -7,6 +7,8 @@ import androidx.preference.PreferenceDialogFragmentCompat;
 
 import com.example.medicationadherence.ui.MainViewModel;
 
+import java.util.Objects;
+
 public class DataDialogPreferenceFragment extends PreferenceDialogFragmentCompat {
     public static DataDialogPreferenceFragment newInstance(String key){
         DataDialogPreferenceFragment fragment = new DataDialogPreferenceFragment();
@@ -18,7 +20,7 @@ public class DataDialogPreferenceFragment extends PreferenceDialogFragmentCompat
 
     @Override
     public void onDialogClosed(boolean positiveResult) {
-        MainViewModel model = new ViewModelProvider(getActivity()).get(MainViewModel.class);
+        MainViewModel model = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
         if(positiveResult)
             model.deleteAll();
     }

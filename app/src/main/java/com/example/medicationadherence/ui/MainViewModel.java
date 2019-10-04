@@ -4,9 +4,10 @@ package com.example.medicationadherence.ui;
 import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.LiveData;
 
 import com.example.medicationadherence.data.Repository;
+import com.example.medicationadherence.data.room.dao.ScheduleDAO;
 import com.example.medicationadherence.data.room.entities.Doctor;
 import com.example.medicationadherence.data.room.entities.Instructions;
 import com.example.medicationadherence.data.room.entities.MedicationEntity;
@@ -23,8 +24,8 @@ public class MainViewModel extends AndroidViewModel {
     private int summaryViewScale = 0;
     private int medSortMode = 0; //0 = a-z, 1 = z-a
     private Repository repository;
-    private MutableLiveData<List<Medication>> medList;
-    private MutableLiveData<List<Schedule.ScheduleCard>> cardList;
+    private LiveData<List<Medication>> medList;
+    private LiveData<List<ScheduleDAO.ScheduleCard>> cardList;
 
 
     public MainViewModel (Application application){

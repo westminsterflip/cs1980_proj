@@ -48,7 +48,7 @@ public class RootWizardFragment extends Fragment {
             @Override
             public void onChanged(ArrayList<Integer> integers) {
                 if(innerNavController!=null){
-                    if(innerNavController.getCurrentDestination().getId() == destinations.get(0))
+                    if(Objects.requireNonNull(innerNavController.getCurrentDestination()).getId() == destinations.get(0))
                         setHasLast(false);
                     else
                         setHasLast(true);
@@ -81,9 +81,9 @@ public class RootWizardFragment extends Fragment {
         cancelBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputMethodManager manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager manager = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (getActivity().getCurrentFocus() != null) {
-                    manager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    Objects.requireNonNull(manager).hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 }
                 int currentLoc = Objects.requireNonNull(innerNavController.getCurrentDestination()).getId();
                 if (currentLoc == destinations.get(0)){
@@ -119,9 +119,9 @@ public class RootWizardFragment extends Fragment {
         nextFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputMethodManager manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager manager = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (getActivity().getCurrentFocus() != null) {
-                    manager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    Objects.requireNonNull(manager).hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 }
                 int currentLoc = Objects.requireNonNull(innerNavController.getCurrentDestination()).getId();
                 if(model.getDestinationExitable(destinations.indexOf(currentLoc))) {
@@ -189,9 +189,9 @@ public class RootWizardFragment extends Fragment {
 
     @Override
     public void onDetach() {
-        InputMethodManager manager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager manager = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
         if (getActivity().getCurrentFocus() != null) {
-            manager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            Objects.requireNonNull(manager).hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
         super.onDetach();
     }

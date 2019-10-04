@@ -19,17 +19,17 @@ import java.util.List;
 @Dao
 public interface MedicationLogDAO {
     @Insert
-    public void insert(MedicationLog... medicationLogs);
+    void insert(MedicationLog... medicationLogs);
  
     @Update
-    public void update(MedicationLog... medicationLogs);
+    void update(MedicationLog... medicationLogs);
  
     @Delete
-    public void delete(MedicationLog... medicationLog);
+    void delete(MedicationLog... medicationLog);
 
 	@Query("SELECT * FROM MEDICATIONLOG")
-	public List<MedicationLog> getAllMedicationLogs();
+    List<MedicationLog> getAllMedicationLogs();
 
     @Query("DELETE FROM MEDICATIONLOG")
-    public void clearTable();
+    void clearTable();
 }

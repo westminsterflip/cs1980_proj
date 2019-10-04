@@ -3,7 +3,7 @@ package com.example.medicationadherence.data;
 import android.app.Application;
 import android.os.AsyncTask;
 
-import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.LiveData;
 
 import com.example.medicationadherence.data.room.MedicationDatabase;
 import com.example.medicationadherence.data.room.dao.DoctorDAO;
@@ -27,8 +27,8 @@ public class Repository {
     private MedicationDAO mMedicationDAO;
     private MedicationLogDAO mMedicationLogDAO;
     private ScheduleDAO mScheduleDAO;
-    private MutableLiveData<List<Medication>> medList;
-    private MutableLiveData<List<Schedule.ScheduleCard>> cardList;
+    private LiveData<List<Medication>> medList;
+    private LiveData<List<ScheduleDAO.ScheduleCard>> cardList;
 
     public Repository(Application application){
         MedicationDatabase medDB = MedicationDatabase.getDatabase(application);
@@ -41,11 +41,11 @@ public class Repository {
         cardList = mScheduleDAO.loadScheduled();
     }
 
-    public MutableLiveData<List<Schedule.ScheduleCard>> getCardList() {
+    public LiveData<List<ScheduleDAO.ScheduleCard>> getCardList() {
         return cardList;
     }
 
-    public MutableLiveData<List<Medication>> getMedList(){
+    public LiveData<List<Medication>> getMedList(){
         return medList;
     }
 

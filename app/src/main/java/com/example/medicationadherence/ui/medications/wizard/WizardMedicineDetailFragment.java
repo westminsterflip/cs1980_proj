@@ -57,7 +57,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        model = new ViewModelProvider(Objects.requireNonNull(getParentFragment().getParentFragment())).get(RootWizardViewModel.class);
+        model = new ViewModelProvider(Objects.requireNonNull(Objects.requireNonNull(getParentFragment()).getParentFragment())).get(RootWizardViewModel.class);
     }
 
     @Override
@@ -166,7 +166,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!s.toString().equals("")) {
                     model.setMedName(s.toString());
-                    model.setDestinationExitable(0, !perPillDosage.getText().toString().equals(""));
+                    model.setDestinationExitable(0, !Objects.requireNonNull(perPillDosage.getText()).toString().equals(""));
                 } else {
                     model.setDestinationExitable(0,false);
                 }
@@ -190,7 +190,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!s.toString().equals("")) {
                     model.setMedDosage(s.toString() + dosageUnitSelector.getSelectedItem());
-                    model.setDestinationExitable(0, !medName.getText().toString().equals(""));
+                    model.setDestinationExitable(0, !Objects.requireNonNull(medName.getText()).toString().equals(""));
                 } else {
                     model.setDestinationExitable(0, false);
                 }
@@ -255,11 +255,11 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
 
     @Override
     public void showErrors() {
-        if(medName.getText().toString().equals(""))
+        if(Objects.requireNonNull(medName.getText()).toString().equals(""))
             medNameRequired.setVisibility(View.VISIBLE);
         else
             medNameRequired.setVisibility(View.INVISIBLE);
-        if(perPillDosage.getText().toString().equals(""))
+        if(Objects.requireNonNull(perPillDosage.getText()).toString().equals(""))
             dosageRequired.setVisibility(View.VISIBLE);
         else
             dosageRequired.setVisibility(View.INVISIBLE);
@@ -267,15 +267,15 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
 
     @Override
     public void pause() {
-        model.setMedName(medName.getText().toString());
-        model.setMedDosage(perPillDosage.getText().toString()+dosageUnitSelector.getSelectedItem().toString());
+        model.setMedName(Objects.requireNonNull(medName.getText()).toString());
+        model.setMedDosage(Objects.requireNonNull(perPillDosage.getText()).toString()+dosageUnitSelector.getSelectedItem().toString());
         System.out.println(dosageUnitSelector.getSelectedItem().toString());
-        if(!instructions.getText().toString().equals(""))
+        if(!Objects.requireNonNull(instructions.getText()).toString().equals(""))
             model.setInstructions(instructions.getText().toString());
         model.setActive(active.isChecked());
-        if(!onHand.getText().toString().equals(""))
+        if(!Objects.requireNonNull(onHand.getText()).toString().equals(""))
             model.setOnHand(Integer.parseInt(onHand.getText().toString()));
-        if(!cost.getText().toString().equals(""))
+        if(!Objects.requireNonNull(cost.getText()).toString().equals(""))
             model.setCost(Double.parseDouble(cost.getText().toString()));
         model.setAsNeeded(asNeeded.isChecked());
     }

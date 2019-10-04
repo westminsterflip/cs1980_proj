@@ -21,19 +21,19 @@ import java.util.List;
 @Dao
 public interface DoctorDAO {
     @Insert
-    public long insert(Doctor doctors);
+    long insert(Doctor doctors);
  
     @Update
-    public void update(Doctor... doctors);
+    void update(Doctor... doctors);
  
     @Delete
-    public void delete(Doctor... doctor);
+    void delete(Doctor... doctor);
 
 	@Query("SELECT * FROM Doctor")
-	public List<Doctor> getAllDoctors();
+    List<Doctor> getAllDoctors();
 
     @Query("DELETE FROM Doctor")
-    public void clearTable();
+    void clearTable();
 
     @Query("UPDATE Doctor SET name = :name, practiceName = :practiceName, address = :address, phone = :phone WHERE doctorID = :id")
     void update(Long id, String name, String practiceName, String address, String phone);

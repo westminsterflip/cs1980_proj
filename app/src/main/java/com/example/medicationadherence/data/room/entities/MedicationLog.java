@@ -18,11 +18,10 @@ import static androidx.room.ForeignKey.CASCADE;
 @ForeignKey(entity = MedicationEntity.class, parentColumns = "medicationID", childColumns = "medicationID", onDelete = CASCADE))
 public class MedicationLog {
 	private int medicationID;  /* FK MedicationEntity.medicationID */
-	@NonNull
     private long date;
 	private boolean taken;     /* true if taken, false if missed */
 	@NonNull
-    private Integer timeLate;
+    private Integer timeLate = null;
 	
 	public int getMedicationID() {
         return this.medicationID;

@@ -49,12 +49,12 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        model = new ViewModelProvider(Objects.requireNonNull(getParentFragment().getParentFragment())).get(RootWizardViewModel.class);
+        model = new ViewModelProvider(Objects.requireNonNull(Objects.requireNonNull(getParentFragment()).getParentFragment())).get(RootWizardViewModel.class);
         if(model.getThisList().size() == 1)
             model.getThisList().add(this);
         else if (model.getThisList().get(1) != this)
             model.getThisList().set(1, this);
-        mainModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
+        mainModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
         doctorList = mainModel.getRepository().getDoctors();
     }
 
@@ -73,8 +73,8 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
         phoneLayout = root.findViewById(R.id.textInputPhone);
         phone = root.findViewById(R.id.wizardPhone);
 
-        ArrayList<String> doctors = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.doctorChooserItems)));
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, doctors);
+        ArrayList<String> doctors = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.doctorChooserItems)));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), R.layout.support_simple_spinner_dropdown_item, doctors);
         for(Doctor doctor : doctorList){
             adapter.add(doctor.getName());
         }
@@ -108,7 +108,7 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
                         practiceName.setText("");
                         practiceAddress.setText("");
                         phone.setText("");
-                        model.setDestinationExitable(1, !doctorName.getText().toString().equals(""));
+                        model.setDestinationExitable(1, !Objects.requireNonNull(doctorName.getText()).toString().equals(""));
                     }
                     doctorNameLayout.setVisibility(View.VISIBLE);
                     if(savedInstanceState == null)
@@ -181,13 +181,13 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
     @Override
     public void pause() {
         model.setSpinnerSelection(doctorChooser.getSelectedItemPosition());
-        if(!doctorName.getText().toString().equals(""))
+        if(!Objects.requireNonNull(doctorName.getText()).toString().equals(""))
             model.setDoctorName(doctorName.getText().toString());
-        if(!practiceName.getText().toString().equals(""))
+        if(!Objects.requireNonNull(practiceName.getText()).toString().equals(""))
             model.setPracticeName(practiceName.getText().toString());
-        if(!practiceAddress.getText().toString().equals(""))
+        if(!Objects.requireNonNull(practiceAddress.getText()).toString().equals(""))
             model.setPracticeAddress(practiceAddress.getText().toString());
-        if(!phone.getText().toString().equals(""))
+        if(!Objects.requireNonNull(phone.getText()).toString().equals(""))
             model.setPhone(phone.getText().toString());
     }
 }

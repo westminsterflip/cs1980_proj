@@ -19,9 +19,8 @@ import static androidx.room.ForeignKey.CASCADE;
 public class Schedule {
 	private int medicationID;       /* FK MedicationEntity.medicationID */
 	private int numDoses;
-	@NonNull
 	private long time;
-    @NonNull
+	@NonNull
 	private boolean[] weekdays;     //boolean array for scheduled on day {SMTWTFS}
 
 	public void setMedicationID(int medicationID) {
@@ -48,44 +47,13 @@ public class Schedule {
     public long getTime() {
         return this.time;
     }
-	
-	public void setWeekday(boolean[] weekdays) {
-        this.weekdays = weekdays;
-    }
 
     @NonNull
-	public boolean[] getWeekday() {
-        return this.weekdays;
+    public boolean[] getWeekdays() {
+        return weekdays;
     }
 
-    public static class ScheduleCard{
-	    public int medicationID;
-	    public String medName;
-	    public String dosageAmt;
-	    public long startDate;
-	    public long endDate;
-	    public int doses;
-	    public long timeOfDay;
-	    public boolean[] days;
-
-        public ScheduleCard(String medName, String dosageAmt, long startDate, long endDate, int doses, long timeOfDay, boolean[] days) {
-            this.medName = medName;
-            this.dosageAmt = dosageAmt;
-            this.startDate = startDate;
-            this.endDate = endDate;
-            this.doses = doses;
-            this.timeOfDay = timeOfDay;
-            this.days = days;
-        }
-
-        public ScheduleCard(String medName, String dosageAmt, long startDate, int doses, long timeOfDay, boolean[] days) {
-            this.medName = medName;
-            this.dosageAmt = dosageAmt;
-            this.startDate = startDate;
-            this.doses = doses;
-            this.timeOfDay = timeOfDay;
-            this.days = days;
-            this.endDate = -1;
-        }
+    public void setWeekdays(@NonNull boolean[] weekdays) {
+        this.weekdays = weekdays;
     }
 }

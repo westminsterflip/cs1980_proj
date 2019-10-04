@@ -6,7 +6,7 @@ package com.example.medicationadherence.data.room.dao;/* Schedule entity DAO in 
    @authors Erin Herlihy, David Stropkey, Nicholas West, Ian Patterson
 */
 
-import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -20,24 +20,45 @@ import java.util.List;
 @Dao
 public interface ScheduleDAO {
     @Insert
-    public void insert(Schedule... schedules);
+    void insert(Schedule... schedules);
  
     @Update
-    public void update(Schedule... schedules);
+    void update(Schedule... schedules);
  
     @Delete
-    public void delete(Schedule... schedule);
+    void delete(Schedule... schedule);
 	
 	@Query("SELECT * FROM SCHEDULE")
-	public List<Schedule> getAllSchedules();
+    List<Schedule> getAllSchedules();
 
     @Query("DELETE FROM SCHEDULE")
-    public void clearTable();
+    void clearTable();
 
     @Query("SELECT MEDICATIONENTITY.medicationID as medicationID, MEDICATIONENTITY.name as medName,"+
            "MEDICATIONENTITY.dosage AS dosageAmt, MEDICATIONENTITY.startDate AS startDate,"+
            " MEDICATIONENTITY.endDate AS endDate, SCHEDULE.numDoses AS doses, SCHEDULE.time AS timeOfDay"+
            ", SCHEDULE.weekdays AS days FROM MEDICATIONENTITY INNER JOIN "+
            "SCHEDULE ON MEDICATIONENTITY.medicationID = SCHEDULE.medicationID")
-    public MutableLiveData<List<Schedule.ScheduleCard>> loadScheduled();
+    LiveData<List<ScheduleCard>> loadScheduled();
+
+    class ScheduleCard{
+        public int medicationID;
+        public String medName;
+        public String dosageAmt;
+        public long startDate;
+        public long endDate;
+        public int doses;
+        public long timeOfDay;
+        public boolean[] days;
+
+        public ScheduleCard(String medName, String dosageAmt, long startDate, long endDate, int doses, long timeOfDay, boolean[] days) {
+            this.medName = medName;
+            this.dosageAmt = dosageAmt;
+            this.startDate = startDate;
+            this.endDate = endDate;
+            this.doses = doses;
+            this.timeOfDay = timeOfDay;
+            this.days = days;
+        }
+    }
 }

@@ -21,17 +21,17 @@ import java.util.List;
 @Dao
 public interface InstructionsDAO {
     @Insert
-    public void insert(Instructions... instructions);
+    void insert(Instructions... instructions);
  
     @Update
-    public void update(Instructions... instructions);
+    void update(Instructions... instructions);
  
     @Delete
-    public void delete(Instructions... instruction);
+    void delete(Instructions... instruction);
 	
 	@Query("SELECT * FROM INSTRUCTIONS")
-	public List<Instructions> getAllInstructions();
+    List<Instructions> getAllInstructions();
 
     @Query("DELETE FROM INSTRUCTIONS")
-    public void clearTable();
+    void clearTable();
 }
