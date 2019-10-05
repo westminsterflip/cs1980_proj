@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class SummaryDetailAdapter extends RecyclerView.Adapter {
-    private final List<DetailSummary> detailList;
+    private List<DetailSummary> detailList;
 
     public SummaryDetailAdapter(List<DetailSummary> detailList) {
         this.detailList = detailList;

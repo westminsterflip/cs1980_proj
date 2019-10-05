@@ -19,7 +19,7 @@ import java.sql.Time;
 import java.util.List;
 
 public class DailyMedicationListAdapter extends RecyclerView.Adapter implements Serializable {
-    private final List<DailyMedication> medicationList;
+    private List<DailyMedication> medicationList;
 
     public DailyMedicationListAdapter(List<DailyMedication> medicationList){
         this.medicationList = medicationList;

@@ -269,7 +269,6 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
     public void pause() {
         model.setMedName(Objects.requireNonNull(medName.getText()).toString());
         model.setMedDosage(Objects.requireNonNull(perPillDosage.getText()).toString()+dosageUnitSelector.getSelectedItem().toString());
-        System.out.println(dosageUnitSelector.getSelectedItem().toString());
         if(!Objects.requireNonNull(instructions.getText()).toString().equals(""))
             model.setInstructions(instructions.getText().toString());
         model.setActive(active.isChecked());

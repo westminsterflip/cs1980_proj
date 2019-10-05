@@ -4,7 +4,6 @@ import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,16 +13,20 @@ import androidx.core.os.ConfigurationCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.medicationadherence.R;
-import com.example.medicationadherence.model.Medication;
+import com.example.medicationadherence.data.room.entities.Doctor;
+import com.example.medicationadherence.data.room.entities.Medication;
+import com.example.medicationadherence.ui.MainViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 public class MedicationListAdapter extends RecyclerView.Adapter {
-    private final List<Medication> medicationList;
+    private List<Medication> medicationList;
+    private MainViewModel mainModel;
 
-    public MedicationListAdapter(List<Medication> medicationList){
+    public MedicationListAdapter(List<Medication> medicationList, MainViewModel mainModel){
         this.medicationList = medicationList;
+        this.mainModel = mainModel;
     }
 
 
@@ -38,40 +41,25 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         final MedicationViewHolder holderm = (MedicationViewHolder) holder;
-        if(medicationList.get(position).getMedImage() != -1){ //If an image is specified it will load, otherwise the default is a pill on a background
-            holderm.medImage.setImageResource(medicationList.get(position).getMedImage());
-            holderm.medImage.setBackgroundColor(Integer.parseInt("00FFFFFF",16));
-            holderm.medImage.setImageTintList(null);
-        }
-        holderm.medName.setText(medicationList.get(position).getMedName());
-        holderm.medDosage.setText(medicationList.get(position).getMedDosage());
-        if(medicationList.get(position).getDoctorName() == null || medicationList.get(position).getDoctorName().equals("")){
+//        if(medicationList.get(position).getMedImage() != -1){ //If an image is specified it will load, otherwise the default is a pill on a background
+//            holderm.medImage.setImageResource(medicationList.get(position).getMedImage());
+//            holderm.medImage.setBackgroundColor(Integer.parseInt("00FFFFFF",16));
+//            holderm.medImage.setImageTintList(null);
+//        }
+        Doctor doctor = mainModel.getDoctorWithID(medicationList.get(position).getDoctorID());
+        if(doctor == null){
             holderm.doctorName.setVisibility(View.GONE);
         } else {
-            holderm.doctorName.setText(medicationList.get(position).getDoctorName());
+            holderm.doctorName.setText(doctor.getName());
         }
-        holderm.active.setText(("Active: " + medicationList.get(position).isActive()));
+        holderm.medName.setText(medicationList.get(position).getName());
+        holderm.medDosage.setText(medicationList.get(position).getDosage());
+        holderm.active.setText(("Active: " + medicationList.get(position).isStatus()));
         holderm.startDate.setText((new SimpleDateFormat("MM/dd/yy", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(new Date(medicationList.get(position).getStartDate()))+" - "));
         long ed = medicationList.get(position).getEndDate();
         holderm.endDate.setText((ed == -1) ? "" : new SimpleDateFormat("MM/dd/yy", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(new Date(ed)));
-        holderm.expand.setVisibility(View.GONE);
-        //String details = ""; //TODO: fill with ammount on hand/cost/container vol/instructions, anything else extra
-        //holderm.expandable.setText(details);
-        /*View.OnClickListener expand = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TransitionManager.beginDelayedTransition(holderm.card);
-                if(holderm.expand.getRotation() == 180){
-                    holderm.expand.setRotation(0);
-                    holderm.expandable.setVisibility(View.GONE);
-                } else {
-                    holderm.expand.setRotation(180);
-                    holderm.expandable.setVisibility(View.VISIBLE);
-                }
-            }
-        };
-        holderm.expand.setOnClickListener(expand);
-        holderm.card.setOnClickListener(expand);*/
+        //holderm.expand.setVisibility(View.GONE);
+        //TODO: add onclick listener to open fragment to view all details
     }
 
 
@@ -92,9 +80,7 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
         final TextView active;
         final TextView startDate;
         final TextView endDate;
-        final ImageButton expand;
         final CardView card;
-        final TextView expandable;
 
         MedicationViewHolder(View view){
             super(view);
@@ -106,8 +92,6 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
             startDate=view.findViewById(R.id.textViewStartDate);
             endDate=view.findViewById(R.id.textViewEndDate);
             card=view.findViewById(R.id.medicationCard);
-            expand=view.findViewById(R.id.medicationCardExpand);
-            expandable=view.findViewById(R.id.expandableTextView);
         }
     }
 }

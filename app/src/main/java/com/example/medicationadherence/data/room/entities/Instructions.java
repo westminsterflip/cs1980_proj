@@ -15,17 +15,22 @@ import androidx.room.ForeignKey;
 import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(primaryKeys = {"medicationID", "instructions"}, foreignKeys =
-@ForeignKey(entity = MedicationEntity.class, parentColumns = "medicationID", childColumns = "medicationID", onDelete = CASCADE))
+@ForeignKey(entity = Medication.class, parentColumns = "medicationID", childColumns = "medicationID", onDelete = CASCADE))
 public class Instructions {
-	private int medicationID;           /* FK MedicationEntity.medicationID */
+	private long medicationID;           /* FK Medication.medicationID */
     @NonNull
 	private String instructions = "";
-	
-	public void setMedicationID(int medicationID) {
+
+    public Instructions(long medicationID, String instructions) {
+        this.medicationID = medicationID;
+        this.instructions = instructions;
+    }
+
+    public void setMedicationID(long medicationID) {
         this.medicationID = medicationID;
     }
 
-	public int getMedicationID() {
+	public long getMedicationID() {
         return this.medicationID;
     }
 	

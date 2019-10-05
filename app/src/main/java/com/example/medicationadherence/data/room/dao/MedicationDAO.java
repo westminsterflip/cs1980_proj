@@ -1,4 +1,4 @@
-package com.example.medicationadherence.data.room.dao;/* MedicationEntity entity DAO in MedicationDatabase
+package com.example.medicationadherence.data.room.dao;/* Medication entity DAO in MedicationDatabase
    
    Implemented using Android Room
    
@@ -12,24 +12,24 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.medicationadherence.data.room.entities.MedicationEntity;
+import com.example.medicationadherence.data.room.entities.Medication;
 
 import java.util.List;
 
 @Dao
 public interface MedicationDAO {
     @Insert
-    void insert(MedicationEntity... medications);
+    long insert(Medication medications);
  
     @Update
-    void update(MedicationEntity... medications);
+    void update(Medication... medications);
  
     @Delete
-    void delete(MedicationEntity... medication);
+    void delete(Medication... medication);
 	
-	@Query("SELECT * FROM MEDICATIONENTITY")
-    List<MedicationEntity> getAllMedications();
+	@Query("SELECT * FROM Medication")
+    List<Medication> getAllMedications();
 
-	@Query("DELETE FROM MEDICATIONENTITY")
+	@Query("DELETE FROM Medication")
     void clearTable();
 }

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.data.room.entities.Doctor;
-import com.example.medicationadherence.data.room.entities.MedicationEntity;
+import com.example.medicationadherence.data.room.entities.Medication;
 import com.example.medicationadherence.ui.medications.MedicationViewModel;
 
 import java.util.ArrayList;
@@ -119,8 +119,8 @@ public class RootWizardViewModel extends ViewModel {
         this.asNeeded = asNeeded;
     }
 
-    public MedicationEntity getMedication(){
-        return new MedicationEntity(medName, active, doctorID, medDosage, startDate, endDate, containerVol, cost);
+    public Medication getMedication(){
+        return new Medication(medName, active, doctorID, medDosage, startDate, endDate, containerVol, cost);
     }
 
     public Doctor getDoctor(){
@@ -128,7 +128,7 @@ public class RootWizardViewModel extends ViewModel {
     }
 
     public void setMedDosage(String medDosage) {
-        System.out.println("set: " + (this.medDosage = medDosage));
+        this.medDosage = medDosage;
     }
 
     public MedicationViewModel getModel() {

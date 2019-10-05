@@ -2,6 +2,7 @@ package com.example.medicationadherence.ui.medications.wizard;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.ImageButton;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -20,6 +22,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.medicationadherence.R;
+import com.example.medicationadherence.data.room.entities.Instructions;
 import com.example.medicationadherence.ui.MainViewModel;
 import com.example.medicationadherence.ui.medications.MedicationFragment;
 import com.example.medicationadherence.ui.medications.MedicationViewModel;
@@ -118,7 +121,7 @@ public class RootWizardFragment extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(Objects.requireNonNull(getChildFragmentManager().findFragmentById(R.id.wizard_nav_host_fragment)), callback);
         nextFinish.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 InputMethodManager manager = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (getActivity().getCurrentFocus() != null) {
                     Objects.requireNonNull(manager).hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -127,22 +130,36 @@ public class RootWizardFragment extends Fragment {
                 if(model.getDestinationExitable(destinations.indexOf(currentLoc))) {
                     if(currentLoc == destinations.get(destinations.size()-1)){
                         model.getThisList().get(model.getThisList().size()-1).pause();
-                        //Navigation.findNavController(v).navigateUp();
                         if(model.getDoctorName()!= null && !model.getDoctorName().equals("")){
                             if(model.getSpinnerSelection() == 1) {//add new doctor if doesn't exist
-                                if(mainModel.getDocWithName(model.getDoctorName())==null){
+                                if(mainModel.getDocWithName(model.getDoctorName())==null || mainModel.getDocWithName(model.getDoctorName()).size()==0){
                                     model.setDoctorID(mainModel.insert(model.getDoctor()));
+                                    addMedGoUp(v);
                                 } else {
-
+                                    new AlertDialog.Builder(Objects.requireNonNull(getContext())).setTitle("Update Doctor?")
+                                            .setMessage(R.string.doctor_update)
+                                            .setPositiveButton("yes", null)
+                                            .setNegativeButton("no", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    model.setDoctorID(mainModel.insert(model.getDoctor()));
+                                                    addMedGoUp(v);
+                                                }
+                                            })
+                                            .show();
                                 }
-                                //TODO check if exists then this: AlertDialog.Builder, edit if exists
                             } else if(model.getSpinnerSelection() > 1){
-                                if(mainModel.getRepository().getDoctors().indexOf(model.getDoctor())==-1)
-                                    mainModel.updateDoctor(mainModel.getRepository().getDoctors().get(model.getSpinnerSelection()-2).getDoctorID(), model.getDoctorName(), model.getPracticeName(), model.getPracticeAddress(), model.getPhone());
+                                if(mainModel.getRepository().getDoctors().indexOf(model.getDoctor())!=-1) {
+                                    mainModel.updateDoctor(mainModel.getRepository().getDoctors().get(model.getSpinnerSelection() - 2).getDoctorID(), model.getDoctorName(), model.getPracticeName(), model.getPracticeAddress(), model.getPhone());
+                                }
+                                addMedGoUp(v);
+                            } else {
+                                int i = 1/0;//this shouldn't be reachable, so crash app if it is reached
                             }
+                        } else {
+                            addMedGoUp(v);
                         }
-                        System.out.println(model.getDoctorID());
-                        mainModel.insert(model.getMedication());
+
                     } else {
                         innerNavController.navigate(destinations.get(destinations.indexOf(currentLoc)+1));
                         if (innerNavController.getCurrentDestination().getId() == destinations.get(destinations.size()-1)){
@@ -154,7 +171,6 @@ public class RootWizardFragment extends Fragment {
                     ErrFragment fragment = model.getThisList().get(destinations.indexOf(currentLoc));
                     fragment.showErrors();
                 }
-
             }
         });
 
@@ -198,5 +214,13 @@ public class RootWizardFragment extends Fragment {
             Objects.requireNonNull(manager).hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
         super.onDetach();
+    }
+
+    void addMedGoUp(View v){
+        long medID = mainModel.insert(model.getMedication());
+        medModel.getMedList().add(model.getMedication());
+        Navigation.findNavController(v).navigateUp();
+        if (model.getInstructions() != null && !model.getInstructions().equals(""))
+            mainModel.insert(new Instructions(medID, model.getInstructions()));
     }
 }

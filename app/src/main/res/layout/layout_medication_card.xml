@@ -23,11 +23,12 @@
                 android:layout_width="0dp"
                 android:layout_height="80dp"
                 android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
                 android:background="@color/colorAccent"
                 android:tint="#FFFFFF"
                 app:layout_constraintDimensionRatio="1"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/textViewMedName"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_pill" />
 
             <TextView
@@ -35,9 +36,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
                 android:text="Ibuprofen"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/medImage"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -45,7 +47,10 @@
                 android:id="@+id/textViewDoctorName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:gravity="start"
                 android:text="Doctor MD"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textViewMedName"
                 app:layout_constraintTop_toBottomOf="@+id/textViewMedName" />
 
@@ -53,24 +58,31 @@
                 android:id="@+id/textViewMedDosage"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:gravity="start"
                 android:text="12 pills"
-                app:layout_constraintStart_toStartOf="@+id/textViewDoctorName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/textViewMedName"
                 app:layout_constraintTop_toBottomOf="@+id/textViewDoctorName" />
 
             <TextView
                 android:id="@+id/textViewActive"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:gravity="start"
                 android:text="Active: yes"
-                app:layout_constraintStart_toStartOf="@+id/textViewMedDosage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/textViewMedName"
                 app:layout_constraintTop_toBottomOf="@+id/textViewMedDosage" />
 
             <TextView
                 android:id="@+id/textViewStartDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:text="10/10/19"
-                app:layout_constraintBottom_toBottomOf="@id/textViewEndDate"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textViewActive"
                 app:layout_constraintTop_toBottomOf="@+id/textViewActive" />
 
@@ -81,26 +93,6 @@
                 android:text=" - 9/9/19"
                 app:layout_constraintStart_toEndOf="@+id/textViewStartDate"
                 app:layout_constraintTop_toBottomOf="@+id/textViewActive" />
-
-            <ImageButton
-                android:id="@+id/medicationCardExpand"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#00FFFFFF"
-                app:layout_constraintBottom_toBottomOf="@+id/textViewEndDate"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:srcCompat="@drawable/ic_expand_more_24px" />
-
-            <TextView
-                android:id="@+id/expandableTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textViewStartDate"
-                app:layout_constraintTop_toBottomOf="@+id/textViewStartDate"
-                app:layout_constraintVertical_bias="0.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

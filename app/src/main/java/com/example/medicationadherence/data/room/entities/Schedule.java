@@ -15,9 +15,9 @@ import androidx.room.ForeignKey;
 import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(primaryKeys = {"medicationID", "time", "weekdays"}, foreignKeys =
-@ForeignKey(entity = MedicationEntity.class, parentColumns = "medicationID", childColumns = "medicationID", onDelete = CASCADE))
+@ForeignKey(entity = Medication.class, parentColumns = "medicationID", childColumns = "medicationID", onDelete = CASCADE))
 public class Schedule {
-	private int medicationID;       /* FK MedicationEntity.medicationID */
+	private int medicationID;       /* FK Medication.medicationID */
 	private int numDoses;
 	private long time;
 	@NonNull
@@ -42,8 +42,8 @@ public class Schedule {
 	public void setTime(long time) {
         this.time = time;
     }
-	
-	@NonNull
+
+    @NonNull
     public long getTime() {
         return this.time;
     }

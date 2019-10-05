@@ -13,10 +13,9 @@ import com.example.medicationadherence.data.room.dao.MedicationLogDAO;
 import com.example.medicationadherence.data.room.dao.ScheduleDAO;
 import com.example.medicationadherence.data.room.entities.Doctor;
 import com.example.medicationadherence.data.room.entities.Instructions;
-import com.example.medicationadherence.data.room.entities.MedicationEntity;
+import com.example.medicationadherence.data.room.entities.Medication;
 import com.example.medicationadherence.data.room.entities.MedicationLog;
 import com.example.medicationadherence.data.room.entities.Schedule;
-import com.example.medicationadherence.model.Medication;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -27,7 +26,6 @@ public class Repository {
     private MedicationDAO mMedicationDAO;
     private MedicationLogDAO mMedicationLogDAO;
     private ScheduleDAO mScheduleDAO;
-    private LiveData<List<Medication>> medList;
     private LiveData<List<ScheduleDAO.ScheduleCard>> cardList;
 
     public Repository(Application application){
@@ -37,7 +35,6 @@ public class Repository {
         mMedicationDAO = medDB.getMedicationDao();
         mMedicationLogDAO = medDB.getMedicationLogDao();
         mScheduleDAO = medDB.getScheduleDao();
-        //TODO: fill medList;
         cardList = mScheduleDAO.loadScheduled();
     }
 
@@ -45,8 +42,13 @@ public class Repository {
         return cardList;
     }
 
-    public LiveData<List<Medication>> getMedList(){
-        return medList;
+    public List<Medication> getMedList(){
+        try {
+            return new GetMedListTask(mMedicationDAO).execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public long insert(Doctor doctor){
@@ -71,8 +73,13 @@ public class Repository {
         new InsertAsyncTask(mInstructionsDAO).execute(instructions);
     }
 
-    public void insert(MedicationEntity medication){
-        new InsertAsyncTask(mMedicationDAO).execute(medication);
+    public long insert(Medication medication){
+        try {
+            return new InsertAsyncTask(mMedicationDAO).execute(medication).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     public void insert(MedicationLog medicationLog){
@@ -98,6 +105,24 @@ public class Repository {
 
     public void updateDoctor(Long id, String doctorName, String practiceName, String address, String phone){
         new UpdateDoctorAsyncTask(mDoctorDAO, id, doctorName, practiceName, address, phone).execute();
+    }
+
+    public Doctor getDocWithID(Long doctorID){
+        try {
+            return (Doctor)new GetWIDTask(mDoctorDAO).execute(doctorID).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getInstWithID(Long medicationID){
+        try {
+            return (String)new GetWIDTask(mInstructionsDAO).execute(medicationID).get();
+        } catch (ExecutionException | InterruptedException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private static class GWNAsyncTask extends AsyncTask<String, Void, List<Doctor>>{
@@ -147,11 +172,38 @@ public class Repository {
             } else if (instructionsDAO != null){
                 instructionsDAO.insert((Instructions) objects[0]);
             } else if (medicationDAO != null){
-                medicationDAO.insert((MedicationEntity) objects[0]);
+                return medicationDAO.insert((Medication) objects[0]);
             } else if (medicationLogDAO != null){
                 medicationLogDAO.insert((MedicationLog) objects[0]);
             } else if (scheduleDAO != null){
                 scheduleDAO.insert((Schedule) objects[0]);
+            }
+            return (long) -1;
+        }
+    }
+
+    private static class GetWIDTask extends AsyncTask<Object, Void, Object> {
+        private DoctorDAO doctorDAO;
+        private InstructionsDAO instructionsDAO;
+        private MedicationDAO medicationDAO;
+        private MedicationLogDAO medicationLogDAO;
+        private ScheduleDAO scheduleDAO;
+
+        public GetWIDTask(DoctorDAO doctorDAO) {
+            this.doctorDAO = doctorDAO;
+        }
+
+        public GetWIDTask(InstructionsDAO instructionsDAO) {
+            this.instructionsDAO = instructionsDAO;
+        }
+
+        @Override
+        protected Object doInBackground(Object... objects) {
+            Object lng = objects[0];
+            if (doctorDAO != null) {
+                return doctorDAO.getWithID((Long) lng);
+            } else if (instructionsDAO != null) {
+                return instructionsDAO.getInstWithID((Long) lng);
             }
             return (long) -1;
         }
@@ -180,6 +232,19 @@ public class Repository {
             medicationLogDAO.clearTable();
             scheduleDAO.clearTable();
             return null;
+        }
+    }
+
+    private static class GetMedListTask extends AsyncTask<Void, Void, List<Medication>>{
+        private MedicationDAO medicationDAO;
+
+        public GetMedListTask(MedicationDAO medicationDAO) {
+            this.medicationDAO = medicationDAO;
+        }
+
+        @Override
+        protected List<Medication> doInBackground(Void... voids) {
+            return medicationDAO.getAllMedications();
         }
     }
 
@@ -219,4 +284,28 @@ public class Repository {
             return null;
         }
     }
+//
+//    private static class getInst extends AsyncTask<Void, Void, List<Instructions>>{
+//        private InstructionsDAO medicationDAO;
+//
+//        public getInst(InstructionsDAO medicationDAO) {
+//            this.medicationDAO = medicationDAO;
+//        }
+//
+//        @Override
+//        protected List<Instructions> doInBackground(Void... voids) {
+//            return medicationDAO.getAllInstructions();
+//        }
+//    }
+//
+//    public List<Instructions> getIList() {
+//        try {
+//            return new getInst(mInstructionsDAO).execute().get();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 }

@@ -1,6 +1,6 @@
 package com.example.medicationadherence.data.room.entities;
 
-/* MedicationEntity entity in MedicationDatabase
+/* Medication entity in MedicationDatabase
    
    Implemented using Android Room
    
@@ -19,9 +19,9 @@ import static androidx.room.ForeignKey.CASCADE;
 @Entity(foreignKeys =
 @ForeignKey(entity = Doctor.class, parentColumns = "doctorID", childColumns = "doctorID", onDelete = CASCADE), indices = {
 @Index("doctorID")})
-public class MedicationEntity {
+public class Medication {
 	@PrimaryKey(autoGenerate = true)
-	private int medicationID;
+	private Long medicationID;
 
 	private String name;
 	private boolean status;
@@ -32,11 +32,11 @@ public class MedicationEntity {
 	private int containerVolume;
 	private double cost;
 
-    public int getMedicationID() {
+    public Long getMedicationID() {
         return medicationID;
     }
 
-    public void setMedicationID(int medicationID) {
+    public void setMedicationID(Long medicationID) {
         this.medicationID = medicationID;
     }
 
@@ -104,7 +104,7 @@ public class MedicationEntity {
         this.cost = cost;
     }
 
-    public MedicationEntity(String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost) {
+    public Medication(String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost) {
         this.name = name;
         this.status = status;
         this.doctorID = doctorID;

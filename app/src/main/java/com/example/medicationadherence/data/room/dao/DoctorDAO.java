@@ -40,4 +40,7 @@ public interface DoctorDAO {
 
     @Query("SELECT * FROM DOCTOR WHERE name = :name")
     List<Doctor> getWithName(String name);
+
+    @Query("SELECT * FROM DOCTOR WHERE doctorID = :doctorID")
+    Doctor getWithID(Long doctorID);
 }

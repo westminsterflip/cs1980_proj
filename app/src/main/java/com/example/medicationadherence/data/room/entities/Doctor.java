@@ -13,6 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.Objects;
+
 @Entity
 public class Doctor {
 	@PrimaryKey(autoGenerate = true)
@@ -74,7 +76,7 @@ public class Doctor {
     @Override
     public boolean equals(@Nullable Object obj) {
         Doctor doc = (Doctor)obj;
-        boolean out = doc.getName().equals(name);
+        boolean out = Objects.requireNonNull(doc).getName().equals(name);
         out &= (doc.getPracticeName()==null?practiceName==null:doc.getPracticeName().equals(practiceName));
         out &= (doc.getAddress()==null?address==null:doc.getAddress().equals(address));
         out &= (doc.getPhone()==null?phone==null:doc.getPhone().equals(phone));

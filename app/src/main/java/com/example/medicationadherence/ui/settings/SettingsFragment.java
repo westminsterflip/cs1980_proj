@@ -26,7 +26,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mainModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
+        mainModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -65,7 +65,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onDisplayPreferenceDialog(Preference preference) {
         //TODO: change to alertdialog
         if (preference instanceof DataDialogPreference){
-            new AlertDialog.Builder(getContext()).setTitle("Delete Database")
+            new AlertDialog.Builder(Objects.requireNonNull(getContext())).setTitle("Delete Database")
                 .setMessage(R.string.data_dialog_warning)
                 .setPositiveButton("yes", new DialogInterface.OnClickListener() {
                     @Override
