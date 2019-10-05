@@ -130,8 +130,12 @@ public class RootWizardFragment extends Fragment {
                         //Navigation.findNavController(v).navigateUp();
                         if(model.getDoctorName()!= null && !model.getDoctorName().equals("")){
                             if(model.getSpinnerSelection() == 1) {//add new doctor if doesn't exist
+                                if(mainModel.getDocWithName(model.getDoctorName())==null){
+                                    model.setDoctorID(mainModel.insert(model.getDoctor()));
+                                } else {
+
+                                }
                                 //TODO check if exists then this: AlertDialog.Builder, edit if exists
-                                model.setDoctorID(mainModel.insert(model.getDoctor()));
                             } else if(model.getSpinnerSelection() > 1){
                                 if(mainModel.getRepository().getDoctors().indexOf(model.getDoctor())==-1)
                                     mainModel.updateDoctor(mainModel.getRepository().getDoctors().get(model.getSpinnerSelection()-2).getDoctorID(), model.getDoctorName(), model.getPracticeName(), model.getPracticeAddress(), model.getPhone());

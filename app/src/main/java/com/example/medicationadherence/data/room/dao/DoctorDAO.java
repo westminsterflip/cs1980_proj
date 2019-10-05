@@ -25,7 +25,7 @@ public interface DoctorDAO {
  
     @Update
     void update(Doctor... doctors);
- 
+
     @Delete
     void delete(Doctor... doctor);
 
@@ -37,4 +37,7 @@ public interface DoctorDAO {
 
     @Query("UPDATE Doctor SET name = :name, practiceName = :practiceName, address = :address, phone = :phone WHERE doctorID = :id")
     void update(Long id, String name, String practiceName, String address, String phone);
+
+    @Query("SELECT * FROM DOCTOR WHERE name = :name")
+    List<Doctor> getWithName(String name);
 }

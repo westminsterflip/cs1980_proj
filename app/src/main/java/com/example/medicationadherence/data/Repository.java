@@ -87,8 +87,30 @@ public class Repository {
         new DeleteAsyncTask(mDoctorDAO, mInstructionsDAO, mMedicationDAO, mMedicationLogDAO, mScheduleDAO).execute();
     }
 
+    public List<Doctor> getDocWithName(String name){
+        try {
+            return new GWNAsyncTask(mDoctorDAO).execute(name).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void updateDoctor(Long id, String doctorName, String practiceName, String address, String phone){
         new UpdateDoctorAsyncTask(mDoctorDAO, id, doctorName, practiceName, address, phone).execute();
+    }
+
+    private static class GWNAsyncTask extends AsyncTask<String, Void, List<Doctor>>{
+        private DoctorDAO doctorDAO;
+
+        public GWNAsyncTask(DoctorDAO doctorDAO) {
+            this.doctorDAO = doctorDAO;
+        }
+
+        @Override
+        protected List<Doctor> doInBackground(String... strings) {
+            return doctorDAO.getWithName(strings[0]);
+        }
     }
 
     private static class InsertAsyncTask extends AsyncTask<Object, Void, Long> {

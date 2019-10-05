@@ -102,4 +102,8 @@ public class MainViewModel extends AndroidViewModel {
         if(practice != null && practice.equals("")) practice =null;
         repository.updateDoctor(id, doctorName, practice, address, phone);
     }
+
+    public List<Doctor> getDocWithName(String name){
+        return repository.getDocWithName(name);
+    }
 }
