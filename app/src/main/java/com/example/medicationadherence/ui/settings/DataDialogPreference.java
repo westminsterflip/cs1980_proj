@@ -7,7 +7,6 @@ import androidx.preference.DialogPreference;
 
 import com.example.medicationadherence.R;
 public class DataDialogPreference extends DialogPreference {
-    private final int dialogLayoutResID = R.layout.layout_data_dialog_pref;
 
     public DataDialogPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
@@ -23,11 +22,6 @@ public class DataDialogPreference extends DialogPreference {
 
     public DataDialogPreference(Context context) {
         this(context, null);
-    }
-
-    @Override
-    public int getDialogLayoutResource() {
-        return dialogLayoutResID;
     }
 }
 

@@ -67,7 +67,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         if (preference instanceof DataDialogPreference){
             new AlertDialog.Builder(getContext()).setTitle("Delete Database")
                 .setMessage(R.string.data_dialog_warning)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton("yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mainModel.deleteAll();
