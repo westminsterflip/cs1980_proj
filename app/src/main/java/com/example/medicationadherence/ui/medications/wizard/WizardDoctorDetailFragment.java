@@ -31,6 +31,7 @@ import java.util.Objects;
 
 //TODO: https://developers.google.com/places/android-sdk/autocomplete
 //TODO: https://developer.android.com/guide/topics/text/autofill
+//TODO: dialog for updating if name exists but fields null
 public class WizardDoctorDetailFragment extends Fragment implements RootWizardFragment.ErrFragment {
     private RootWizardViewModel model;
     private Spinner doctorChooser;
