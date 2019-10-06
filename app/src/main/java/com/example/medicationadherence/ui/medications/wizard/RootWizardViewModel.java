@@ -10,6 +10,7 @@ import com.example.medicationadherence.data.room.entities.Doctor;
 import com.example.medicationadherence.data.room.entities.Medication;
 import com.example.medicationadherence.ui.medications.MedicationViewModel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -83,6 +84,7 @@ public class RootWizardViewModel extends ViewModel {
 
     public void setStartDate(long startDate) {
         this.startDate = startDate;
+        System.out.println("set start date: " + new SimpleDateFormat("MM-dd-yyyy").format(this.startDate));
     }
 
     public long getEndDate() {
@@ -91,6 +93,7 @@ public class RootWizardViewModel extends ViewModel {
 
     public void setEndDate(long endDate) {
         this.endDate = endDate;
+        System.out.println("set end date: " + new SimpleDateFormat("MM-dd-yyyy").format(this.endDate));
     }
 
     public int getOnHand() {
