@@ -1,5 +1,7 @@
 package com.example.medicationadherence.ui.medications.wizard;
 
+import android.app.DatePickerDialog;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -33,6 +35,7 @@ public class RootWizardViewModel extends ViewModel {
     private String phone;
     private Long doctorID = null;
     private MutableLiveData<ArrayList<Integer>> destinations;
+    private DatePickerDialog datePickerDialog;
 
     public int getMedImage() {
         return medImage;
@@ -207,5 +210,13 @@ public class RootWizardViewModel extends ViewModel {
 
     public void setDestinations(MutableLiveData<ArrayList<Integer>> destinations) {
         this.destinations = destinations;
+    }
+
+    public DatePickerDialog getDatePickerDialog() {
+        return datePickerDialog;
+    }
+
+    public void setDatePickerDialog(DatePickerDialog datePickerDialog) {
+        this.datePickerDialog = datePickerDialog;
     }
 }

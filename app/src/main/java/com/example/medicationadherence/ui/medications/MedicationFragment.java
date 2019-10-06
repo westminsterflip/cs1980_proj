@@ -33,7 +33,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
 
-//TODO: open wizard
 public class MedicationFragment extends Fragment implements Serializable {
     private MedicationViewModel model;
     private MainViewModel mainModel;

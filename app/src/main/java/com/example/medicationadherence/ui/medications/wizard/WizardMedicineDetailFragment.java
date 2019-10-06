@@ -52,17 +52,19 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
     private TextInputEditText cost;
     private CheckBox asNeeded;
     private TextInputEditText instructions;
-    private DatePickerDialog datePickerDialog; //TODO: Currently has to be dismissed on theme/configuration change or app crashes
+    private DatePickerDialog datePickerDialog;
+    private boolean start = true;//TODO: Currently has to be dismissed on theme/configuration change or app crashes
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         model = new ViewModelProvider(Objects.requireNonNull(Objects.requireNonNull(getParentFragment()).getParentFragment())).get(RootWizardViewModel.class);
+        datePickerDialog = model.getDatePickerDialog();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_wizard_medicine_detail, container, false);
+        final View root = inflater.inflate(R.layout.fragment_wizard_medicine_detail, container, false);
 
         medName = root.findViewById(R.id.wizardMedName);
         medNameRequired = root.findViewById(R.id.wizardMedNameRequired);
@@ -83,11 +85,62 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
         if(savedInstanceState != null) {
             medNameRequired.setVisibility((savedInstanceState.getBoolean("medNameRequiredVisible", false)) ? View.VISIBLE : View.INVISIBLE);
             dosageRequired.setVisibility((savedInstanceState.getBoolean("dosageRequiredVisible", false)) ? View.VISIBLE : View.INVISIBLE);
+            if(savedInstanceState.getBoolean("dateDialogVisible", false) && datePickerDialog != null){
+                datePickerDialog.show();
+                final Calendar cal = Calendar.getInstance();
+                if (savedInstanceState.getBoolean("datePickerStart", true)){
+                    datePickerDialog.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                            long currTime = cal.getTimeInMillis();
+                            cal.clear();
+                            cal.set(Calendar.YEAR, year);
+                            cal.set(Calendar.MONTH, month);
+                            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                            ((TextView)root.findViewById(R.id.wizardStartDate)).setText(new SimpleDateFormat("MM/dd/yyyy", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(new Date(cal.getTimeInMillis())));
+                            model.setStartDate(cal.getTimeInMillis());
+                            if (cal.getTimeInMillis() > currTime)
+                                active.setChecked(false);
+                            else
+                                active.setChecked(true);
+                        }
+                    });
+                } else {
+                    datePickerDialog.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                            long currTime = cal.getTimeInMillis();
+                            cal.clear();
+                            cal.set(Calendar.YEAR, year);
+                            cal.set(Calendar.MONTH, month);
+                            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                            if(cal.getTimeInMillis() < model.getStartDate() || cal.getTimeInMillis() < currTime){
+                                model.setEndDate(-1);
+                                endDate.setText("");
+                                endBefore.setVisibility(View.VISIBLE);
+                            } else {
+                                endBefore.setVisibility(View.INVISIBLE);
+                                endDate.setText(new SimpleDateFormat("MM/dd/yyyy", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(new Date(cal.getTimeInMillis())));
+                            }
+                            model.setEndDate(cal.getTimeInMillis());
+                        }
+                    });
+                    datePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            model.setEndDate(-1);
+                            endDate.setText("");
+                            endBefore.setVisibility(View.INVISIBLE);
+                        }
+                    });
+                }
+            }
         }
 
         setStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                start = true;
                 final Calendar cal = Calendar.getInstance();
                 cal.set(Calendar.HOUR_OF_DAY,0);
                 cal.clear(Calendar.AM_PM);
@@ -108,7 +161,6 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
                             active.setChecked(false);
                         else
                             active.setChecked(true);
-                        //TODO: set active or inactive based on start time;
                     }
                 };
                 datePickerDialog = new DatePickerDialog(Objects.requireNonNull(getContext()), listener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
@@ -119,6 +171,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
         setEnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                start = false;
                 final Calendar cal = Calendar.getInstance();
                 cal.set(Calendar.HOUR_OF_DAY,0);
                 cal.clear(Calendar.AM_PM);
@@ -149,6 +202,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
                     public void onCancel(DialogInterface dialog) {
                         model.setEndDate(-1);
                         endDate.setText("");
+                        endBefore.setVisibility(View.INVISIBLE);
                     }
                 };
                 datePickerDialog = new DatePickerDialog(Objects.requireNonNull(getContext()), listener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
@@ -241,6 +295,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
     @Override
     public void onPause() {
         pause();
+        model.setDatePickerDialog(datePickerDialog);
         super.onPause();
     }
 
@@ -249,7 +304,12 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
         if(this.isVisible()){
             outState.putBoolean("medNameRequiredVisible", medNameRequired.getVisibility() == View.VISIBLE);
             outState.putBoolean("dosageRequiredVisible", dosageRequired.getVisibility() == View.VISIBLE);
+            if(datePickerDialog != null)
+                outState.putBoolean("dateDialogVisible", datePickerDialog.isShowing());
+            outState.putBoolean("datePickerStart", start);
         }
+        if(datePickerDialog != null)
+            datePickerDialog.dismiss();
         super.onSaveInstanceState(outState);
     }
 

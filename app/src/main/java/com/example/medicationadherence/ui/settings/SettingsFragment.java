@@ -63,7 +63,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onDisplayPreferenceDialog(Preference preference) {
-        //TODO: change to alertdialog
         if (preference instanceof DataDialogPreference){
             new AlertDialog.Builder(Objects.requireNonNull(getContext())).setTitle("Delete Database")
                 .setMessage(R.string.data_dialog_warning)
