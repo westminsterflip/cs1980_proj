@@ -83,7 +83,6 @@ public class DailyMedListFragment extends Fragment {
         updateText();
 
         //TODO: scroll to current time upon opening list
-        //TODO: coloring for past events?
         //TODO: time separators in recyclerview
         dailyViewPager = root.findViewById(R.id.dailyViewPager);
         model.setMedAdapter(new DailyViewPagerAdapter(model.getDateList(), model.getMedications().getValue()));
@@ -111,7 +110,7 @@ public class DailyMedListFragment extends Fragment {
                                 model.setNextDate(cal2.getTimeInMillis());
                                 model.loadNextMeds();
                             }
-                            dailyViewPager.setAdapter(model.getMedAdapter());
+                            dailyViewPager.setAdapter(model.getMedAdapter()); //TODO: change to notify adapter somehow
                             dailyViewPager.setCurrentItem(1);
                             updateText();
                         }

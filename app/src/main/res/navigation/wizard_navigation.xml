@@ -17,5 +17,14 @@
         android:id="@+id/wizardDoctorDetailFragment"
         android:name="com.example.medicationadherence.ui.medications.wizard.WizardDoctorDetailFragment"
         android:label="fragment_wizard_doctor_detail"
-        tools:layout="@layout/fragment_wizard_doctor_detail" />
+        tools:layout="@layout/fragment_wizard_doctor_detail" >
+        <action
+            android:id="@+id/action_wizardDoctorDetailFragment_to_editScheduleCardFragment2"
+            app:destination="@id/editScheduleCardFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/editScheduleCardFragment2"
+        android:name="com.example.medicationadherence.ui.home.schedule.EditScheduleCardFragment"
+        android:label="fragment_edit_schedule_card"
+        tools:layout="@layout/fragment_edit_schedule_card" />
 </navigation>

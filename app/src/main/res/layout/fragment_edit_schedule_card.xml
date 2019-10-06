@@ -1,8 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout5"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.home.schedule.EditScheduleCardFragment">
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/scheduleMedName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="5dp"
+        android:text="TextView"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/scheduleDecreaseDoses"
+        style="@style/Widget.AppCompat.ImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#00FFFFFF"
+        android:src="@drawable/ic_minus"
+        app:layout_constraintStart_toStartOf="@+id/scheduleMedName"
+        app:layout_constraintTop_toBottomOf="@+id/scheduleMedName" />
+
+    <EditText
+        android:id="@+id/scheduleDoseCount"
+        android:layout_width="60dp"
+        android:layout_height="0dp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/scheduleIncreaseDoses"
+        app:layout_constraintStart_toEndOf="@+id/scheduleDecreaseDoses"
+        app:layout_constraintTop_toBottomOf="@+id/scheduleMedName" />
+
+    <ImageButton
+        android:id="@+id/scheduleIncreaseDoses"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#00FFFFFF"
+        android:foregroundTint="#00DB0606"
+        android:src="@drawable/ic_add_24px"
+        android:tint="?attr/colorControlNormal"
+        android:tintMode="src_in"
+        app:layout_constraintStart_toEndOf="@+id/scheduleDoseCount"
+        app:layout_constraintTop_toBottomOf="@+id/scheduleMedName" />
+
+    <TextView
+        android:id="@+id/scheduleDosesText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" doses \@ "
+        app:layout_constraintBottom_toBottomOf="@+id/scheduleIncreaseDoses"
+        app:layout_constraintStart_toEndOf="@+id/scheduleIncreaseDoses"
+        app:layout_constraintTop_toBottomOf="@+id/scheduleMedName" />
+
+    <TextView
+        android:id="@+id/scheduleDoseSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0mg"
+        app:layout_constraintBottom_toBottomOf="@+id/scheduleDosesText"
+        app:layout_constraintStart_toEndOf="@+id/scheduleDosesText"
+        app:layout_constraintTop_toTopOf="@+id/scheduleDosesText" />
+</androidx.constraintlayout.widget.ConstraintLayout>

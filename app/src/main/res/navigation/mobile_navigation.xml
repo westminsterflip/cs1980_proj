@@ -58,5 +58,18 @@
         android:id="@+id/editScheduleFragment"
         android:name="com.example.medicationadherence.ui.home.schedule.EditScheduleFragment"
         android:label="fragment_edit_schedule"
-        tools:layout="@layout/fragment_edit_schedule" />
+        tools:layout="@layout/fragment_edit_schedule" >
+        <action
+            android:id="@+id/action_editScheduleFragment_to_editScheduleCardFragment"
+            app:destination="@id/editScheduleCardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editScheduleCardFragment"
+        android:name="com.example.medicationadherence.ui.home.schedule.EditScheduleCardFragment"
+        android:label="fragment_edit_schedule_card"
+        tools:layout="@layout/fragment_edit_schedule_card" >
+        <argument
+            android:name="medicationID"
+            app:argType="java.lang.Long" />
+    </fragment>
 </navigation>

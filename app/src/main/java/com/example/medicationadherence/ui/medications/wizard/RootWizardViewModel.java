@@ -10,7 +10,6 @@ import com.example.medicationadherence.data.room.entities.Doctor;
 import com.example.medicationadherence.data.room.entities.Medication;
 import com.example.medicationadherence.ui.medications.MedicationViewModel;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -28,7 +27,7 @@ public class RootWizardViewModel extends ViewModel {
     private double cost = -1;
     private boolean asNeeded = false;
     private MedicationViewModel model;
-    private boolean[] destinationExitable = {false, true};
+    private boolean[] destinationExitable = {false, true, false};
     private ArrayList<RootWizardFragment.ErrFragment> thisList = new ArrayList<>();
     private int spinnerSelection = 0;
     private String practiceName;
@@ -37,6 +36,7 @@ public class RootWizardViewModel extends ViewModel {
     private Long doctorID = null;
     private MutableLiveData<ArrayList<Integer>> destinations;
     private DatePickerDialog datePickerDialog;
+    private boolean scheduleAfter = false;
 
     public int getMedImage() {
         return medImage;
@@ -84,7 +84,6 @@ public class RootWizardViewModel extends ViewModel {
 
     public void setStartDate(long startDate) {
         this.startDate = startDate;
-        System.out.println("set start date: " + new SimpleDateFormat("MM-dd-yyyy").format(this.startDate));
     }
 
     public long getEndDate() {
@@ -93,7 +92,6 @@ public class RootWizardViewModel extends ViewModel {
 
     public void setEndDate(long endDate) {
         this.endDate = endDate;
-        System.out.println("set end date: " + new SimpleDateFormat("MM-dd-yyyy").format(this.endDate));
     }
 
     public int getOnHand() {
@@ -211,10 +209,6 @@ public class RootWizardViewModel extends ViewModel {
         return destinations;
     }
 
-    public void setDestinations(MutableLiveData<ArrayList<Integer>> destinations) {
-        this.destinations = destinations;
-    }
-
     public DatePickerDialog getDatePickerDialog() {
         return datePickerDialog;
     }
@@ -222,4 +216,14 @@ public class RootWizardViewModel extends ViewModel {
     public void setDatePickerDialog(DatePickerDialog datePickerDialog) {
         this.datePickerDialog = datePickerDialog;
     }
+
+    public boolean isScheduleAfter() {
+        return scheduleAfter;
+    }
+
+    public void setScheduleAfter(boolean scheduleAfter) {
+        this.scheduleAfter = scheduleAfter;
+    }
+
+
 }

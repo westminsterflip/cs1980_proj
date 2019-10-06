@@ -9,14 +9,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.medicationadherence.R;
+import com.example.medicationadherence.ui.medications.wizard.RootWizardFragment;
 
-public class EditScheduleFragment extends Fragment {
-
+public class EditScheduleFragment extends Fragment implements RootWizardFragment.ErrFragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -26,4 +25,13 @@ public class EditScheduleFragment extends Fragment {
         return root;
     }
 
+    @Override
+    public void showErrors() {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
 }

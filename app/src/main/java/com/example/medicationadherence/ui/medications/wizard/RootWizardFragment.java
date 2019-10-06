@@ -93,7 +93,6 @@ public class RootWizardFragment extends Fragment {
                     Navigation.findNavController(root).navigateUp();
                 } else {
                     innerNavController.navigateUp();
-                    innerNavController.navigate(R.id.wizardMedicineDetailFragment);
                     if (innerNavController.getCurrentDestination().getId() == destinations.get(0)){
                         setHasLast(false);
                     }

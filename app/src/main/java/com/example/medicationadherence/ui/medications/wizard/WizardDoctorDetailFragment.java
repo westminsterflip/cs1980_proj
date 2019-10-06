@@ -9,10 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -46,6 +47,7 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
     private TextInputEditText phone;
     private List<Doctor> doctorList;
     private MainViewModel mainModel;
+    private CheckBox scheduleAfter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,13 +75,13 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
         practiceAddress = root.findViewById(R.id.wizardPracticeAddress);
         phoneLayout = root.findViewById(R.id.textInputPhone);
         phone = root.findViewById(R.id.wizardPhone);
+        scheduleAfter = root.findViewById(R.id.wizardScheduleAfter);
 
         ArrayList<String> doctors = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.doctorChooserItems)));
         ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), R.layout.support_simple_spinner_dropdown_item, doctors);
         for(Doctor doctor : doctorList){
             adapter.add(doctor.getName());
         }
-        //TODO: add doctors from db
         doctorChooser.setAdapter(adapter);
         doctorChooser.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -127,8 +129,10 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
                 //This shouldn't happen
             }
         });
-        if(savedInstanceState == null)
+        if(savedInstanceState == null) {
             doctorChooser.setSelection(model.getSpinnerSelection());
+            scheduleAfter.setChecked(model.isScheduleAfter());
+        }
         doctorName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -144,8 +148,18 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
             public void afterTextChanged(Editable s) {
             }
         });
-
-        //TODO: error check phone number
+        scheduleAfter.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                System.out.println("checked: " + isChecked);
+                if (isChecked){
+                    model.getDestinations().getValue().add(R.id.editScheduleCardFragment2);
+                } else {
+                    model.getDestinations().getValue().remove((Integer)R.id.editScheduleCardFragment2);
+                }
+                model.getDestinations().postValue(model.getDestinations().getValue());
+            }
+        });
         return root;
     }
 
@@ -174,12 +188,6 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putBoolean("showErrors", doctorNameRequired.getVisibility() == View.VISIBLE);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
     public void pause() {
         model.setSpinnerSelection(doctorChooser.getSelectedItemPosition());
         if(!Objects.requireNonNull(doctorName.getText()).toString().equals(""))
@@ -190,5 +198,6 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
             model.setPracticeAddress(practiceAddress.getText().toString());
         if(!Objects.requireNonNull(phone.getText()).toString().equals(""))
             model.setPhone(phone.getText().toString());
+        model.setScheduleAfter(scheduleAfter.isChecked());
     }
 }
