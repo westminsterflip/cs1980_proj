@@ -25,6 +25,7 @@
         style="@style/Widget.AppCompat.ImageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:backgroundTint="#00FFFFFF"
         android:src="@drawable/ic_minus"
         app:layout_constraintStart_toStartOf="@+id/scheduleMedName"
@@ -34,8 +35,10 @@
         android:id="@+id/scheduleDoseCount"
         android:layout_width="60dp"
         android:layout_height="0dp"
+        android:layout_marginTop="10dp"
         android:ems="10"
         android:inputType="numberDecimal"
+        android:text="1"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/scheduleIncreaseDoses"
         app:layout_constraintStart_toEndOf="@+id/scheduleDecreaseDoses"
@@ -45,6 +48,7 @@
         android:id="@+id/scheduleIncreaseDoses"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:backgroundTint="#00FFFFFF"
         android:foregroundTint="#00DB0606"
         android:src="@drawable/ic_add_24px"
@@ -57,7 +61,8 @@
         android:id="@+id/scheduleDosesText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=" doses \@ "
+        android:layout_marginTop="10dp"
+        android:text=" dose \@ "
         app:layout_constraintBottom_toBottomOf="@+id/scheduleIncreaseDoses"
         app:layout_constraintStart_toEndOf="@+id/scheduleIncreaseDoses"
         app:layout_constraintTop_toBottomOf="@+id/scheduleMedName" />
@@ -70,4 +75,135 @@
         app:layout_constraintBottom_toBottomOf="@+id/scheduleDosesText"
         app:layout_constraintStart_toEndOf="@+id/scheduleDosesText"
         app:layout_constraintTop_toTopOf="@+id/scheduleDosesText" />
+
+    <Switch
+        android:id="@+id/scheduleDaily"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:text="Daily"
+        app:layout_constraintStart_toStartOf="@+id/scheduleDecreaseDoses"
+        app:layout_constraintTop_toBottomOf="@+id/scheduleDecreaseDoses" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="@+id/scheduleMedName"
+        app:layout_constraintStart_toStartOf="@+id/scheduleMedName"
+        app:layout_constraintTop_toBottomOf="@+id/scheduleDaily">
+
+        <CheckBox
+            android:id="@+id/scheduleSunday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Su" />
+
+        <CheckBox
+            android:id="@+id/scheduleMonday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="M" />
+
+        <CheckBox
+            android:id="@+id/scheduleTuesday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="T" />
+
+        <CheckBox
+            android:id="@+id/scheduleWednesday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="W" />
+
+        <CheckBox
+            android:id="@+id/scheduleThursday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Th" />
+
+        <CheckBox
+            android:id="@+id/scheduleFriday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="F" />
+
+        <CheckBox
+            android:id="@+id/scheduleSaturday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="S" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/scheduleSetStart"
+        android:layout_width="137dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Set start date"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout3"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+
+    <TextView
+        android:id="@+id/scheduleStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="1dp"
+        android:text="TextView"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/scheduleSetStart"
+        app:layout_constraintStart_toEndOf="@+id/scheduleSetStart"
+        app:layout_constraintTop_toTopOf="@+id/scheduleSetStart" />
+
+    <Button
+        android:id="@+id/scheduleSetEnd"
+        android:layout_width="137dp"
+        android:layout_height="wrap_content"
+        android:text="Set end date"
+        app:layout_constraintStart_toStartOf="@+id/scheduleSetStart"
+        app:layout_constraintTop_toBottomOf="@+id/scheduleSetStart" />
+
+    <TextView
+        android:id="@+id/scheduleEndDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="1dp"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/scheduleSetEnd"
+        app:layout_constraintStart_toEndOf="@+id/scheduleSetEnd"
+        app:layout_constraintTop_toTopOf="@+id/scheduleSetEnd" />
+
+    <Button
+        android:id="@+id/scheduleSetTime"
+        android:layout_width="137dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Set time"
+        app:layout_constraintStart_toStartOf="@+id/scheduleSetEnd"
+        app:layout_constraintTop_toBottomOf="@+id/scheduleSetEnd" />
+
+    <TextView
+        android:id="@+id/scheduleTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="1dp"
+        android:text="TextView"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/scheduleSetTime"
+        app:layout_constraintStart_toEndOf="@+id/scheduleSetTime"
+        app:layout_constraintTop_toTopOf="@+id/scheduleSetTime" />
 </androidx.constraintlayout.widget.ConstraintLayout>

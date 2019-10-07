@@ -32,4 +32,7 @@ public interface MedicationDAO {
 
 	@Query("DELETE FROM Medication")
     void clearTable();
+
+	@Query("SELECT * FROM MEDICATION WHERE medicationID = :medicationID")
+    Medication getMedWithID(Long medicationID);
 }

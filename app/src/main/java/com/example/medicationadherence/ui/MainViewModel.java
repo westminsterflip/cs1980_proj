@@ -114,4 +114,6 @@ public class MainViewModel extends AndroidViewModel {
     public Doctor getDoctorWithID(Long doctorID){return repository.getDocWithID(doctorID);}
 
     public String getInstWithID(Long medicationID){return repository.getInstWithID(medicationID);}
+
+    public Medication getMedWithID(Long medicationID){return repository.getMedWithID(medicationID);}
 }

@@ -125,6 +125,15 @@ public class Repository {
         return null;
     }
 
+    public Medication getMedWithID(Long medicationID){
+        try {
+            return (Medication)new GetWIDTask(mMedicationDAO).execute(medicationID).get();
+        } catch (ExecutionException | InterruptedException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private static class GWNAsyncTask extends AsyncTask<String, Void, List<Doctor>>{
         private DoctorDAO doctorDAO;
 
@@ -197,6 +206,10 @@ public class Repository {
             this.instructionsDAO = instructionsDAO;
         }
 
+        public GetWIDTask(MedicationDAO medicationDAO){
+            this.medicationDAO = medicationDAO;
+        }
+
         @Override
         protected Object doInBackground(Object... objects) {
             Object lng = objects[0];
@@ -204,6 +217,8 @@ public class Repository {
                 return doctorDAO.getWithID((Long) lng);
             } else if (instructionsDAO != null) {
                 return instructionsDAO.getInstWithID((Long) lng);
+            } else if (medicationDAO != null) {
+                return medicationDAO.getMedWithID((Long) lng);
             }
             return (long) -1;
         }
@@ -284,28 +299,4 @@ public class Repository {
             return null;
         }
     }
-//
-//    private static class getInst extends AsyncTask<Void, Void, List<Instructions>>{
-//        private InstructionsDAO medicationDAO;
-//
-//        public getInst(InstructionsDAO medicationDAO) {
-//            this.medicationDAO = medicationDAO;
-//        }
-//
-//        @Override
-//        protected List<Instructions> doInBackground(Void... voids) {
-//            return medicationDAO.getAllInstructions();
-//        }
-//    }
-//
-//    public List<Instructions> getIList() {
-//        try {
-//            return new getInst(mInstructionsDAO).execute().get();
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
 }
