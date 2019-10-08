@@ -120,7 +120,7 @@ public class RootWizardFragment extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(Objects.requireNonNull(getChildFragmentManager().findFragmentById(R.id.wizard_nav_host_fragment)), callback);
         nextFinish.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(final View v) {
+            public void onClick(final View v) {//TODO: fix this
                 InputMethodManager manager = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (getActivity().getCurrentFocus() != null) {
                     Objects.requireNonNull(manager).hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);

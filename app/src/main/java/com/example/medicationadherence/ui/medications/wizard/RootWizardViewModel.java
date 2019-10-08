@@ -37,6 +37,7 @@ public class RootWizardViewModel extends ViewModel {
     private MutableLiveData<ArrayList<Integer>> destinations;
     private DatePickerDialog datePickerDialog;
     private boolean scheduleAfter = false;
+    private long scheduleTime = -1;
 
     public int getMedImage() {
         return medImage;
@@ -225,5 +226,11 @@ public class RootWizardViewModel extends ViewModel {
         this.scheduleAfter = scheduleAfter;
     }
 
+    public long getScheduleTime() {
+        return scheduleTime;
+    }
 
+    public void setScheduleTime(long scheduleTime) {
+        this.scheduleTime = scheduleTime;
+    }
 }

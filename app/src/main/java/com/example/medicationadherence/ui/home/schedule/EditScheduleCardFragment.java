@@ -1,6 +1,9 @@
 package com.example.medicationadherence.ui.home.schedule;
 
+import android.app.TimePickerDialog;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +14,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
+import androidx.core.os.ConfigurationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -21,7 +26,10 @@ import com.example.medicationadherence.ui.MainViewModel;
 import com.example.medicationadherence.ui.medications.wizard.RootWizardFragment;
 import com.example.medicationadherence.ui.medications.wizard.RootWizardViewModel;
 
-public class EditScheduleCardFragment extends Fragment {
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+public class EditScheduleCardFragment extends Fragment implements RootWizardFragment.ErrFragment {
     private boolean fromWizard;
     private RootWizardViewModel wizardModel;
     private Long medID;
@@ -46,6 +54,10 @@ public class EditScheduleCardFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if(fromWizard = getParentFragment().getParentFragment() instanceof RootWizardFragment){
             wizardModel = new ViewModelProvider(getParentFragment().getParentFragment()).get(RootWizardViewModel.class);
+            if ( wizardModel.getThisList().size() < 3)
+                wizardModel.getThisList().add(this);
+            else if(!wizardModel.getThisList().get(2).equals(this))
+                wizardModel.getThisList().set(2,this);
         } else {
             medID = EditScheduleCardFragmentArgs.fromBundle(getArguments()).getMedicationID();
         }
@@ -100,6 +112,8 @@ public class EditScheduleCardFragment extends Fragment {
                 } else {
                     daily.setChecked(false);
                 }
+                if(fromWizard && (sun.isChecked() || mon.isChecked() || tues.isChecked() || wed.isChecked() || thurs.isChecked() || fri.isChecked() || sat.isChecked()) && wizardModel.getScheduleTime() != -1)
+                    wizardModel.setDestinationExitable(2, true);
                 daily.setOnCheckedChangeListener(dailyListener);
             }
         };
@@ -127,6 +141,32 @@ public class EditScheduleCardFragment extends Fragment {
                 }
             }
         });
+        setTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar c = Calendar.getInstance();
+                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        Calendar c = Calendar.getInstance();
+                        c.clear();
+                        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        c.set(Calendar.MINUTE, minute);
+                        if ( fromWizard)
+                            wizardModel.setScheduleTime(c.getTimeInMillis());
+                        String timeText;
+                        if(DateFormat.is24HourFormat(getContext()))
+                            timeText = new SimpleDateFormat("kk:mm", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(c.getTimeInMillis());
+                        else
+                            timeText = new SimpleDateFormat("hh:mm aa", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(c.getTimeInMillis());
+                        time.setText(timeText);
+                        if(fromWizard && (sun.isChecked() || mon.isChecked() || tues.isChecked() || wed.isChecked() || thurs.isChecked() || fri.isChecked() || sat.isChecked()) && wizardModel.getScheduleTime() != -1)
+                            wizardModel.setDestinationExitable(2, true);
+                    }
+                }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), DateFormat.is24HourFormat(getContext()));
+                timePickerDialog.show();
+            }
+        });
 
         if(fromWizard){
             medName.setHeight(0);
@@ -144,5 +184,15 @@ public class EditScheduleCardFragment extends Fragment {
         }
 
         return root;
+    }
+
+    @Override
+    public void showErrors() {
+
+    }
+
+    @Override
+    public void pause() {
+
     }
 }
