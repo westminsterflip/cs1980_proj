@@ -20,62 +20,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/scheduleDecreaseDoses"
-        style="@style/Widget.AppCompat.ImageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:backgroundTint="#00FFFFFF"
-        android:src="@drawable/ic_minus"
-        app:layout_constraintStart_toStartOf="@+id/scheduleMedName"
-        app:layout_constraintTop_toBottomOf="@+id/scheduleMedName" />
-
-    <EditText
-        android:id="@+id/scheduleDoseCount"
-        android:layout_width="60dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:inputType="numberDecimal"
-        android:text="1"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/scheduleIncreaseDoses"
-        app:layout_constraintStart_toEndOf="@+id/scheduleDecreaseDoses"
-        app:layout_constraintTop_toBottomOf="@+id/scheduleMedName" />
-
-    <ImageButton
-        android:id="@+id/scheduleIncreaseDoses"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:backgroundTint="#00FFFFFF"
-        android:foregroundTint="#00DB0606"
-        android:src="@drawable/ic_add_24px"
-        android:tint="?attr/colorControlNormal"
-        android:tintMode="src_in"
-        app:layout_constraintStart_toEndOf="@+id/scheduleDoseCount"
-        app:layout_constraintTop_toBottomOf="@+id/scheduleMedName" />
-
-    <TextView
-        android:id="@+id/scheduleDosesText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text=" dose \@ "
-        app:layout_constraintBottom_toBottomOf="@+id/scheduleIncreaseDoses"
-        app:layout_constraintStart_toEndOf="@+id/scheduleIncreaseDoses"
-        app:layout_constraintTop_toBottomOf="@+id/scheduleMedName" />
-
-    <TextView
-        android:id="@+id/scheduleDoseSize"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0mg"
-        app:layout_constraintBottom_toBottomOf="@+id/scheduleDosesText"
-        app:layout_constraintStart_toEndOf="@+id/scheduleDosesText"
-        app:layout_constraintTop_toTopOf="@+id/scheduleDosesText" />
-
     <Switch
         android:id="@+id/scheduleDaily"
         android:layout_width="wrap_content"
@@ -83,8 +27,8 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="10dp"
         android:text="Daily"
-        app:layout_constraintStart_toStartOf="@+id/scheduleDecreaseDoses"
-        app:layout_constraintTop_toBottomOf="@+id/scheduleDecreaseDoses" />
+        app:layout_constraintStart_toStartOf="@+id/scheduleMedName"
+        app:layout_constraintTop_toBottomOf="@+id/scheduleMedName" />
 
     <LinearLayout
         android:id="@+id/linearLayout3"
@@ -186,23 +130,22 @@
         app:layout_constraintStart_toEndOf="@+id/scheduleSetEnd"
         app:layout_constraintTop_toTopOf="@+id/scheduleSetEnd" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="200dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/scheduleSetTime"
+        app:layout_constraintStart_toStartOf="@+id/scheduleMedName"
+        app:layout_constraintTop_toBottomOf="@+id/scheduleSetEnd" />
+
     <Button
         android:id="@+id/scheduleSetTime"
         android:layout_width="137dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Set time"
-        app:layout_constraintStart_toStartOf="@+id/scheduleSetEnd"
-        app:layout_constraintTop_toBottomOf="@+id/scheduleSetEnd" />
+        android:layout_marginBottom="15dp"
+        android:text="Add time"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/scheduleSetEnd" />
 
-    <TextView
-        android:id="@+id/scheduleTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="1dp"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/scheduleSetTime"
-        app:layout_constraintStart_toEndOf="@+id/scheduleSetTime"
-        app:layout_constraintTop_toTopOf="@+id/scheduleSetTime" />
 </androidx.constraintlayout.widget.ConstraintLayout>

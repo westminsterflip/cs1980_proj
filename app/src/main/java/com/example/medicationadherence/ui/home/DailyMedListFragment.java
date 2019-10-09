@@ -60,14 +60,6 @@ public class DailyMedListFragment extends Fragment {
             cal.add(Calendar.DAY_OF_YEAR, -2);
             model.setPrevDate(cal.getTimeInMillis());
         }
-        /*FloatingActionButton fab = root.findViewById(R.id.addMedButton);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
         ImageButton next = root.findViewById(R.id.dailyNextButton);
         ImageButton prev = root.findViewById(R.id.dailyPrevButton);
         final View.OnClickListener changeDay = new View.OnClickListener() {
