@@ -55,6 +55,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
     private DatePickerDialog datePickerDialog;
     private boolean start = true;
     private TextView endBefore;
+    private boolean exitable = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -226,9 +227,9 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!s.toString().equals("")) {
                     model.setMedName(s.toString());
-                    model.setDestinationExitable(0, !Objects.requireNonNull(perPillDosage.getText()).toString().equals(""));
+                    exitable = !Objects.requireNonNull(perPillDosage.getText()).toString().equals("");
                 } else {
-                    model.setDestinationExitable(0,false);
+                    exitable = false;
                 }
             }
 
@@ -250,9 +251,9 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!s.toString().equals("")) {
                     model.setMedDosage(s.toString() + dosageUnitSelector.getSelectedItem());
-                    model.setDestinationExitable(0, !Objects.requireNonNull(medName.getText()).toString().equals(""));
+                    exitable = !Objects.requireNonNull(medName.getText()).toString().equals("");
                 } else {
-                    model.setDestinationExitable(0, false);
+                    exitable = false;
                 }
             }
 
@@ -346,5 +347,10 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
         if(!Objects.requireNonNull(cost.getText()).toString().equals(""))
             model.setCost(Double.parseDouble(cost.getText().toString()));
         model.setAsNeeded(asNeeded.isChecked());
+    }
+
+    @Override
+    public boolean isExitable() {
+        return exitable;
     }
 }

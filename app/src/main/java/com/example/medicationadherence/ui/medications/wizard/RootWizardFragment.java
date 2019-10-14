@@ -23,6 +23,7 @@ import androidx.navigation.Navigation;
 
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.data.room.entities.Instructions;
+import com.example.medicationadherence.data.room.entities.Schedule;
 import com.example.medicationadherence.ui.MainViewModel;
 import com.example.medicationadherence.ui.medications.MedicationFragment;
 import com.example.medicationadherence.ui.medications.MedicationViewModel;
@@ -42,6 +43,7 @@ public class RootWizardFragment extends Fragment {
     private Button nextFinish;
     private ImageButton nextArrow;
     private NavController innerNavController;
+    private boolean scheduled = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,6 +71,7 @@ public class RootWizardFragment extends Fragment {
         else
             medModel = model.getModel();
         mainModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
+        model.context = getContext();
     }
 
     @Nullable
@@ -80,7 +83,7 @@ public class RootWizardFragment extends Fragment {
         cancelBack = root.findViewById(R.id.rootWizardBackCancel);
         nextArrow = root.findViewById(R.id.rootWizardNextArrow);
         nextFinish = root.findViewById(R.id.rootWizardNextFinish);
-        innerNavController = Navigation.findNavController(root.findViewById(R.id.wizard_nav_host_fragment));
+        model.setNavController(innerNavController = Navigation.findNavController(root.findViewById(R.id.wizard_nav_host_fragment)));
         cancelBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,24 +128,48 @@ public class RootWizardFragment extends Fragment {
                 if (getActivity().getCurrentFocus() != null) {
                     Objects.requireNonNull(manager).hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 }
-                int currentLoc = Objects.requireNonNull(innerNavController.getCurrentDestination()).getId();
-                if(model.getDestinationExitable(destinations.indexOf(currentLoc))) {
-                    if(currentLoc == destinations.get(destinations.size()-1)){
-                        model.getThisList().get(model.getThisList().size()-1).pause();
+                final int currentLoc = Objects.requireNonNull(innerNavController.getCurrentDestination()).getId();
+                if(model.getThisList().get(model.getDestinations().getValue().indexOf(currentLoc)).isExitable()) {
+
+                    if(currentLoc == R.id.wizardDoctorDetailFragment){
+                        model.getThisList().get(1).pause();
                         if(model.getDoctorName()!= null && !model.getDoctorName().equals("")){
                             if(model.getSpinnerSelection() == 1) {//add new doctor if doesn't exist
                                 if(mainModel.getDocWithName(model.getDoctorName())==null || mainModel.getDocWithName(model.getDoctorName()).size()==0){
                                     model.setDoctorID(mainModel.insert(model.getDoctor()));
-                                    addMedGoUp(v);
+                                    if(currentLoc == destinations.get(destinations.size()-1)){
+                                        model.getThisList().get(model.getThisList().size()-1).pause();
+                                        addMedGoUp(v);
+                                    } else {
+                                        innerNavController.navigate(destinations.get(destinations.indexOf(currentLoc)+1));
+                                        if (innerNavController.getCurrentDestination().getId() == destinations.get(destinations.size()-1)){
+                                            setHasNext(false);
+                                        }
+                                        setHasLast(true);
+                                    }
                                 } else {
                                     new AlertDialog.Builder(Objects.requireNonNull(getContext())).setTitle("Update Doctor?")
                                             .setMessage(R.string.doctor_update)
-                                            .setPositiveButton("yes", null)
+                                            .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    ((WizardDoctorDetailFragment)model.getThisList().get(destinations.indexOf(R.id.wizardDoctorDetailFragment))).doctorChooser.performClick();
+                                                }
+                                            })
                                             .setNegativeButton("no", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     model.setDoctorID(mainModel.insert(model.getDoctor()));
-                                                    addMedGoUp(v);
+                                                    if(currentLoc == destinations.get(destinations.size()-1)){
+                                                        model.getThisList().get(model.getThisList().size()-1).pause();
+                                                        addMedGoUp(v);
+                                                    } else {
+                                                        innerNavController.navigate(destinations.get(destinations.indexOf(currentLoc)+1));
+                                                        if (innerNavController.getCurrentDestination().getId() == destinations.get(destinations.size()-1)){
+                                                            setHasNext(false);
+                                                        }
+                                                        setHasLast(true);
+                                                    }
                                                 }
                                             })
                                             .show();
@@ -150,21 +177,50 @@ public class RootWizardFragment extends Fragment {
                             } else if(model.getSpinnerSelection() > 1){
                                 if(mainModel.getRepository().getDoctors().indexOf(model.getDoctor())!=-1) {
                                     mainModel.updateDoctor(mainModel.getRepository().getDoctors().get(model.getSpinnerSelection() - 2).getDoctorID(), model.getDoctorName(), model.getPracticeName(), model.getPracticeAddress(), model.getPhone());
+                                    if(currentLoc == destinations.get(destinations.size()-1)){
+                                        model.getThisList().get(model.getThisList().size()-1).pause();
+                                        addMedGoUp(v);
+                                    } else {
+                                        innerNavController.navigate(destinations.get(destinations.indexOf(currentLoc)+1));
+                                        if (innerNavController.getCurrentDestination().getId() == destinations.get(destinations.size()-1)){
+                                            setHasNext(false);
+                                        }
+                                        setHasLast(true);
+                                    }
                                 }
-                                addMedGoUp(v);
                             } else {
                                 int i = 1/0;//this shouldn't be reachable, so crash app if it is reached
                             }
                         } else {
-                            addMedGoUp(v);
+                            if(currentLoc == destinations.get(destinations.size()-1)){
+                                model.getThisList().get(model.getThisList().size()-1).pause();
+                                addMedGoUp(v);
+                            } else {
+                                innerNavController.navigate(destinations.get(destinations.indexOf(currentLoc)+1));
+                                if (innerNavController.getCurrentDestination().getId() == destinations.get(destinations.size()-1)){
+                                    setHasNext(false);
+                                }
+                                setHasLast(true);
+                            }
                         }
-
+                    } else if(currentLoc == R.id.editScheduleCardFragment2){
+                        model.getThisList().get(model.getDestinations().getValue().indexOf(R.id.editScheduleCardFragment2)).pause();
+                        innerNavController.navigateUp();
+                    } else if (currentLoc == R.id.editScheduleFragment2){
+                        scheduled = true;
+                        model.getThisList().get(model.getThisList().size()-1).pause();
+                        addMedGoUp(v);
                     } else {
-                        innerNavController.navigate(destinations.get(destinations.indexOf(currentLoc)+1));
-                        if (innerNavController.getCurrentDestination().getId() == destinations.get(destinations.size()-1)){
-                            setHasNext(false);
+                        if(currentLoc == destinations.get(destinations.size()-1)){
+                            model.getThisList().get(model.getThisList().size()-1).pause();
+                            addMedGoUp(v);
+                        } else {
+                            innerNavController.navigate(destinations.get(destinations.indexOf(currentLoc)+1));
+                            if (innerNavController.getCurrentDestination().getId() == destinations.get(destinations.size()-1)){
+                                setHasNext(false);
+                            }
+                            setHasLast(true);
                         }
-                        setHasLast(true);
                     }
                 } else {
                     ErrFragment fragment = model.getThisList().get(destinations.indexOf(currentLoc));
@@ -185,6 +241,7 @@ public class RootWizardFragment extends Fragment {
     public interface ErrFragment{
         void showErrors();
         void pause();
+        boolean isExitable();
     }
 
     @Override
@@ -206,6 +263,11 @@ public class RootWizardFragment extends Fragment {
         backArrow.setVisibility(hasLast ? View.VISIBLE : View.INVISIBLE);
     }
 
+    public void setAdd(){
+        nextFinish.setText("Add");
+        nextArrow.setVisibility(View.INVISIBLE);
+    }
+
     @Override
     public void onDetach() {
         InputMethodManager manager = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -221,5 +283,11 @@ public class RootWizardFragment extends Fragment {
         Navigation.findNavController(v).navigateUp();
         if (model.getInstructions() != null && !model.getInstructions().equals(""))
             mainModel.insert(new Instructions(medID, model.getInstructions()));
+        if (scheduled){
+            for (Schedule s : model.getSchedules()){
+                s.setMedicationID(medID);
+                mainModel.insert(s);
+            }
+        }
     }
 }

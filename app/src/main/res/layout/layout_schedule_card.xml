@@ -12,24 +12,18 @@
         android:layout_marginTop="5dp"
         android:text="MEDICATION NAME"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/scheduleCardDose"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="dosage"
-        app:layout_constraintStart_toStartOf="@+id/scheduleCardMedName"
-        app:layout_constraintTop_toBottomOf="@+id/scheduleCardMedName" />
 
     <TextView
         android:id="@+id/scheduleCardStartDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:text="start: 00/00/00"
-        app:layout_constraintStart_toStartOf="@+id/scheduleCardDose"
-        app:layout_constraintTop_toBottomOf="@+id/scheduleCardDose" />
+        app:layout_constraintStart_toStartOf="@+id/scheduleCardMedName"
+        app:layout_constraintTop_toBottomOf="@+id/scheduleCardMedName" />
 
     <TextView
         android:id="@+id/scheduleCardEndDate"
@@ -39,15 +33,6 @@
         android:text="end: 00/00/00"
         app:layout_constraintStart_toEndOf="@+id/scheduleCardStartDate"
         app:layout_constraintTop_toTopOf="@+id/scheduleCardStartDate" />
-
-    <TextView
-        android:id="@+id/scheduleCardTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:text="\@ 6:00pm"
-        app:layout_constraintStart_toEndOf="@+id/scheduleCardEndDate"
-        app:layout_constraintTop_toTopOf="@+id/scheduleCardEndDate" />
 
     <LinearLayout
         android:id="@+id/linearLayout5"

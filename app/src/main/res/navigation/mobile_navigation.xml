@@ -13,9 +13,6 @@
         <action
             android:id="@+id/action_nav_home_to_dailyMedListFragment"
             app:destination="@id/dailyMedListFragment" />
-        <action
-            android:id="@+id/action_nav_home_to_editScheduleFragment"
-            app:destination="@id/editScheduleFragment" />
     </fragment>
 
     <fragment
@@ -31,6 +28,9 @@
         <action
             android:id="@+id/action_nav_medications_to_rootWizardFragment"
             app:destination="@id/rootWizardFragment" />
+        <action
+            android:id="@+id/action_nav_medications_to_editScheduleFragment"
+            app:destination="@id/editScheduleFragment" />
     </fragment>
     <fragment
         android:id="@+id/nav_settings"
@@ -62,6 +62,10 @@
         <action
             android:id="@+id/action_editScheduleFragment_to_editScheduleCardFragment"
             app:destination="@id/editScheduleCardFragment" />
+        <argument
+            android:name="medicationID"
+            app:argType="long"
+            android:defaultValue="-1L" />
     </fragment>
     <fragment
         android:id="@+id/editScheduleCardFragment"
@@ -69,7 +73,19 @@
         android:label="fragment_edit_schedule_card"
         tools:layout="@layout/fragment_edit_schedule_card" >
         <argument
-            android:name="medicationID"
-            app:argType="java.lang.Long" />
+            android:name="days"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="startDate"
+            app:argType="long"
+            android:defaultValue="-1L" />
+        <argument
+            android:name="endDate"
+            app:argType="long"
+            android:defaultValue="-1L" />
+        <action
+            android:id="@+id/action_editScheduleCardFragment_to_editScheduleFragment"
+            app:destination="@id/editScheduleFragment" />
     </fragment>
 </navigation>

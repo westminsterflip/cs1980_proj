@@ -17,17 +17,18 @@ import static androidx.room.ForeignKey.CASCADE;
 @Entity(primaryKeys = {"medicationID", "time", "weekdays"}, foreignKeys =
 @ForeignKey(entity = Medication.class, parentColumns = "medicationID", childColumns = "medicationID", onDelete = CASCADE))
 public class Schedule {
-	private int medicationID;       /* FK Medication.medicationID */
+    @NonNull
+	private Long medicationID;       /* FK Medication.medicationID */
 	private int numDoses;
 	private long time;
 	@NonNull
 	private boolean[] weekdays;     //boolean array for scheduled on day {SMTWTFS}
 
-	public void setMedicationID(int medicationID) {
+	public void setMedicationID(Long medicationID) {
         this.medicationID = medicationID;
     }
 	
-	public int getMedicationID() {
+	public Long getMedicationID() {
         return this.medicationID;
     }
 
@@ -54,6 +55,13 @@ public class Schedule {
     }
 
     public void setWeekdays(@NonNull boolean[] weekdays) {
+        this.weekdays = weekdays;
+    }
+
+    public Schedule(Long medicationID, int numDoses, long time, @NonNull boolean[] weekdays) {
+        this.medicationID = medicationID;
+        this.numDoses = numDoses;
+        this.time = time;
         this.weekdays = weekdays;
     }
 }

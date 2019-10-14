@@ -30,6 +30,17 @@
         app:layout_constraintStart_toStartOf="@+id/scheduleMedName"
         app:layout_constraintTop_toBottomOf="@+id/scheduleMedName" />
 
+    <TextView
+        android:id="@+id/timeCardDayErr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="*at least one day req."
+        android:textColor="@android:color/holo_red_light"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/scheduleDaily"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout3"
+        app:layout_constraintStart_toEndOf="@+id/scheduleDaily" />
+
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="0dp"
@@ -90,54 +101,15 @@
             android:text="S" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/scheduleSetStart"
-        android:layout_width="137dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Set start date"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout3"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
-
-    <TextView
-        android:id="@+id/scheduleStart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="1dp"
-        android:text="TextView"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/scheduleSetStart"
-        app:layout_constraintStart_toEndOf="@+id/scheduleSetStart"
-        app:layout_constraintTop_toTopOf="@+id/scheduleSetStart" />
-
-    <Button
-        android:id="@+id/scheduleSetEnd"
-        android:layout_width="137dp"
-        android:layout_height="wrap_content"
-        android:text="Set end date"
-        app:layout_constraintStart_toStartOf="@+id/scheduleSetStart"
-        app:layout_constraintTop_toBottomOf="@+id/scheduleSetStart" />
-
-    <TextView
-        android:id="@+id/scheduleEndDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="1dp"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/scheduleSetEnd"
-        app:layout_constraintStart_toEndOf="@+id/scheduleSetEnd"
-        app:layout_constraintTop_toTopOf="@+id/scheduleSetEnd" />
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="200dp"
+        android:id="@+id/scheduleTimes"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
         app:layout_constraintBottom_toTopOf="@+id/scheduleSetTime"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout3"
         app:layout_constraintStart_toStartOf="@+id/scheduleMedName"
-        app:layout_constraintTop_toBottomOf="@+id/scheduleSetEnd" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
 
     <Button
         android:id="@+id/scheduleSetTime"
@@ -146,6 +118,18 @@
         android:layout_marginBottom="15dp"
         android:text="Add time"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/scheduleSetEnd" />
+        app:layout_constraintStart_toStartOf="@+id/scheduleTimes" />
+
+    <TextView
+        android:id="@+id/timeCardTimeErr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="*at least one time req."
+        android:textColor="@android:color/holo_red_light"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/scheduleTimes"
+        app:layout_constraintStart_toEndOf="@+id/scheduleSetTime"
+        app:layout_constraintTop_toBottomOf="@+id/scheduleTimes" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
