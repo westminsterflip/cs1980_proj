@@ -1,0 +1,8 @@
+Sprint 4
+- for demo: fully implement and manually test
+    - adding a medication
+    - viewing all medications
+    - viewing daily schedule
+- begin implementing notifications
+- midterm presentation and paper
+- update & delete medications from list
