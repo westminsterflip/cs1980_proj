@@ -34,4 +34,7 @@ public interface InstructionsDAO {
 
     @Query("DELETE FROM INSTRUCTIONS")
     void clearTable();
+
+    @Query("SELECT instructions FROM INSTRUCTIONS WHERE medicationID = :medicationID")
+    String getInstWithID(Long medicationID);
 }

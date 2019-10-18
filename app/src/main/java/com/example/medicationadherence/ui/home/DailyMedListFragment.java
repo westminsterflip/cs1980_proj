@@ -60,14 +60,6 @@ public class DailyMedListFragment extends Fragment {
             cal.add(Calendar.DAY_OF_YEAR, -2);
             model.setPrevDate(cal.getTimeInMillis());
         }
-        /*FloatingActionButton fab = root.findViewById(R.id.addMedButton);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
         ImageButton next = root.findViewById(R.id.dailyNextButton);
         ImageButton prev = root.findViewById(R.id.dailyPrevButton);
         final View.OnClickListener changeDay = new View.OnClickListener() {
@@ -83,7 +75,6 @@ public class DailyMedListFragment extends Fragment {
         updateText();
 
         //TODO: scroll to current time upon opening list
-        //TODO: coloring for past events?
         //TODO: time separators in recyclerview
         dailyViewPager = root.findViewById(R.id.dailyViewPager);
         model.setMedAdapter(new DailyViewPagerAdapter(model.getDateList(), model.getMedications().getValue()));
@@ -111,7 +102,7 @@ public class DailyMedListFragment extends Fragment {
                                 model.setNextDate(cal2.getTimeInMillis());
                                 model.loadNextMeds();
                             }
-                            dailyViewPager.setAdapter(model.getMedAdapter());
+                            dailyViewPager.setAdapter(model.getMedAdapter()); //TODO: change to notify adapter somehow
                             dailyViewPager.setCurrentItem(1);
                             updateText();
                         }

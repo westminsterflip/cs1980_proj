@@ -10,10 +10,9 @@ import com.example.medicationadherence.data.Repository;
 import com.example.medicationadherence.data.room.dao.ScheduleDAO;
 import com.example.medicationadherence.data.room.entities.Doctor;
 import com.example.medicationadherence.data.room.entities.Instructions;
-import com.example.medicationadherence.data.room.entities.MedicationEntity;
+import com.example.medicationadherence.data.room.entities.Medication;
 import com.example.medicationadherence.data.room.entities.MedicationLog;
 import com.example.medicationadherence.data.room.entities.Schedule;
-import com.example.medicationadherence.model.Medication;
 
 import java.util.Calendar;
 import java.util.List;
@@ -24,7 +23,6 @@ public class MainViewModel extends AndroidViewModel {
     private int summaryViewScale = 0;
     private int medSortMode = 0; //0 = a-z, 1 = z-a
     private Repository repository;
-    private LiveData<List<Medication>> medList;
     private LiveData<List<ScheduleDAO.ScheduleCard>> cardList;
 
 
@@ -33,6 +31,8 @@ public class MainViewModel extends AndroidViewModel {
         repository = new Repository(application);
         cardList = repository.getCardList();
     }
+
+    public List<Medication> getMedList(){return repository.getMedList();}
 
     public long getSummaryTimeToView() {
         if (summaryTimeToView == -1)
@@ -80,8 +80,8 @@ public class MainViewModel extends AndroidViewModel {
         repository.insert(instructions);
     }
 
-    public void insert(MedicationEntity medicationEntity){
-        repository.insert(medicationEntity);
+    public long insert(Medication medication){
+        return repository.insert(medication);
     }
 
     public void insert(MedicationLog medicationLog){
@@ -102,4 +102,18 @@ public class MainViewModel extends AndroidViewModel {
         if(practice != null && practice.equals("")) practice =null;
         repository.updateDoctor(id, doctorName, practice, address, phone);
     }
+
+    public List<Doctor> getDocWithName(String name){
+        return repository.getDocWithName(name);
+    }
+
+    public LiveData<List<ScheduleDAO.ScheduleCard>> getCardList() {
+        return cardList;
+    }
+
+    public Doctor getDoctorWithID(Long doctorID){return repository.getDocWithID(doctorID);}
+
+    public String getInstWithID(Long medicationID){return repository.getInstWithID(medicationID);}
+
+    public Medication getMedWithID(Long medicationID){return repository.getMedWithID(medicationID);}
 }

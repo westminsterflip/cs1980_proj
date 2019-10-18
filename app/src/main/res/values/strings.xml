@@ -11,12 +11,13 @@
 
     <string name="late_setting_title">Late Time</string>
     <string name="late_setting_summary">Time after which to consider dose late</string>
-    <string name="data_delete_title">Delete App Data</string>
+    <string name="data_delete_title">Delete Database</string>
     <string name="data_delete_summary">Delete all medicines, schedules, and adherence</string>
 
     <string name="sort_az_asc">"Alphabetical Asc."</string>
     <string name="sort_az_desc">"Alphabetical Desc."</string>
     <string name="data_dialog_warning">"Warning: this will delete all stored data, do you wish to continue?"</string>
+    <string name="doctor_update">A doctor with that name already exists.  Do you wish to update the existing entry?</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

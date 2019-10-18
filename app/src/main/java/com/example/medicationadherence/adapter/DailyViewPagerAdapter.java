@@ -14,8 +14,8 @@ import com.example.medicationadherence.model.DailyMedication;
 import java.util.List;
 
 public class DailyViewPagerAdapter extends RecyclerView.Adapter {
-    private final List<Long> dateList;
-    private final List<List<DailyMedication>> medLists;
+    private List<Long> dateList;
+    private List<List<DailyMedication>> medLists;
 
     public DailyViewPagerAdapter(List<Long> dateList, List<List<DailyMedication>> medLists){
         this.dateList = dateList;

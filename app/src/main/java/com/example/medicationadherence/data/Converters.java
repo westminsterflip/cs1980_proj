@@ -6,7 +6,7 @@ public class Converters{
     @TypeConverter
     public static int fromBoolArray(boolean[] array){
         int out = 0;
-        for (int i=0; i<7; i++){
+        for (int i=0; i<array.length; i++){
             if(array[i])
                 out += (1 << i);
         }
@@ -15,8 +15,8 @@ public class Converters{
 
     @TypeConverter
     public static boolean[] intToBoolArray(int boolInt){
-        boolean[] out = new boolean[7];
-        for (int i = 0; i < 7; i++){
+        boolean[] out = new boolean[8];
+        for (int i = 0; i < 8; i++){
             out[i] = (boolInt & (1 << i)) !=0;
         }
         return out;

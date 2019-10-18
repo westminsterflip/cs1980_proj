@@ -1,6 +1,7 @@
 package com.example.medicationadherence.ui.settings;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,20 +9,24 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import com.example.medicationadherence.R;
+import com.example.medicationadherence.ui.MainViewModel;
 
 import java.util.Objects;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
+    private MainViewModel mainModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mainModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -59,9 +64,16 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onDisplayPreferenceDialog(Preference preference) {
         if (preference instanceof DataDialogPreference){
-            DialogFragment dialogFragment = DataDialogPreferenceFragment.newInstance(preference.getKey());
-            dialogFragment.setTargetFragment(this, 0);
-            dialogFragment.show(Objects.requireNonNull(getParentFragmentManager()), null);
+            new AlertDialog.Builder(Objects.requireNonNull(getContext())).setTitle("Delete Database")
+                .setMessage(R.string.data_dialog_warning)
+                .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mainModel.deleteAll();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
         } else
             super.onDisplayPreferenceDialog(preference);
     }

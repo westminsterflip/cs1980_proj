@@ -34,11 +34,11 @@ public interface ScheduleDAO {
     @Query("DELETE FROM SCHEDULE")
     void clearTable();
 
-    @Query("SELECT MEDICATIONENTITY.medicationID as medicationID, MEDICATIONENTITY.name as medName,"+
-           "MEDICATIONENTITY.dosage AS dosageAmt, MEDICATIONENTITY.startDate AS startDate,"+
-           " MEDICATIONENTITY.endDate AS endDate, SCHEDULE.numDoses AS doses, SCHEDULE.time AS timeOfDay"+
-           ", SCHEDULE.weekdays AS days FROM MEDICATIONENTITY INNER JOIN "+
-           "SCHEDULE ON MEDICATIONENTITY.medicationID = SCHEDULE.medicationID")
+    @Query("SELECT Medication.medicationID as medicationID, Medication.name as medName,"+
+           "Medication.dosage AS dosageAmt, Medication.startDate AS startDate,"+
+           " Medication.endDate AS endDate, SCHEDULE.numDoses AS doses, SCHEDULE.time AS timeOfDay"+
+           ", SCHEDULE.weekdays AS days FROM Medication INNER JOIN "+
+           "SCHEDULE ON Medication.medicationID = SCHEDULE.medicationID")
     LiveData<List<ScheduleCard>> loadScheduled();
 
     class ScheduleCard{

@@ -1,5 +1,8 @@
 package com.example.medicationadherence.ui.home;
 
+import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,6 +14,7 @@ import android.widget.Button;
 import android.widget.CalendarView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -54,7 +58,16 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.edit_schedule, menu);
-        //TODO: somehow change overflow icon
+        Toolbar toolbar = Objects.requireNonNull(getActivity()).findViewById(R.id.toolbar);
+        Drawable drawable = getResources().getDrawable(R.drawable.ic_dots_vertical, null);
+        switch (Objects.requireNonNull(getContext()).getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK){
+            case Configuration.UI_MODE_NIGHT_NO:
+                drawable.setTint(Color.parseColor("#FF000000"));
+                break;
+            case Configuration.UI_MODE_NIGHT_YES:
+                drawable.setTint(Color.parseColor("#FFFFFFFF"));
+        }
+        toolbar.setOverflowIcon(drawable);
     }
 
     @Override
