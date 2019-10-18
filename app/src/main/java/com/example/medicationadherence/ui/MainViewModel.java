@@ -4,10 +4,8 @@ package com.example.medicationadherence.ui;
 import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 
 import com.example.medicationadherence.data.Repository;
-import com.example.medicationadherence.data.room.dao.ScheduleDAO;
 import com.example.medicationadherence.data.room.entities.Doctor;
 import com.example.medicationadherence.data.room.entities.Instructions;
 import com.example.medicationadherence.data.room.entities.Medication;
@@ -23,13 +21,11 @@ public class MainViewModel extends AndroidViewModel {
     private int summaryViewScale = 0;
     private int medSortMode = 0; //0 = a-z, 1 = z-a
     private Repository repository;
-    private LiveData<List<ScheduleDAO.ScheduleCard>> cardList;
 
 
     public MainViewModel (Application application){
         super(application);
         repository = new Repository(application);
-        cardList = repository.getCardList();
     }
 
     public List<Medication> getMedList(){return repository.getMedList();}
@@ -105,10 +101,6 @@ public class MainViewModel extends AndroidViewModel {
 
     public List<Doctor> getDocWithName(String name){
         return repository.getDocWithName(name);
-    }
-
-    public LiveData<List<ScheduleDAO.ScheduleCard>> getCardList() {
-        return cardList;
     }
 
     public Doctor getDoctorWithID(Long doctorID){return repository.getDocWithID(doctorID);}

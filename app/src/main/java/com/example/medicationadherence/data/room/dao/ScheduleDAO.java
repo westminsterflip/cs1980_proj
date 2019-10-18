@@ -6,7 +6,6 @@ package com.example.medicationadherence.data.room.dao;/* Schedule entity DAO in 
    @authors Erin Herlihy, David Stropkey, Nicholas West, Ian Patterson
 */
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -39,7 +38,7 @@ public interface ScheduleDAO {
            " Medication.endDate AS endDate, SCHEDULE.numDoses AS doses, SCHEDULE.time AS timeOfDay"+
            ", SCHEDULE.weekdays AS days FROM Medication INNER JOIN "+
            "SCHEDULE ON Medication.medicationID = SCHEDULE.medicationID")
-    LiveData<List<ScheduleCard>> loadScheduled();
+    List<ScheduleCard> loadScheduled();
 
     class ScheduleCard{
         public int medicationID;

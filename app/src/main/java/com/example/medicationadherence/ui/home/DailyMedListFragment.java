@@ -36,31 +36,8 @@ public class DailyMedListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         model = new ViewModelProvider(this).get(DailyMedListViewModel.class);
-        final Observer<List<List<ScheduleDAO.ScheduleCard>>> medicationObserver = new Observer<List<List<ScheduleDAO.ScheduleCard>>>() {
-            @Override
-            public void onChanged(List<List<ScheduleDAO.ScheduleCard>> dailyMedications) {
-                if (model.getMedAdapter() != null) {
-                    model.getMedAdapter().notifyDataSetChanged();
-                }
-            }
-        };
-        model.getDateList();
-        model.getMedications().observe(this, medicationObserver);
-
         mainModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
-        final Observer<List<ScheduleDAO.ScheduleCard>> scheduleObserver = new Observer<List<ScheduleDAO.ScheduleCard>>() {
-            @Override
-            public void onChanged(List<ScheduleDAO.ScheduleCard> scheduleCards) {
-                model.loadMeds();
-            }
-        };
-        mainModel.getCardList().observe(this, scheduleObserver);
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_daily_med_list, container, false);
+        model.getDateList();
         long timeToView = DailyMedListFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getTimeToView();
         if(model.getDate() == -1){
             model.setDate(timeToView);
@@ -71,6 +48,23 @@ public class DailyMedListFragment extends Fragment {
             cal.add(Calendar.DAY_OF_YEAR, -2);
             model.setPrevDate(cal.getTimeInMillis());
         }
+        model.setCardList(mainModel.getRepository().getScheduleCard());
+        model.setMainModel(mainModel);
+        final Observer<List<List<ScheduleDAO.ScheduleCard>>> medicationObserver = new Observer<List<List<ScheduleDAO.ScheduleCard>>>() {
+            @Override
+            public void onChanged(List<List<ScheduleDAO.ScheduleCard>> dailyMedications) {
+                if (model.getMedAdapter() != null) {
+                    model.getMedAdapter().notifyDataSetChanged();
+                }
+            }
+        };
+        model.getMedications().observe(this, medicationObserver);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_daily_med_list, container, false);
         ImageButton next = root.findViewById(R.id.dailyNextButton);
         ImageButton prev = root.findViewById(R.id.dailyPrevButton);
         final View.OnClickListener changeDay = new View.OnClickListener() {

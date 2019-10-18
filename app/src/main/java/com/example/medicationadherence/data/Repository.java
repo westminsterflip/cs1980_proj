@@ -3,8 +3,6 @@ package com.example.medicationadherence.data;
 import android.app.Application;
 import android.os.AsyncTask;
 
-import androidx.lifecycle.LiveData;
-
 import com.example.medicationadherence.data.room.MedicationDatabase;
 import com.example.medicationadherence.data.room.dao.DoctorDAO;
 import com.example.medicationadherence.data.room.dao.InstructionsDAO;
@@ -26,7 +24,6 @@ public class Repository {
     private MedicationDAO mMedicationDAO;
     private MedicationLogDAO mMedicationLogDAO;
     private ScheduleDAO mScheduleDAO;
-    private LiveData<List<ScheduleDAO.ScheduleCard>> cardList;
 
     public Repository(Application application){
         MedicationDatabase medDB = MedicationDatabase.getDatabase(application);
@@ -35,16 +32,20 @@ public class Repository {
         mMedicationDAO = medDB.getMedicationDao();
         mMedicationLogDAO = medDB.getMedicationLogDao();
         mScheduleDAO = medDB.getScheduleDao();
-        cardList = mScheduleDAO.loadScheduled();
-    }
-
-    public LiveData<List<ScheduleDAO.ScheduleCard>> getCardList() {
-        return cardList;
     }
 
     public List<Medication> getMedList(){
         try {
             return new GetMedListTask(mMedicationDAO).execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<ScheduleDAO.ScheduleCard> getScheduleCard(){
+        try {
+            return new GetCardTask(mScheduleDAO).execute().get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -260,6 +261,19 @@ public class Repository {
         @Override
         protected List<Medication> doInBackground(Void... voids) {
             return medicationDAO.getAllMedications();
+        }
+    }
+
+    private static class GetCardTask extends AsyncTask<Void, Void, List<ScheduleDAO.ScheduleCard>>{
+        private ScheduleDAO scheduleDAO;
+
+        public GetCardTask(ScheduleDAO scheduleDAO) {
+            this.scheduleDAO = scheduleDAO;
+        }
+
+        @Override
+        protected List<ScheduleDAO.ScheduleCard> doInBackground(Void... voids) {
+            return scheduleDAO.loadScheduled();
         }
     }
 

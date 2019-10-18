@@ -18,6 +18,7 @@ public class DailyMedListViewModel extends ViewModel {
     private List<Long> dateList;
     private MainViewModel mainModel;
     private int day;
+    private List<ScheduleDAO.ScheduleCard> cardList;
 
     DailyViewPagerAdapter getMedAdapter() {
         return medAdapter;
@@ -40,8 +41,8 @@ public class DailyMedListViewModel extends ViewModel {
         List<List<ScheduleDAO.ScheduleCard>> bigMedList = new ArrayList<>();
         for(int o = 0; o < 3; o++){
             List<ScheduleDAO.ScheduleCard> medList = new ArrayList<>();
-            for(ScheduleDAO.ScheduleCard s : mainModel.getCardList().getValue()){
-                if(s.days[(day - 2 + o) % 7])
+            for(ScheduleDAO.ScheduleCard s : cardList){
+                if(s.days[(day + 5 + o) % 7])
                     medList.add(s);
             }
             bigMedList.add(medList);
@@ -80,8 +81,8 @@ public class DailyMedListViewModel extends ViewModel {
         List<List<ScheduleDAO.ScheduleCard>> medList = medications.getValue();
         Objects.requireNonNull(medList).remove(0);
         List<ScheduleDAO.ScheduleCard> medList1 = new ArrayList<>();
-        for(ScheduleDAO.ScheduleCard s : mainModel.getCardList().getValue()){
-            if(s.days[(day) % 7])
+        for(ScheduleDAO.ScheduleCard s : cardList){
+            if(s.days[day % 7])
                 medList1.add(s);
         }
         medList.add(medList1);
@@ -92,8 +93,8 @@ public class DailyMedListViewModel extends ViewModel {
         List<List<ScheduleDAO.ScheduleCard>> medList = medications.getValue();
         Objects.requireNonNull(medList).remove(2);
         List<ScheduleDAO.ScheduleCard> medList1 = new ArrayList<>();
-        for(ScheduleDAO.ScheduleCard s : mainModel.getCardList().getValue()){
-            if(s.days[(day - 2) % 7])
+        for(ScheduleDAO.ScheduleCard s : cardList){
+            if(s.days[(day + 5) % 7])
                 medList1.add(s);
         }
         medList.add(0,medList1);
@@ -112,5 +113,17 @@ public class DailyMedListViewModel extends ViewModel {
 
     public void setDateList(List<Long> dateList) {
         this.dateList = dateList;
+    }
+
+    public MainViewModel getMainModel() {
+        return mainModel;
+    }
+
+    public void setMainModel(MainViewModel mainModel) {
+        this.mainModel = mainModel;
+    }
+
+    public void setCardList(List<ScheduleDAO.ScheduleCard> cardList) {
+        this.cardList = cardList;
     }
 }
