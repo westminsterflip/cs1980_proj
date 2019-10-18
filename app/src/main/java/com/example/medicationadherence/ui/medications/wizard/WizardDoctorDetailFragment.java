@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -35,7 +36,7 @@ import java.util.Objects;
 //TODO: dialog for updating if name exists but fields null
 public class WizardDoctorDetailFragment extends Fragment implements RootWizardFragment.ErrFragment {
     private RootWizardViewModel model;
-    private Spinner doctorChooser;
+    public Spinner doctorChooser;
     private TextInputLayout doctorNameLayout;
     private TextInputEditText doctorName;
     private TextView doctorNameRequired;
@@ -48,6 +49,7 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
     private List<Doctor> doctorList;
     private MainViewModel mainModel;
     private CheckBox scheduleAfter;
+    private boolean exitable = true;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +66,7 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_wizard_doctor_detail, container, false);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Add Medication");
 
         doctorChooser = root.findViewById(R.id.wizardDoctorChooser);
         doctorNameLayout = root.findViewById(R.id.textInputDoctorName);
@@ -97,11 +100,11 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
                     practiceAddress.setText("");
                     phone.setText("");
                     model.setDoctorName(null);
-                    model.setDestinationExitable(1, true);
+                    exitable = true;
                 } else {
                     if(position != 1){
                         doctorNameRequired.setVisibility(View.INVISIBLE);
-                        model.setDestinationExitable(1, true);
+                        exitable = true;
                         doctorName.setText(doctorList.get(position-2).getName());
                         practiceName.setText(doctorList.get(position-2).getPracticeName());
                         practiceAddress.setText(doctorList.get(position-2).getAddress());
@@ -111,7 +114,7 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
                         practiceName.setText("");
                         practiceAddress.setText("");
                         phone.setText("");
-                        model.setDestinationExitable(1, !Objects.requireNonNull(doctorName.getText()).toString().equals(""));
+                        exitable = !Objects.requireNonNull(doctorName.getText()).toString().equals("");
                     }
                     doctorNameLayout.setVisibility(View.VISIBLE);
                     if(savedInstanceState == null)
@@ -141,7 +144,7 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                model.setDestinationExitable(1, !s.toString().equals(""));
+                exitable = !s.toString().equals("");
             }
 
             @Override
@@ -153,8 +156,10 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 System.out.println("checked: " + isChecked);
                 if (isChecked){
+                    model.getDestinations().getValue().add(R.id.editScheduleFragment2);
                     model.getDestinations().getValue().add(R.id.editScheduleCardFragment2);
                 } else {
+                    model.getDestinations().getValue().remove((Integer)R.id.editScheduleFragment2);
                     model.getDestinations().getValue().remove((Integer)R.id.editScheduleCardFragment2);
                 }
                 model.getDestinations().postValue(model.getDestinations().getValue());
@@ -199,5 +204,10 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
         if(!Objects.requireNonNull(phone.getText()).toString().equals(""))
             model.setPhone(phone.getText().toString());
         model.setScheduleAfter(scheduleAfter.isChecked());
+    }
+
+    @Override
+    public boolean isExitable() {
+        return exitable;
     }
 }

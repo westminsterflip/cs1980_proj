@@ -19,12 +19,28 @@
         android:label="fragment_wizard_doctor_detail"
         tools:layout="@layout/fragment_wizard_doctor_detail" >
         <action
-            android:id="@+id/action_wizardDoctorDetailFragment_to_editScheduleCardFragment2"
-            app:destination="@id/editScheduleCardFragment2" />
+            android:id="@+id/action_wizardDoctorDetailFragment_to_editScheduleFragment2"
+            app:destination="@id/editScheduleFragment2" />
     </fragment>
     <fragment
         android:id="@+id/editScheduleCardFragment2"
         android:name="com.example.medicationadherence.ui.home.schedule.EditScheduleCardFragment"
         android:label="fragment_edit_schedule_card"
-        tools:layout="@layout/fragment_edit_schedule_card" />
+        tools:layout="@layout/fragment_edit_schedule_card" >
+        <argument
+            android:name="days"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_editScheduleCardFragment2_to_editScheduleFragment2"
+            app:destination="@id/editScheduleFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/editScheduleFragment2"
+        android:name="com.example.medicationadherence.ui.home.schedule.EditScheduleFragment"
+        android:label="fragment_edit_schedule"
+        tools:layout="@layout/fragment_edit_schedule" >
+        <action
+            android:id="@+id/action_editScheduleFragment2_to_editScheduleCardFragment2"
+            app:destination="@id/editScheduleCardFragment2" />
+    </fragment>
 </navigation>
