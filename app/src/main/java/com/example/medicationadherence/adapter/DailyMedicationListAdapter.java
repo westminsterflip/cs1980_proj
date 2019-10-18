@@ -12,16 +12,16 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.medicationadherence.R;
-import com.example.medicationadherence.model.DailyMedication;
+import com.example.medicationadherence.data.room.dao.ScheduleDAO;
 
 import java.io.Serializable;
 import java.sql.Time;
 import java.util.List;
 
 public class DailyMedicationListAdapter extends RecyclerView.Adapter implements Serializable {
-    private List<DailyMedication> medicationList;
+    private List<ScheduleDAO.ScheduleCard> medicationList;
 
-    public DailyMedicationListAdapter(List<DailyMedication> medicationList){
+    public DailyMedicationListAdapter(List<ScheduleDAO.ScheduleCard> medicationList){
         this.medicationList = medicationList;
     }
 
@@ -35,13 +35,13 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         final DailyMedicationViewHolder holderm = (DailyMedicationViewHolder) holder;
-        if(medicationList.get(position).getMedImage() != -1){ //If an image is specified it will load, otherwise the default is a pill on a background
+        /*if(medicationList.get(position).getMedImage() != -1){ //If an image is specified it will load, otherwise the default is a pill on a background
             holderm.medImage.setImageResource(medicationList.get(position).getMedImage());
             holderm.medImage.setBackgroundColor(Integer.parseInt("00FFFFFF",16));
             holderm.medImage.setImageTintList(null);
-        }
-        holderm.medName.setText(medicationList.get(position).getMedName());
-        String instr = medicationList.get(position).getInstructions();
+        }*/
+        holderm.medName.setText(medicationList.get(position).medName);
+        /*String instr = medicationList.get(position).;
         if(instr != null){
             holderm.instructions.setText(medicationList.get(position).getInstructions());
             View.OnClickListener expand = new View.OnClickListener() {
@@ -60,9 +60,9 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
             holderm.expand.setOnClickListener(expand);
         } else {
             holderm.expand.setVisibility(View.GONE);
-        }
-        holderm.medDosage.setText(medicationList.get(position).getMedDosage());
-        holderm.dosageTime.setText(new Time(medicationList.get(position).getDosageTime()).toString());
+        }*/
+        holderm.medDosage.setText((medicationList.get(position).doses + "@" + medicationList.get(position).dosageAmt));
+        holderm.dosageTime.setText(new Time(medicationList.get(position).timeOfDay).toString());
     }
 
     @Override
