@@ -9,15 +9,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.medicationadherence.R;
-import com.example.medicationadherence.model.DailyMedication;
+import com.example.medicationadherence.data.room.dao.ScheduleDAO;
 
 import java.util.List;
 
 public class DailyViewPagerAdapter extends RecyclerView.Adapter {
     private List<Long> dateList;
-    private List<List<DailyMedication>> medLists;
+    private List<List<ScheduleDAO.ScheduleCard>> medLists;
 
-    public DailyViewPagerAdapter(List<Long> dateList, List<List<DailyMedication>> medLists){
+    public DailyViewPagerAdapter(List<Long> dateList, List<List<ScheduleDAO.ScheduleCard>> medLists){
         this.dateList = dateList;
         this.medLists = medLists;
     }

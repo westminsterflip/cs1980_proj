@@ -18,7 +18,8 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.adapter.DailyViewPagerAdapter;
-import com.example.medicationadherence.model.DailyMedication;
+import com.example.medicationadherence.data.room.dao.ScheduleDAO;
+import com.example.medicationadherence.ui.MainViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -29,14 +30,15 @@ public class DailyMedListFragment extends Fragment {
     private DailyMedListViewModel model;
     private TextView date;
     private ViewPager2 dailyViewPager;
+    private MainViewModel mainModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         model = new ViewModelProvider(this).get(DailyMedListViewModel.class);
-        final Observer<List<List<DailyMedication>>> medicationObserver = new Observer<List<List<DailyMedication>>>() {
+        final Observer<List<List<ScheduleDAO.ScheduleCard>>> medicationObserver = new Observer<List<List<ScheduleDAO.ScheduleCard>>>() {
             @Override
-            public void onChanged(List<List<DailyMedication>> dailyMedications) {
+            public void onChanged(List<List<ScheduleDAO.ScheduleCard>> dailyMedications) {
                 if (model.getMedAdapter() != null) {
                     model.getMedAdapter().notifyDataSetChanged();
                 }
@@ -44,6 +46,15 @@ public class DailyMedListFragment extends Fragment {
         };
         model.getDateList();
         model.getMedications().observe(this, medicationObserver);
+
+        mainModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
+        final Observer<List<ScheduleDAO.ScheduleCard>> scheduleObserver = new Observer<List<ScheduleDAO.ScheduleCard>>() {
+            @Override
+            public void onChanged(List<ScheduleDAO.ScheduleCard> scheduleCards) {
+                model.loadMeds();
+            }
+        };
+        mainModel.getCardList().observe(this, scheduleObserver);
     }
 
     @Nullable
@@ -78,7 +89,7 @@ public class DailyMedListFragment extends Fragment {
         //TODO: time separators in recyclerview
         dailyViewPager = root.findViewById(R.id.dailyViewPager);
         model.setMedAdapter(new DailyViewPagerAdapter(model.getDateList(), model.getMedications().getValue()));
-        dailyViewPager.setAdapter(new DailyViewPagerAdapter(model.getDateList(), model.getMedications().getValue()));
+        dailyViewPager.setAdapter(model.getMedAdapter());
         dailyViewPager.setCurrentItem(1);
         dailyViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override

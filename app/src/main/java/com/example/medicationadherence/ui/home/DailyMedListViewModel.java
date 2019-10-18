@@ -3,19 +3,21 @@ package com.example.medicationadherence.ui.home;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.medicationadherence.R;
 import com.example.medicationadherence.adapter.DailyViewPagerAdapter;
-import com.example.medicationadherence.model.DailyMedication;
+import com.example.medicationadherence.data.room.dao.ScheduleDAO;
+import com.example.medicationadherence.ui.MainViewModel;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 public class DailyMedListViewModel extends ViewModel {
     private DailyViewPagerAdapter medAdapter;
-    private MutableLiveData<List<List<DailyMedication>>> medications;
+    private MutableLiveData<List<List<ScheduleDAO.ScheduleCard>>> medications;
     private List<Long> dateList;
+    private MainViewModel mainModel;
+    private int day;
 
     DailyViewPagerAdapter getMedAdapter() {
         return medAdapter;
@@ -25,7 +27,7 @@ public class DailyMedListViewModel extends ViewModel {
         this.medAdapter = medAdapter;
     }
 
-    MutableLiveData<List<List<DailyMedication>>> getMedications(){
+    MutableLiveData<List<List<ScheduleDAO.ScheduleCard>>> getMedications(){
         if (medications == null){
             medications = new MutableLiveData<>();
             loadMeds();
@@ -33,13 +35,14 @@ public class DailyMedListViewModel extends ViewModel {
         return medications;
     }
 
-    private void loadMeds(){
+    public void loadMeds(){
         //TODO: load from db
-        List<List<DailyMedication>> bigMedList = new ArrayList<>();
+        List<List<ScheduleDAO.ScheduleCard>> bigMedList = new ArrayList<>();
         for(int o = 0; o < 3; o++){
-            List<DailyMedication> medList = new ArrayList<>();
-            for(int i = 0; i < 20; i++){
-                medList.add(new DailyMedication((new Random().nextBoolean()) ? R.mipmap.ic_launcher_round : -1, "DailyMedication" + i, i + " pill(s)", dateList.get(o) + i * 60000, (new Random().nextBoolean())? null : "test"));
+            List<ScheduleDAO.ScheduleCard> medList = new ArrayList<>();
+            for(ScheduleDAO.ScheduleCard s : mainModel.getCardList().getValue()){
+                if(s.days[(day - 2 + o) % 7])
+                    medList.add(s);
             }
             bigMedList.add(medList);
         }
@@ -51,6 +54,9 @@ public class DailyMedListViewModel extends ViewModel {
     }
 
     void setDate(long date) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(date);
+        System.out.println(day = c.get(Calendar.DAY_OF_WEEK));
         dateList.set(1,date);
     }
 
@@ -71,22 +77,24 @@ public class DailyMedListViewModel extends ViewModel {
     }
 
     public void loadNextMeds(){
-        List<List<DailyMedication>> medList = medications.getValue();
+        List<List<ScheduleDAO.ScheduleCard>> medList = medications.getValue();
         Objects.requireNonNull(medList).remove(0);
-        List<DailyMedication> medList1 = new ArrayList<>();
-        for(int i = 0; i < 20; i++){
-            medList1.add(new DailyMedication((new Random().nextBoolean()) ? R.mipmap.ic_launcher_round : -1, "DailyMedication" + i, i + " pill(s)", dateList.get(2) + i * 60000, ""));
+        List<ScheduleDAO.ScheduleCard> medList1 = new ArrayList<>();
+        for(ScheduleDAO.ScheduleCard s : mainModel.getCardList().getValue()){
+            if(s.days[(day) % 7])
+                medList1.add(s);
         }
         medList.add(medList1);
         medications.setValue(medList);
     }
 
     public void loadPrevMeds(){
-        List<List<DailyMedication>> medList = medications.getValue();
+        List<List<ScheduleDAO.ScheduleCard>> medList = medications.getValue();
         Objects.requireNonNull(medList).remove(2);
-        List<DailyMedication> medList1 = new ArrayList<>();
-        for(int i = 0; i < 20; i++){
-            medList1.add(new DailyMedication((new Random().nextBoolean()) ? R.mipmap.ic_launcher_round : -1, "DailyMedication" + i, i + " pill(s)", dateList.get(0) + i * 60000, ""));
+        List<ScheduleDAO.ScheduleCard> medList1 = new ArrayList<>();
+        for(ScheduleDAO.ScheduleCard s : mainModel.getCardList().getValue()){
+            if(s.days[(day - 2) % 7])
+                medList1.add(s);
         }
         medList.add(0,medList1);
         medications.setValue(medList);
