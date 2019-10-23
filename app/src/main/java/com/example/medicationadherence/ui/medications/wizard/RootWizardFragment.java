@@ -22,6 +22,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.medicationadherence.R;
+import com.example.medicationadherence.data.room.entities.Doctor;
 import com.example.medicationadherence.data.room.entities.Instructions;
 import com.example.medicationadherence.data.room.entities.Medication;
 import com.example.medicationadherence.data.room.entities.Schedule;
@@ -30,6 +31,7 @@ import com.example.medicationadherence.ui.medications.MedicationFragment;
 import com.example.medicationadherence.ui.medications.MedicationViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -191,7 +193,15 @@ public class RootWizardFragment extends Fragment {
                                             .show();
                                 }
                             } else if(model.getSpinnerSelection() > 1){
-                                if(mainModel.getRepository().getDoctors().indexOf(model.getDoctor())!=-1) {
+                                int pos = -1;
+                                List<Doctor> doctors = mainModel.getRepository().getDoctors();
+                                for(int i = 0; i < doctors.size(); i++){
+                                    if (doctors.get(i).getDoctorID().equals(model.getDoctorID())){
+                                        pos = i;
+                                        break;
+                                    }
+                                }
+                                if(pos!=-1) {
                                     mainModel.updateDoctor(mainModel.getRepository().getDoctors().get(model.getSpinnerSelection() - 2).getDoctorID(), model.getDoctorName(), model.getPracticeName(), model.getPracticeAddress(), model.getPhone());
                                     if(currentLoc == destinations.get(destinations.size()-1)){
                                         model.getThisList().get(model.getThisList().size()-1).pause();
@@ -203,6 +213,8 @@ public class RootWizardFragment extends Fragment {
                                         }
                                         setHasLast(true);
                                     }
+                                } else {
+                                    int i = 1/0;
                                 }
                             } else {
                                 int i = 1/0;//this shouldn't be reachable, so crash app if it is reached

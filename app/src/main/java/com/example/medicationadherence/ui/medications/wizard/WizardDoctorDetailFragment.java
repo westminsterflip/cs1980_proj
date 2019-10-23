@@ -109,6 +109,7 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
                         practiceName.setText(doctorList.get(position-2).getPracticeName());
                         practiceAddress.setText(doctorList.get(position-2).getAddress());
                         phone.setText(doctorList.get(position-2).getPhone());
+                        model.setDoctorID(doctorList.get(position-2).getDoctorID());
                     } else {
                         doctorName.setText("");
                         practiceName.setText("");

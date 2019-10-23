@@ -1,5 +1,6 @@
 package com.example.medicationadherence.adapter;
 
+import android.app.Activity;
 import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.example.medicationadherence.data.room.entities.Medication;
 import com.example.medicationadherence.ui.MainViewModel;
 import com.example.medicationadherence.ui.medications.MedicationFragment;
 import com.example.medicationadherence.ui.medications.MedicationFragmentDirections;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,11 +30,15 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
     private List<Medication> medicationList;
     private MainViewModel mainModel;
     private ArrayList<MedicationFragment> thisList;
+    private Medication justDeleted;
+    private int justDelPos;
+    private Activity activity;
 
-    public MedicationListAdapter(List<Medication> medicationList, MainViewModel mainModel, ArrayList thisList){
+    public MedicationListAdapter(List<Medication> medicationList, MainViewModel mainModel, ArrayList thisList, Activity activity){
         this.medicationList = medicationList;
         this.mainModel = mainModel;
         this.thisList = thisList;
+        this.activity = activity;
     }
 
 
@@ -84,6 +90,36 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
             return -1;
         }
         return medicationList.size();
+    }
+
+    public void delete(int pos){
+        justDeleted = medicationList.get(pos);
+        justDelPos = pos;
+        String name = medicationList.get(pos).getName();
+        medicationList.remove(pos);
+        notifyItemRemoved(pos);
+        showUndo(name);
+    }
+
+    private void showUndo(String name){
+        View view = activity.findViewById(R.id.drawer_layout);
+        String s = name + " deleted";
+        Snackbar undoBar = Snackbar.make(view, s, Snackbar.LENGTH_LONG);
+        undoBar.setAction("UNDO", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                medicationList.add(justDelPos, justDeleted);
+                notifyItemInserted(justDelPos);
+            }
+        });
+        undoBar.show();
+        undoBar.addCallback(new Snackbar.Callback(){
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                super.onDismissed(transientBottomBar, event);
+                //TODO: delete from database
+            }
+        });
     }
 
     public class MedicationViewHolder extends RecyclerView.ViewHolder{

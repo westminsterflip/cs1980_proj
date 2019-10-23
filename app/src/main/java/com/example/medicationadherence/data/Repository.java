@@ -109,7 +109,7 @@ public class Repository {
     }
 
     public void updateMedication(Long id, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost){
-        new UpdateMedicationTask(mMedicationDAO, id, name, status, doctorID, dosage, startDate, endDate, containerVolume, cost);
+        new UpdateMedicationTask(mMedicationDAO, id, name, status, doctorID, dosage, startDate, endDate, containerVolume, cost).execute();
     }
 
     public Doctor getDocWithID(Long doctorID){

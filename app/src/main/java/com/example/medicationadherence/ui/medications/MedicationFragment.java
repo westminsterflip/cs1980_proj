@@ -2,6 +2,7 @@ package com.example.medicationadherence.ui.medications;
 
 
 import android.content.res.Configuration;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -58,8 +60,10 @@ public class MedicationFragment extends Fragment implements Serializable {
         View root = inflater.inflate(R.layout.fragment_medication, container, false);
         medRecyclerView = root.findViewById(R.id.medicationRecyclerView);
         medRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        model.setMedAdapter(new MedicationListAdapter(model.getMedList(), mainModel, thisList));
+        model.setMedAdapter(new MedicationListAdapter(model.getMedList(), mainModel, thisList, getActivity()));
         medRecyclerView.setAdapter(model.getMedAdapter());
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeDeleteCallback(model.getMedAdapter()));
+        itemTouchHelper.attachToRecyclerView(medRecyclerView);
         sort(mainModel.getMedSortMode());
         setHasOptionsMenu(true);
         FloatingActionButton addMed = root.findViewById(R.id.addMedButton);
@@ -184,5 +188,40 @@ public class MedicationFragment extends Fragment implements Serializable {
     public void onResume() {
         sort(mainModel.getMedSortMode());
         super.onResume();
+    }
+
+    private class SwipeDeleteCallback extends ItemTouchHelper.SimpleCallback{
+        private MedicationListAdapter medicationListAdapter;
+
+        public SwipeDeleteCallback(MedicationListAdapter medicationListAdapter) {
+            super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+            this.medicationListAdapter = medicationListAdapter;
+        }
+
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            int pos = viewHolder.getAdapterPosition();
+            medicationListAdapter.delete(pos);
+        }
+
+        @Override
+        public void onMoved(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, int fromPos, @NonNull RecyclerView.ViewHolder target, int toPos, int x, int y) {
+            super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y);
+        }
+
+        @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            View view = viewHolder.itemView;
+            int offset = R.dimen.fab_margin;
+            if (dX > 0) {
+
+            }
+        }
     }
 }
