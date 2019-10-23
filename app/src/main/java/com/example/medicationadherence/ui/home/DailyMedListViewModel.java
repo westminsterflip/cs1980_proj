@@ -42,7 +42,7 @@ public class DailyMedListViewModel extends ViewModel {
         for(int o = 0; o < 3; o++){
             List<ScheduleDAO.ScheduleCard> medList = new ArrayList<>();
             for(ScheduleDAO.ScheduleCard s : cardList){
-                if(s.days[(day + 5 + o) % 7])
+                if(s.days[(day + 5 + o) % 7] && s.startDate <= dateList.get(1) && (s.endDate >= dateList.get(1) || s.endDate == -1))
                     medList.add(s);
             }
             bigMedList.add(medList);
@@ -82,7 +82,7 @@ public class DailyMedListViewModel extends ViewModel {
         Objects.requireNonNull(medList).remove(0);
         List<ScheduleDAO.ScheduleCard> medList1 = new ArrayList<>();
         for(ScheduleDAO.ScheduleCard s : cardList){
-            if(s.days[day % 7])
+            if(s.days[day % 7] && s.startDate <= dateList.get(2) && (s.endDate >= dateList.get(2) || s.endDate == -1))
                 medList1.add(s);
         }
         medList.add(medList1);
@@ -94,7 +94,7 @@ public class DailyMedListViewModel extends ViewModel {
         Objects.requireNonNull(medList).remove(2);
         List<ScheduleDAO.ScheduleCard> medList1 = new ArrayList<>();
         for(ScheduleDAO.ScheduleCard s : cardList){
-            if(s.days[(day + 5) % 7])
+            if(s.days[(day + 5) % 7]&& s.startDate <= dateList.get(0) && (s.endDate >= dateList.get(0) || s.endDate == -1))
                 medList1.add(s);
         }
         medList.add(0,medList1);

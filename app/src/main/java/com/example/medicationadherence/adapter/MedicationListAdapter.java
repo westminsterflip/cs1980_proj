@@ -10,23 +10,29 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.os.ConfigurationCompat;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.data.room.entities.Doctor;
 import com.example.medicationadherence.data.room.entities.Medication;
 import com.example.medicationadherence.ui.MainViewModel;
+import com.example.medicationadherence.ui.medications.MedicationFragment;
+import com.example.medicationadherence.ui.medications.MedicationFragmentDirections;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 public class MedicationListAdapter extends RecyclerView.Adapter {
     private List<Medication> medicationList;
     private MainViewModel mainModel;
+    private ArrayList<MedicationFragment> thisList;
 
-    public MedicationListAdapter(List<Medication> medicationList, MainViewModel mainModel){
+    public MedicationListAdapter(List<Medication> medicationList, MainViewModel mainModel, ArrayList thisList){
         this.medicationList = medicationList;
         this.mainModel = mainModel;
+        this.thisList = thisList;
     }
 
 
@@ -60,6 +66,14 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
         holderm.endDate.setText((ed == -1) ? "" : new SimpleDateFormat("MM/dd/yy", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(new Date(ed)));
         //holderm.expand.setVisibility(View.GONE);
         //TODO: add onclick listener to open fragment to view all details
+        holderm.card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MedicationFragmentDirections.ActionNavMedicationsToRootWizardFragment action = MedicationFragmentDirections.actionNavMedicationsToRootWizardFragment(thisList);
+                action.setMedicationID(medicationList.get(position).getMedicationID());
+                Navigation.findNavController(v).navigate(action);
+            }
+        });
     }
 
 

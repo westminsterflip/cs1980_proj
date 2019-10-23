@@ -73,7 +73,7 @@ public class HomeFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menuEditSchedule){
-            Navigation.findNavController(Objects.requireNonNull(getView())).navigate(R.id.editScheduleFragment);
+            //Navigation.findNavController(Objects.requireNonNull(getView())).navigate(R.id.editScheduleFragment);
         }
         return super.onOptionsItemSelected(item);
     }

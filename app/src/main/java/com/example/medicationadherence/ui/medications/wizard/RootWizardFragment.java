@@ -23,6 +23,7 @@ import androidx.navigation.Navigation;
 
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.data.room.entities.Instructions;
+import com.example.medicationadherence.data.room.entities.Medication;
 import com.example.medicationadherence.data.room.entities.Schedule;
 import com.example.medicationadherence.ui.MainViewModel;
 import com.example.medicationadherence.ui.medications.MedicationFragment;
@@ -44,6 +45,8 @@ public class RootWizardFragment extends Fragment {
     private ImageButton nextArrow;
     private NavController innerNavController;
     private boolean scheduled = false;
+    private int index = -1;
+    private MedicationFragment medicationFragment;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,12 +69,25 @@ public class RootWizardFragment extends Fragment {
         };
         model.getDestinations().observe(this, destObserver);
         destinations = model.getDestinations().getValue();
+        mainModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
+        model.context = getContext();
+        model.setsMedID(RootWizardFragmentArgs.fromBundle(getArguments()).getMedicationID());
         if (model.getModel() == null)
             medModel = model.setModel(new ViewModelProvider((MedicationFragment) RootWizardFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getMedFragmentInst().get(0)).get(MedicationViewModel.class));
         else
             medModel = model.getModel();
-        mainModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
-        model.context = getContext();
+        medicationFragment = (MedicationFragment) RootWizardFragmentArgs.fromBundle(getArguments()).getMedFragmentInst().get(0);
+        if(model.getsMedID() != -1) {
+            Medication m = mainModel.getMedWithID(model.getsMedID());
+            model.setMedication(m);
+            for (int i = 0; i < medModel.getMedList().size(); i ++){
+                System.out.println(medModel.getMedList().get(i).getMedicationID() + " " + medModel.getMedList().get(i).getName());
+                if (medModel.getMedList().get(i).getMedicationID().equals(model.getsMedID())){
+                    index = i;
+                    break;
+                }
+            }
+        }
     }
 
     @Nullable
@@ -278,8 +294,17 @@ public class RootWizardFragment extends Fragment {
     }
 
     void addMedGoUp(View v){
-        long medID = mainModel.insert(model.getMedication());
-        medModel.getMedList().add(model.getMedication());
+        long medID;
+        if(index == -1){
+            model.setsMedID(medID = mainModel.insert(model.getMedication()));
+            medModel.getMedList().add(model.getMedicationWID());
+        } else {
+            System.out.println(model.getMedName() + " " + model.getsMedID());
+            System.out.println("index: " + index);
+            medModel.getMedList().set(index, model.getMedicationWID());
+            medicationFragment.sort(mainModel.getMedSortMode());
+            mainModel.updateMedication(medID = model.getsMedID(), model.getMedName(), model.isActive(), model.getDoctorID(), model.getMedDosage(), model.getStartDate(), model.getEndDate(), model.getContainerVol(), model.getCost());
+        }
         Navigation.findNavController(v).navigateUp();
         if (model.getInstructions() != null && !model.getInstructions().equals(""))
             mainModel.insert(new Instructions(medID, model.getInstructions()));

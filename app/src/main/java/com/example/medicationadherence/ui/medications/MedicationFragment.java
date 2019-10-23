@@ -49,6 +49,7 @@ public class MedicationFragment extends Fragment implements Serializable {
         else
             thisList.set(0, this);
         model.setMedList(mainModel.getMedList());
+        System.out.println("created");
     }
 
 
@@ -57,7 +58,7 @@ public class MedicationFragment extends Fragment implements Serializable {
         View root = inflater.inflate(R.layout.fragment_medication, container, false);
         medRecyclerView = root.findViewById(R.id.medicationRecyclerView);
         medRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        model.setMedAdapter(new MedicationListAdapter(model.getMedList(), mainModel));
+        model.setMedAdapter(new MedicationListAdapter(model.getMedList(), mainModel, thisList));
         medRecyclerView.setAdapter(model.getMedAdapter());
         sort(mainModel.getMedSortMode());
         setHasOptionsMenu(true);
@@ -103,7 +104,7 @@ public class MedicationFragment extends Fragment implements Serializable {
         return super.onOptionsItemSelected(item);
     }
 
-    private void sort(int sortMode) {
+    public void sort(int sortMode) {
         switch (sortMode) {
             case 0:
                 sortAZAsc();

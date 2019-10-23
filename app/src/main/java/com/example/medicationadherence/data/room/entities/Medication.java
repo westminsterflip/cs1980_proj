@@ -11,6 +11,7 @@ package com.example.medicationadherence.data.room.entities;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -105,6 +106,19 @@ public class Medication {
     }
 
     public Medication(String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost) {
+        this.name = name;
+        this.status = status;
+        this.doctorID = doctorID;
+        this.dosage = dosage;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.containerVolume = containerVolume;
+        this.cost = cost;
+    }
+
+    @Ignore
+    public Medication(Long medicationID, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost) {
+        this.medicationID = medicationID;
         this.name = name;
         this.status = status;
         this.doctorID = doctorID;

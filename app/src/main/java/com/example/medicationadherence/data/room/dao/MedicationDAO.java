@@ -23,6 +23,9 @@ public interface MedicationDAO {
  
     @Update
     void update(Medication... medications);
+
+    @Query("update medication set name = :name, status = :status, doctorID = :doctorID, dosage = :dosage, startDate = :startDate, endDate = :endDate, containerVolume = :containerVolume, cost = :cost where medicationID = :id")
+    void update(Long id, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost);
  
     @Delete
     void delete(Medication... medication);

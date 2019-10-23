@@ -47,7 +47,7 @@ public class StartEndDaysScheduleAdapter extends RecyclerView.Adapter {
             @Override
             public void onClick(View v) {
                 EditScheduleFragmentDirections.ActionEditScheduleFragment2ToEditScheduleCardFragment2 action = EditScheduleFragmentDirections.actionEditScheduleFragment2ToEditScheduleCardFragment2(Converters.fromBoolArray(day));
-                model.getNavController().navigate(action);
+                model.getNavController().navigate(R.id.editScheduleCardFragment2);
             }
         });
     }

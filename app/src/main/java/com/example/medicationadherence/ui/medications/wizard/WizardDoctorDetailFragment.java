@@ -209,5 +209,5 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
     @Override
     public boolean isExitable() {
         return exitable;
-    }
+    }//TODO: this isn't working, wrong value returned
 }

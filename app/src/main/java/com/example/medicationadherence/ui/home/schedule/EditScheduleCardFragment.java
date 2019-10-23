@@ -52,7 +52,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
         super.onCreate(savedInstanceState);
         if(fromWizard = getParentFragment().getParentFragment() instanceof RootWizardFragment){
             wizardModel = new ViewModelProvider(getParentFragment().getParentFragment()).get(RootWizardViewModel.class);
-            checks = Converters.intToBoolArray(EditScheduleCardFragmentArgs.fromBundle(getArguments()).getDays());
+            //checks = Converters.intToBoolArray(EditScheduleCardFragmentArgs.fromBundle(getArguments()).getDays());
             if ( wizardModel.getThisList().size() < 4)
                 wizardModel.getThisList().add(this);
             else if(!wizardModel.getThisList().get(3).equals(this))

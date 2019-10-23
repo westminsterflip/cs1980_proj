@@ -108,6 +108,10 @@ public class Repository {
         new UpdateDoctorAsyncTask(mDoctorDAO, id, doctorName, practiceName, address, phone).execute();
     }
 
+    public void updateMedication(Long id, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost){
+        new UpdateMedicationTask(mMedicationDAO, id, name, status, doctorID, dosage, startDate, endDate, containerVolume, cost);
+    }
+
     public Doctor getDocWithID(Long doctorID){
         try {
             return (Doctor)new GetWIDTask(mDoctorDAO).execute(doctorID).get();
@@ -310,6 +314,38 @@ public class Repository {
         @Override
         protected Void doInBackground(Void... objects) {
             doctorDAO.update(id, doctorName, practice, address, phone);
+            return null;
+        }
+    }
+
+    private static class UpdateMedicationTask extends AsyncTask<Void, Void, Void>{
+        private MedicationDAO medicationDAO;
+        private Long id;
+        private String name;
+        private boolean status;
+        private Long doctorID;
+        private String dosage;
+        private long startDate;
+        private long endDate;
+        private int containerVolume;
+        private double cost;
+
+        public UpdateMedicationTask(MedicationDAO medicationDAO, Long id, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost) {
+            this.medicationDAO = medicationDAO;
+            this.id = id;
+            this.name = name;
+            this.status = status;
+            this.doctorID = doctorID;
+            this.dosage = dosage;
+            this.startDate = startDate;
+            this.endDate = endDate;
+            this.containerVolume = containerVolume;
+            this.cost = cost;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            medicationDAO.update(id, name, status, doctorID, dosage, startDate, endDate, containerVolume, cost);
             return null;
         }
     }

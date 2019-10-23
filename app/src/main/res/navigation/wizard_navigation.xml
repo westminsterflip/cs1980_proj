@@ -27,12 +27,12 @@
         android:name="com.example.medicationadherence.ui.home.schedule.EditScheduleCardFragment"
         android:label="fragment_edit_schedule_card"
         tools:layout="@layout/fragment_edit_schedule_card" >
-        <argument
-            android:name="days"
-            app:argType="integer" />
         <action
             android:id="@+id/action_editScheduleCardFragment2_to_editScheduleFragment2"
             app:destination="@id/editScheduleFragment2" />
+        <argument
+            android:name="days"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/editScheduleFragment2"

@@ -35,15 +35,16 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         final DailyMedicationViewHolder holderm = (DailyMedicationViewHolder) holder;
+        //TODO: https://lhncbc.nlm.nih.gov/rximage-api
         /*if(medicationList.get(position).getMedImage() != -1){ //If an image is specified it will load, otherwise the default is a pill on a background
             holderm.medImage.setImageResource(medicationList.get(position).getMedImage());
             holderm.medImage.setBackgroundColor(Integer.parseInt("00FFFFFF",16));
             holderm.medImage.setImageTintList(null);
         }*/
         holderm.medName.setText(medicationList.get(position).medName);
-        /*String instr = medicationList.get(position).;
-        if(instr != null){
-            holderm.instructions.setText(medicationList.get(position).getInstructions());
+        String instr = medicationList.get(position).instructions;
+        if(instr != null && !instr.equals("")){
+            holderm.instructions.setText(medicationList.get(position).instructions);
             View.OnClickListener expand = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -60,7 +61,7 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
             holderm.expand.setOnClickListener(expand);
         } else {
             holderm.expand.setVisibility(View.GONE);
-        }*/
+        }
         holderm.medDosage.setText((medicationList.get(position).doses + "@" + medicationList.get(position).dosageAmt));
         holderm.dosageTime.setText(new Time(medicationList.get(position).timeOfDay).toString());
     }

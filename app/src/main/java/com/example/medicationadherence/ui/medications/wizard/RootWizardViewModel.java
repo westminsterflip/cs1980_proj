@@ -51,6 +51,7 @@ public class RootWizardViewModel extends ViewModel {
     private NavController navController;
     private ArrayList<String> doseEntries;
     public Context context;
+    private long sMedID = -1;
 
     public int getMedImage() {
         return medImage;
@@ -139,6 +140,10 @@ public class RootWizardViewModel extends ViewModel {
 
     public Medication getMedication(){
         return new Medication(medName, active, doctorID, medDosage, startDate, endDate, containerVol, cost);
+    }
+
+    public Medication getMedicationWID(){
+        return new Medication(sMedID, medName, active, doctorID, medDosage, startDate, endDate, containerVol, cost);
     }
 
     public Doctor getDoctor(){
@@ -306,5 +311,35 @@ public class RootWizardViewModel extends ViewModel {
 
     public void setDoseNull(){
         doseEntries = null;
+    }
+
+    public long getsMedID() {
+        return sMedID;
+    }
+
+    public void setsMedID(long sMedID) {
+        this.sMedID = sMedID;
+    }
+
+    public void setMedication(String medName, boolean active, Long doctorID, String medDosage, long startDate, long endDate, int containerVol, double cost){
+        this.medName = medName;
+        this.active = active;
+        this.doctorID = doctorID;
+        this.medDosage = medDosage;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.containerVol = containerVol;
+        this.cost = cost;
+    }
+
+    public void setMedication(Medication m){
+        medName = m.getName();
+        active = m.isStatus();
+        doctorID = m.getDoctorID();
+        medDosage = m.getDosage();
+        startDate = m.getStartDate();
+        endDate = m.getEndDate();
+        containerVol = m.getContainerVolume();
+        cost = m.getCost();
     }
 }
