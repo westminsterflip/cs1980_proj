@@ -21,6 +21,7 @@ import com.example.medicationadherence.ui.medications.wizard.RootWizardViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.sql.Time;
+import java.util.Objects;
 
 public class EditScheduleFragment extends Fragment implements RootWizardFragment.ErrFragment {
     RootWizardViewModel wizardModel;
@@ -30,7 +31,7 @@ public class EditScheduleFragment extends Fragment implements RootWizardFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        wizardModel = new ViewModelProvider(getParentFragment().getParentFragment()).get(RootWizardViewModel.class);
+        wizardModel = new ViewModelProvider(Objects.requireNonNull(Objects.requireNonNull(getParentFragment()).getParentFragment())).get(RootWizardViewModel.class);
         wizardModel.getSchedules();
         wizardModel.getScheduleDays();
         if ( wizardModel.getThisList().size() < 3)
@@ -55,9 +56,9 @@ public class EditScheduleFragment extends Fragment implements RootWizardFragment
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(new StartEndDaysScheduleAdapter(wizardModel.getScheduleDays(), wizardModel));
-        ((RootWizardFragment)getParentFragment().getParentFragment()).setHasLast(true);
+        ((RootWizardFragment) Objects.requireNonNull(getParentFragment().getParentFragment())).setHasLast(true);
         ((RootWizardFragment)getParentFragment().getParentFragment()).setHasNext(false);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Schedule");
+        Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setTitle("Schedule");
         System.out.println("list:");
         for (Schedule s : wizardModel.getSchedules()){
             System.out.println(Converters.fromBoolArray(s.getWeekdays()) + " " + new Time(s.getTime()));

@@ -22,7 +22,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.medicationadherence.R;
-import com.example.medicationadherence.data.Converters;
 import com.example.medicationadherence.data.room.entities.Doctor;
 import com.example.medicationadherence.data.room.entities.Instructions;
 import com.example.medicationadherence.data.room.entities.Medication;
@@ -31,7 +30,6 @@ import com.example.medicationadherence.ui.MainViewModel;
 import com.example.medicationadherence.ui.medications.MedicationFragment;
 import com.example.medicationadherence.ui.medications.MedicationViewModel;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -73,12 +71,12 @@ public class RootWizardFragment extends Fragment {
         destinations = model.getDestinations().getValue();
         mainModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
         model.context = getContext();
-        model.setsMedID(RootWizardFragmentArgs.fromBundle(getArguments()).getMedicationID());
+        model.setsMedID(RootWizardFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getMedicationID());
         if (model.getModel() == null)
-            medModel = model.setModel(new ViewModelProvider((MedicationFragment) RootWizardFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getMedFragmentInst().get(0)).get(MedicationViewModel.class));
+            medModel = model.setModel(new ViewModelProvider((MedicationFragment) Objects.requireNonNull(RootWizardFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getMedFragmentInst()).get(0)).get(MedicationViewModel.class));
         else
             medModel = model.getModel();
-        medicationFragment = (MedicationFragment) RootWizardFragmentArgs.fromBundle(getArguments()).getMedFragmentInst().get(0);
+        medicationFragment = (MedicationFragment) Objects.requireNonNull(RootWizardFragmentArgs.fromBundle(getArguments()).getMedFragmentInst()).get(0);
         if(model.getsMedID() != -1) {
             Medication m = mainModel.getMedWithID(model.getsMedID());
             model.setMedication(m);
@@ -116,7 +114,7 @@ public class RootWizardFragment extends Fragment {
                 } else {
                     if(currentLoc == R.id.editScheduleCardFragment2) {
                         model.getSchedules().addAll(model.getRemoved());
-                        model.getThisList().get(model.getDestinations().getValue().indexOf(R.id.editScheduleCardFragment2)).pause();
+                        model.getThisList().get(Objects.requireNonNull(model.getDestinations().getValue()).indexOf(R.id.editScheduleCardFragment2)).pause();
                     }
                     innerNavController.navigateUp();
                     if (innerNavController.getCurrentDestination().getId() == destinations.get(0)){
@@ -152,7 +150,7 @@ public class RootWizardFragment extends Fragment {
                     Objects.requireNonNull(manager).hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 }
                 final int currentLoc = Objects.requireNonNull(innerNavController.getCurrentDestination()).getId();
-                if(model.getThisList().get(model.getDestinations().getValue().indexOf(currentLoc)).isExitable()) {
+                if(model.getThisList().get(Objects.requireNonNull(model.getDestinations().getValue()).indexOf(currentLoc)).isExitable()) {
 
                     if(currentLoc == R.id.wizardDoctorDetailFragment){
                         model.getThisList().get(1).pause();
@@ -165,7 +163,7 @@ public class RootWizardFragment extends Fragment {
                                         addMedGoUp(v);
                                     } else {
                                         innerNavController.navigate(destinations.get(destinations.indexOf(currentLoc)+1));
-                                        if (innerNavController.getCurrentDestination().getId() == destinations.get(destinations.size()-1)){
+                                        if (Objects.requireNonNull(innerNavController.getCurrentDestination()).getId() == destinations.get(destinations.size()-1)){
                                             setHasNext(false);
                                         }
                                         setHasLast(true);
@@ -213,7 +211,7 @@ public class RootWizardFragment extends Fragment {
                                         addMedGoUp(v);
                                     } else {
                                         innerNavController.navigate(destinations.get(destinations.indexOf(currentLoc)+1));
-                                        if (innerNavController.getCurrentDestination().getId() == destinations.get(destinations.size()-1)){
+                                        if (Objects.requireNonNull(innerNavController.getCurrentDestination()).getId() == destinations.get(destinations.size()-1)){
                                             setHasNext(false);
                                         }
                                         setHasLast(true);
@@ -230,7 +228,7 @@ public class RootWizardFragment extends Fragment {
                                 addMedGoUp(v);
                             } else {
                                 innerNavController.navigate(destinations.get(destinations.indexOf(currentLoc)+1));
-                                if (innerNavController.getCurrentDestination().getId() == destinations.get(destinations.size()-1)){
+                                if (Objects.requireNonNull(innerNavController.getCurrentDestination()).getId() == destinations.get(destinations.size()-1)){
                                     setHasNext(false);
                                 }
                                 setHasLast(true);
@@ -249,7 +247,7 @@ public class RootWizardFragment extends Fragment {
                             addMedGoUp(v);
                         } else {
                             innerNavController.navigate(destinations.get(destinations.indexOf(currentLoc)+1));
-                            if (innerNavController.getCurrentDestination().getId() == destinations.get(destinations.size()-1)){
+                            if (Objects.requireNonNull(innerNavController.getCurrentDestination()).getId() == destinations.get(destinations.size()-1)){
                                 setHasNext(false);
                             }
                             setHasLast(true);
@@ -327,16 +325,10 @@ public class RootWizardFragment extends Fragment {
             mainModel.insert(new Instructions(medID, model.getInstructions()));
         if (scheduled) {
             List<Schedule> tmp = mainModel.getScheduleFM(medID);
-            for (Schedule s : tmp) {
-                System.out.println(s.getMedicationID() + " " + new Time(s.getTime()) + " " + Converters.fromBoolArray(s.getWeekdays()) + " " + s.getNumDoses());
-            }
-            System.out.println("***************************************************");
             for (Schedule s : model.getSchedules()) {
                 s.setMedicationID(medID);
                 if (!tmp.contains(s))
                     mainModel.insert(s);
-                else
-                    System.out.println(s.getMedicationID() + " " + new Time(s.getTime()) + " " + Converters.fromBoolArray(s.getWeekdays()) + " " + s.getNumDoses());
             }
             tmp.removeAll(model.getSchedules());
             for (Schedule s : tmp){

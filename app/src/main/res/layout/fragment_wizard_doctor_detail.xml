@@ -121,5 +121,18 @@
             android:text="Schedule after creation"
             app:layout_constraintStart_toStartOf="@+id/wizardDoctorChooser"
             app:layout_constraintTop_toBottomOf="@+id/textInputPhone" />
+
+        <Button
+            android:id="@+id/update_doctor"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="Update"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/wizardScheduleAfter" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

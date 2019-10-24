@@ -79,6 +79,7 @@ public class MedicationFragment extends Fragment implements Serializable {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.sort, menu);
         Toolbar toolbar = Objects.requireNonNull(getActivity()).findViewById(R.id.toolbar);
         Drawable drawable = getResources().getDrawable(R.drawable.ic_sort, null);
@@ -90,7 +91,6 @@ public class MedicationFragment extends Fragment implements Serializable {
                 drawable.setTint(Color.parseColor("#FFFFFFFF"));
         }
         toolbar.setOverflowIcon(drawable);
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override

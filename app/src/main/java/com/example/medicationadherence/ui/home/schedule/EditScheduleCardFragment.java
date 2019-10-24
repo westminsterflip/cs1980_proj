@@ -31,6 +31,7 @@ import com.example.medicationadherence.ui.medications.wizard.RootWizardViewModel
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Objects;
 
 public class EditScheduleCardFragment extends Fragment implements RootWizardFragment.ErrFragment {
     private boolean fromWizard;
@@ -50,9 +51,9 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(fromWizard = getParentFragment().getParentFragment() instanceof RootWizardFragment){
+        if(fromWizard = Objects.requireNonNull(getParentFragment()).getParentFragment() instanceof RootWizardFragment){
             wizardModel = new ViewModelProvider(getParentFragment().getParentFragment()).get(RootWizardViewModel.class);
-            checks = Converters.intToBoolArray(EditScheduleCardFragmentArgs.fromBundle(getArguments()).getDays());
+            checks = Converters.intToBoolArray(EditScheduleCardFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getDays());
             if ( wizardModel.getThisList().size() < 4)
                 wizardModel.getThisList().add(this);
             else if(!wizardModel.getThisList().get(3).equals(this))
@@ -61,7 +62,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
             //medID = EditScheduleCardFragmentArgs.fromBundle(getArguments()).getMedicationID();
         }
         System.out.println(fromWizard);
-        mainModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
+        mainModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
     }
 
     @Override
@@ -183,7 +184,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
         if(fromWizard){
             medName.setHeight(0);
             medName.setVisibility(View.INVISIBLE);
-            ((RootWizardFragment)getParentFragment().getParentFragment()).setAdd();
+            ((RootWizardFragment) Objects.requireNonNull(getParentFragment().getParentFragment())).setAdd();
             ((RootWizardFragment)getParentFragment().getParentFragment()).setHasLast(false);
         } else {
             Medication medication = mainModel.getMedWithID(medID);

@@ -56,4 +56,9 @@
             app:argType="long"
             android:defaultValue="-1L" />
     </fragment>
+    <fragment
+        android:id="@+id/wizardDoctorDetailFragment2"
+        android:name="com.example.medicationadherence.ui.medications.wizard.WizardDoctorDetailFragment"
+        android:label="fragment_wizard_doctor_detail"
+        tools:layout="@layout/fragment_wizard_doctor_detail" />
 </navigation>
