@@ -120,4 +120,8 @@ public class MainViewModel extends AndroidViewModel {
     public void remove(Schedule schedule){
         repository.remove(schedule);
     }
+
+    public void remove(Medication medication){
+        repository.remove(medication);
+    }
 }

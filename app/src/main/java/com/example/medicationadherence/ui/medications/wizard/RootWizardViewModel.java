@@ -54,6 +54,7 @@ public class RootWizardViewModel extends ViewModel {
     public Context context;
     private long sMedID = -1;
     private MainViewModel mainViewModel;
+    private ArrayList<Schedule> removed = new ArrayList<>();
 
     public int getMedImage() {
         return medImage;
@@ -310,7 +311,7 @@ public class RootWizardViewModel extends ViewModel {
             }
             long time = c.getTimeInMillis();
             if (schedules.get(i).getWeekdays() == days && schedules.get(i).getTime() == time)
-                schedules.remove(i);
+                removed.add(schedules.remove(i));
             doseEntries.remove(dose);
         }
     }
@@ -355,5 +356,9 @@ public class RootWizardViewModel extends ViewModel {
 
     public void setMainViewModel(MainViewModel mainViewModel) {
         this.mainViewModel = mainViewModel;
+    }
+
+    public ArrayList<Schedule> getRemoved() {
+        return removed;
     }
 }

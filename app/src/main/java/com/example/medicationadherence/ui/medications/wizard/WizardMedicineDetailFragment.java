@@ -33,8 +33,6 @@ import java.util.Date;
 import java.util.Objects;
 
 //TODO: https://developer.android.com/guide/topics/text/autofill
-//TODO: if you type text in a number field the app freezes and crashes
-//TODO: check if medicine exists before adding
 public class WizardMedicineDetailFragment extends Fragment implements RootWizardFragment.ErrFragment {
     private RootWizardViewModel model;
     private TextInputEditText medName;

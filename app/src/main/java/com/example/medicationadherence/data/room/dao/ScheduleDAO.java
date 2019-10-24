@@ -36,7 +36,7 @@ public interface ScheduleDAO {
     @Query("SELECT Medication.medicationID as medicationID, Medication.name as medName,"+
            "Medication.dosage AS dosageAmt, Medication.startDate AS startDate,"+
            " Medication.endDate AS endDate, SCHEDULE.numDoses AS doses, SCHEDULE.time AS timeOfDay"+
-           ", SCHEDULE.weekdays AS days, Instructions.instructions AS instructions FROM Medication INNER JOIN "+
+           ", SCHEDULE.weekdays AS days, Instructions.instructions AS instructions, Medication.status as active FROM Medication INNER JOIN "+
            "SCHEDULE ON Medication.medicationID = SCHEDULE.medicationID LEFT JOIN Instructions ON instructions.medicationID = Medication.medicationID")
     List<ScheduleCard> loadScheduled();
 
@@ -53,8 +53,9 @@ public interface ScheduleDAO {
         public long timeOfDay;
         public boolean[] days;
         public String instructions;
+        public boolean active;
 
-        public ScheduleCard(String medName, String dosageAmt, long startDate, long endDate, int doses, long timeOfDay, boolean[] days, String instructions) {
+        public ScheduleCard(String medName, String dosageAmt, long startDate, long endDate, int doses, long timeOfDay, boolean[] days, String instructions, boolean active) {
             this.medName = medName;
             this.dosageAmt = dosageAmt;
             this.startDate = startDate;
@@ -63,6 +64,7 @@ public interface ScheduleDAO {
             this.timeOfDay = timeOfDay;
             this.days = days;
             this.instructions = instructions;
+            this.active = active;
         }
     }
 }

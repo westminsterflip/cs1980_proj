@@ -151,7 +151,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
         addTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: open fragment to ad time/dose
+                //TODO: add dose selector
                 Calendar c = Calendar.getInstance();
                 TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override

@@ -152,6 +152,10 @@ public class Repository {
         new RemoveAsyncTask(mScheduleDAO).execute(schedule);
     }
 
+    public void remove(Medication medication){
+        new RemoveAsyncTask(mMedicationDAO).execute(medication);
+    }
+
     private static class GWNAsyncTask extends AsyncTask<String, Void, List<Doctor>>{
         private DoctorDAO doctorDAO;
 

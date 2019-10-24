@@ -33,7 +33,6 @@ import java.util.Objects;
 
 //TODO: https://developers.google.com/places/android-sdk/autocomplete
 //TODO: https://developer.android.com/guide/topics/text/autofill
-//TODO: dialog for updating if name exists but fields null
 public class WizardDoctorDetailFragment extends Fragment implements RootWizardFragment.ErrFragment {
     private RootWizardViewModel model;
     public Spinner doctorChooser;
@@ -169,6 +168,13 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
         if(model.getsMedID() != -1){
             scheduleAfter.setChecked(true);
             scheduleAfter.setVisibility(View.GONE);
+            int i;
+            for (i = 0; i < doctorList.size(); i++){
+                if (doctorList.get(i).getDoctorID() == model.getDoctorID()){
+                    doctorChooser.setSelection(i + 2);
+                    break;
+                }
+            }
         }
         return root;
     }
@@ -214,5 +220,5 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
     @Override
     public boolean isExitable() {
         return exitable;
-    }//TODO: this isn't working, wrong value returned
+    }
 }

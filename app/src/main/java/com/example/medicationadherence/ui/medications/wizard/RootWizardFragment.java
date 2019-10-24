@@ -36,8 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
-//TODO: hide keyboard when back pressed in top bar
 public class RootWizardFragment extends Fragment {
     private ArrayList<Integer> destinations;
     private RootWizardViewModel model;
@@ -116,8 +114,10 @@ public class RootWizardFragment extends Fragment {
                 if (currentLoc == destinations.get(0)){
                     Navigation.findNavController(root).navigateUp();
                 } else {
-                    if(currentLoc == R.id.editScheduleCardFragment2)
+                    if(currentLoc == R.id.editScheduleCardFragment2) {
+                        model.getSchedules().addAll(model.getRemoved());
                         model.getThisList().get(model.getDestinations().getValue().indexOf(R.id.editScheduleCardFragment2)).pause();
+                    }
                     innerNavController.navigateUp();
                     if (innerNavController.getCurrentDestination().getId() == destinations.get(0)){
                         setHasLast(false);
@@ -146,7 +146,7 @@ public class RootWizardFragment extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(Objects.requireNonNull(getChildFragmentManager().findFragmentById(R.id.wizard_nav_host_fragment)), callback);
         nextFinish.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(final View v) {//TODO: fix this
+            public void onClick(final View v) {
                 InputMethodManager manager = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (getActivity().getCurrentFocus() != null) {
                     Objects.requireNonNull(manager).hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -340,7 +340,7 @@ public class RootWizardFragment extends Fragment {
             }
             tmp.removeAll(model.getSchedules());
             for (Schedule s : tmp){
-                mainModel.remove(s); //TODO: items removed from list even when cancelled
+                mainModel.remove(s);
             }
         }
     }

@@ -37,12 +37,11 @@ public class DailyMedListViewModel extends ViewModel {
     }
 
     public void loadMeds(){
-        //TODO: load from db
         List<List<ScheduleDAO.ScheduleCard>> bigMedList = new ArrayList<>();
         for(int o = 0; o < 3; o++){
             List<ScheduleDAO.ScheduleCard> medList = new ArrayList<>();
             for(ScheduleDAO.ScheduleCard s : cardList){
-                if(s.days[(day + 5 + o) % 7] && s.startDate <= dateList.get(1) && (s.endDate >= dateList.get(1) || s.endDate == -1))
+                if(s.days[(day + 5 + o) % 7] && s.startDate <= dateList.get(1) && (s.endDate >= dateList.get(1) || s.endDate == -1) && s.active)
                     medList.add(s);
             }
             bigMedList.add(medList);

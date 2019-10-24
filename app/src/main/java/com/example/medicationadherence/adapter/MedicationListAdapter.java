@@ -30,9 +30,10 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
     private List<Medication> medicationList;
     private MainViewModel mainModel;
     private ArrayList<MedicationFragment> thisList;
-    private Medication justDeleted;
-    private int justDelPos;
+    private ArrayList<Medication> justDeleted = new ArrayList<>();
+    private ArrayList<Integer> justDelPos = new ArrayList<>();
     private Activity activity;
+    private boolean del = true;
 
     public MedicationListAdapter(List<Medication> medicationList, MainViewModel mainModel, ArrayList thisList, Activity activity){
         this.medicationList = medicationList;
@@ -71,7 +72,6 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
         long ed = medicationList.get(position).getEndDate();
         holderm.endDate.setText((ed == -1) ? "" : new SimpleDateFormat("MM/dd/yy", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(new Date(ed)));
         //holderm.expand.setVisibility(View.GONE);
-        //TODO: add onclick listener to open fragment to view all details
         holderm.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,11 +93,11 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
     }
 
     public void delete(int pos){
-        justDeleted = medicationList.get(pos);
-        justDelPos = pos;
+        justDeleted.add(medicationList.get(pos));
+        System.out.println("added: "+justDelPos.add(pos) + " " + justDelPos.size());
         String name = medicationList.get(pos).getName();
         medicationList.remove(pos);
-        notifyItemRemoved(pos);
+        notifyDataSetChanged();
         showUndo(name);
     }
 
@@ -108,8 +108,10 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
         undoBar.setAction("UNDO", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                medicationList.add(justDelPos, justDeleted);
-                notifyItemInserted(justDelPos);
+                System.out.println(justDeleted.size() + " " + justDelPos.size());
+                medicationList.add(justDelPos.get(justDelPos.size()-1), justDeleted.get(justDeleted.size()-1));
+                notifyDataSetChanged();
+                del = false;
             }
         });
         undoBar.show();
@@ -117,7 +119,12 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
             @Override
             public void onDismissed(Snackbar transientBottomBar, int event) {
                 super.onDismissed(transientBottomBar, event);
-                //TODO: delete from database
+                int i;
+                for (i = 0; i < justDeleted.size(); i++){
+                    if (del || i < justDeleted.size() - 1)
+                        mainModel.remove(justDeleted.get(i));
+                }
+                del = true;
             }
         });
     }
