@@ -15,6 +15,7 @@ import com.example.medicationadherence.data.Converters;
 import com.example.medicationadherence.data.room.entities.Doctor;
 import com.example.medicationadherence.data.room.entities.Medication;
 import com.example.medicationadherence.data.room.entities.Schedule;
+import com.example.medicationadherence.ui.MainViewModel;
 import com.example.medicationadherence.ui.medications.MedicationViewModel;
 
 import java.text.SimpleDateFormat;
@@ -52,6 +53,7 @@ public class RootWizardViewModel extends ViewModel {
     private ArrayList<String> doseEntries;
     public Context context;
     private long sMedID = -1;
+    private MainViewModel mainViewModel;
 
     public int getMedImage() {
         return medImage;
@@ -246,13 +248,17 @@ public class RootWizardViewModel extends ViewModel {
 
     public ArrayList<Schedule> getSchedules() {
         if(schedules == null)
-            schedules = new ArrayList<>();
+            if(sMedID == -1)
+                schedules = new ArrayList<>();
+            else
+                schedules = (ArrayList)mainViewModel.getScheduleFM(sMedID);
         return schedules;
     }
 
     private void loadScheduleLists(){
         if (scheduleDays == null) scheduleDays = new ArrayList<>();
         scheduleDays.clear();
+        System.out.println("len: " + schedules.size());
         for (Schedule s : schedules){
             if (scheduleDays.indexOf(Converters.fromBoolArray(s.getWeekdays())) == -1)
                 scheduleDays.add(Converters.fromBoolArray(s.getWeekdays()));
@@ -341,5 +347,13 @@ public class RootWizardViewModel extends ViewModel {
         endDate = m.getEndDate();
         containerVol = m.getContainerVolume();
         cost = m.getCost();
+    }
+
+    public MainViewModel getMainViewModel() {
+        return mainViewModel;
+    }
+
+    public void setMainViewModel(MainViewModel mainViewModel) {
+        this.mainViewModel = mainViewModel;
     }
 }

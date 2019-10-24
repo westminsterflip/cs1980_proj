@@ -112,4 +112,12 @@ public class MainViewModel extends AndroidViewModel {
     public void updateMedication(Long id, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost){
         repository.updateMedication(id, name, status, doctorID, dosage, startDate, endDate, containerVolume, cost);
     }
+
+    public List<Schedule> getScheduleFM(Long id){
+        return repository.getScheduleForMed(id);
+    }
+
+    public void remove(Schedule schedule){
+        repository.remove(schedule);
+    }
 }

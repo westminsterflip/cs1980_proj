@@ -166,6 +166,10 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
                 model.getDestinations().postValue(model.getDestinations().getValue());
             }
         });
+        if(model.getsMedID() != -1){
+            scheduleAfter.setChecked(true);
+            scheduleAfter.setVisibility(View.GONE);
+        }
         return root;
     }
 

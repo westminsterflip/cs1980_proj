@@ -22,6 +22,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.medicationadherence.R;
+import com.example.medicationadherence.data.Converters;
 import com.example.medicationadherence.data.room.entities.Doctor;
 import com.example.medicationadherence.data.room.entities.Instructions;
 import com.example.medicationadherence.data.room.entities.Medication;
@@ -30,6 +31,7 @@ import com.example.medicationadherence.ui.MainViewModel;
 import com.example.medicationadherence.ui.medications.MedicationFragment;
 import com.example.medicationadherence.ui.medications.MedicationViewModel;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -90,6 +92,7 @@ public class RootWizardFragment extends Fragment {
                 }
             }
         }
+        model.setMainViewModel(mainModel);
     }
 
     @Nullable
@@ -113,6 +116,8 @@ public class RootWizardFragment extends Fragment {
                 if (currentLoc == destinations.get(0)){
                     Navigation.findNavController(root).navigateUp();
                 } else {
+                    if(currentLoc == R.id.editScheduleCardFragment2)
+                        model.getThisList().get(model.getDestinations().getValue().indexOf(R.id.editScheduleCardFragment2)).pause();
                     innerNavController.navigateUp();
                     if (innerNavController.getCurrentDestination().getId() == destinations.get(0)){
                         setHasLast(false);
@@ -320,10 +325,22 @@ public class RootWizardFragment extends Fragment {
         Navigation.findNavController(v).navigateUp();
         if (model.getInstructions() != null && !model.getInstructions().equals(""))
             mainModel.insert(new Instructions(medID, model.getInstructions()));
-        if (scheduled){
-            for (Schedule s : model.getSchedules()){
+        if (scheduled) {
+            List<Schedule> tmp = mainModel.getScheduleFM(medID);
+            for (Schedule s : tmp) {
+                System.out.println(s.getMedicationID() + " " + new Time(s.getTime()) + " " + Converters.fromBoolArray(s.getWeekdays()) + " " + s.getNumDoses());
+            }
+            System.out.println("***************************************************");
+            for (Schedule s : model.getSchedules()) {
                 s.setMedicationID(medID);
-                mainModel.insert(s);
+                if (!tmp.contains(s))
+                    mainModel.insert(s);
+                else
+                    System.out.println(s.getMedicationID() + " " + new Time(s.getTime()) + " " + Converters.fromBoolArray(s.getWeekdays()) + " " + s.getNumDoses());
+            }
+            tmp.removeAll(model.getSchedules());
+            for (Schedule s : tmp){
+                mainModel.remove(s); //TODO: items removed from list even when cancelled
             }
         }
     }

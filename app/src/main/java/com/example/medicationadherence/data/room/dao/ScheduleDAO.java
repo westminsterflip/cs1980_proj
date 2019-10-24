@@ -40,6 +40,9 @@ public interface ScheduleDAO {
            "SCHEDULE ON Medication.medicationID = SCHEDULE.medicationID LEFT JOIN Instructions ON instructions.medicationID = Medication.medicationID")
     List<ScheduleCard> loadScheduled();
 
+    @Query("select * from schedule where medicationID = :id")
+    List<Schedule> getScheduleForMed(Long id);
+
     class ScheduleCard{
         public int medicationID;
         public String medName;

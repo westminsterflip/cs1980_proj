@@ -34,6 +34,15 @@ public class Repository {
         mScheduleDAO = medDB.getScheduleDao();
     }
 
+    public List<Schedule> getScheduleForMed(Long id){
+        try {
+            return new GetScheduleFMTask(mScheduleDAO, id).execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public List<Medication> getMedList(){
         try {
             return new GetMedListTask(mMedicationDAO).execute().get();
@@ -139,6 +148,10 @@ public class Repository {
         return null;
     }
 
+    public void remove(Schedule schedule){
+        new RemoveAsyncTask(mScheduleDAO).execute(schedule);
+    }
+
     private static class GWNAsyncTask extends AsyncTask<String, Void, List<Doctor>>{
         private DoctorDAO doctorDAO;
 
@@ -193,6 +206,50 @@ public class Repository {
                 scheduleDAO.insert((Schedule) objects[0]);
             }
             return (long) -1;
+        }
+    }
+
+    private static class RemoveAsyncTask extends AsyncTask<Object, Void, Void> {
+        private DoctorDAO doctorDAO;
+        private InstructionsDAO instructionsDAO;
+        private MedicationDAO medicationDAO;
+        private MedicationLogDAO medicationLogDAO;
+        private ScheduleDAO scheduleDAO;
+
+        public RemoveAsyncTask(DoctorDAO doctorDAO) {
+            this.doctorDAO = doctorDAO;
+        }
+
+        public RemoveAsyncTask(InstructionsDAO instructionsDAO) {
+            this.instructionsDAO = instructionsDAO;
+        }
+
+        public RemoveAsyncTask(MedicationDAO medicationDAO) {
+            this.medicationDAO = medicationDAO;
+        }
+
+        public RemoveAsyncTask(MedicationLogDAO medicationLogDAO) {
+            this.medicationLogDAO = medicationLogDAO;
+        }
+
+        public RemoveAsyncTask(ScheduleDAO scheduleDAO) {
+            this.scheduleDAO = scheduleDAO;
+        }
+
+        @Override
+        protected Void doInBackground(Object... objects) {
+            if(doctorDAO != null){
+                doctorDAO.delete((Doctor) objects[0]);
+            } else if (instructionsDAO != null){
+                instructionsDAO.delete((Instructions) objects[0]);
+            } else if (medicationDAO != null){
+                medicationDAO.delete((Medication) objects[0]);
+            } else if (medicationLogDAO != null){
+                medicationLogDAO.delete((MedicationLog) objects[0]);
+            } else if (scheduleDAO != null){
+                scheduleDAO.delete((Schedule) objects[0]);
+            }
+            return null;
         }
     }
 
@@ -265,6 +322,21 @@ public class Repository {
         @Override
         protected List<Medication> doInBackground(Void... voids) {
             return medicationDAO.getAllMedications();
+        }
+    }
+
+    private static class GetScheduleFMTask extends AsyncTask<Void, Void, List<Schedule>>{
+        private ScheduleDAO scheduleDAO;
+        private Long id;
+
+        public GetScheduleFMTask(ScheduleDAO scheduleDAO, Long id) {
+            this.scheduleDAO = scheduleDAO;
+            this.id = id;
+        }
+
+        @Override
+        protected List<Schedule> doInBackground(Void... voids) {
+            return scheduleDAO.getScheduleForMed(id);
         }
     }
 

@@ -9,8 +9,11 @@ package com.example.medicationadherence.data.room.entities;
 */
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+
+import com.example.medicationadherence.data.Converters;
 
 import static androidx.room.ForeignKey.CASCADE;
 
@@ -63,5 +66,11 @@ public class Schedule {
         this.numDoses = numDoses;
         this.time = time;
         this.weekdays = weekdays;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        Schedule s = (Schedule) obj;
+	    return s.medicationID == this.medicationID && s.numDoses == this.numDoses && s.time == this.time && Converters.fromBoolArray(s.weekdays) == Converters.fromBoolArray(this.weekdays);
     }
 }
