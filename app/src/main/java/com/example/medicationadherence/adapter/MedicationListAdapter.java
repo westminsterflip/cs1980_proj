@@ -121,7 +121,7 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
                 super.onDismissed(transientBottomBar, event);
                 int i;
                 for (i = 0; i < justDeleted.size(); i++){
-                    if (del || i < justDeleted.size() - 1)
+                    if (/*del ||*/ i < justDeleted.size() - 1)//TODO: undo produces null medication when editing still
                         mainModel.remove(justDeleted.get(i));
                 }
                 del = true;
