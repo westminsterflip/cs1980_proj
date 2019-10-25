@@ -4,6 +4,7 @@ package com.example.medicationadherence.ui.medications;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -192,10 +194,14 @@ public class MedicationFragment extends Fragment implements Serializable {
 
     private class SwipeDeleteCallback extends ItemTouchHelper.SimpleCallback{
         private MedicationListAdapter medicationListAdapter;
+        private Drawable trashIcon;
+        private ColorDrawable background;
 
         public SwipeDeleteCallback(MedicationListAdapter medicationListAdapter) {
             super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
             this.medicationListAdapter = medicationListAdapter;
+            trashIcon = getResources().getDrawable(R.drawable.ic_delete_24px, null);
+            background = new ColorDrawable(ContextCompat.getColor(getContext(), R.color.summaryMissed));
         }
 
         @Override
@@ -219,9 +225,20 @@ public class MedicationFragment extends Fragment implements Serializable {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             View view = viewHolder.itemView;
             int offset = R.dimen.fab_margin;
+            int iconMargin = (view.getHeight() - trashIcon.getIntrinsicHeight())/2;
+            int iconTop = view.getTop() + iconMargin;
+            int iconBottom = iconTop + trashIcon.getIntrinsicHeight();
             if (dX > 0) {
-
+                trashIcon.setBounds(view.getLeft()+iconMargin, iconTop, view.getLeft() + iconMargin+trashIcon.getIntrinsicWidth(), iconBottom);
+                background.setBounds(view.getLeft(), view.getTop() + 13, view.getLeft() + ((int)dX + offset), view.getBottom() - 13);
+            } else if (dX < 0) {
+                trashIcon.setBounds(view.getRight()-iconMargin-trashIcon.getIntrinsicWidth(), iconTop, view.getRight() -iconMargin, iconBottom);
+                background.setBounds(view.getRight() + ((int)dX - offset), view.getTop() + 13, view.getRight(), view.getBottom() - 13);
+            } else {
+                background.setBounds(0,0,0,0);
             }
+            background.draw(c);
+            trashIcon.draw(c);
         }
     }
 }
