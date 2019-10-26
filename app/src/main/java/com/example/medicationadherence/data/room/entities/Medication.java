@@ -23,7 +23,7 @@ import static androidx.room.ForeignKey.CASCADE;
 public class Medication {
 	@PrimaryKey(autoGenerate = true)
 	private Long medicationID;
-
+    private String medImageURL;
 	private String name;
 	private boolean status;
 	private Long doctorID;     /* FK Doctor.name */
@@ -39,6 +39,14 @@ public class Medication {
 
     public void setMedicationID(Long medicationID) {
         this.medicationID = medicationID;
+    }
+
+    public String getMedImageURL() {
+        return medImageURL;
+    }
+
+    public void setMedImageURL(String medImageURL) {
+        this.medImageURL = medImageURL;
     }
 
     public String getName() {
@@ -105,7 +113,8 @@ public class Medication {
         this.cost = cost;
     }
 
-    public Medication(String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost) {
+    public Medication(String medImageURL, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost) {
+        this.medImageURL = medImageURL;
         this.name = name;
         this.status = status;
         this.doctorID = doctorID;
@@ -117,8 +126,9 @@ public class Medication {
     }
 
     @Ignore
-    public Medication(Long medicationID, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost) {
+    public Medication(Long medicationID, String medImageURL, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost) {
         this.medicationID = medicationID;
+        this.medImageURL = medImageURL;
         this.name = name;
         this.status = status;
         this.doctorID = doctorID;

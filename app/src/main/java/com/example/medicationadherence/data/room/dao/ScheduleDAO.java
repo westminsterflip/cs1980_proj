@@ -33,7 +33,7 @@ public interface ScheduleDAO {
     @Query("DELETE FROM SCHEDULE")
     void clearTable();
 
-    @Query("SELECT Medication.medicationID as medicationID, Medication.name as medName,"+
+    @Query("SELECT Medication.medicationID as medicationID, Medication.medImageURL as medImageURL, Medication.name as medName,"+
            "Medication.dosage AS dosageAmt, Medication.startDate AS startDate,"+
            " Medication.endDate AS endDate, SCHEDULE.numDoses AS doses, SCHEDULE.time AS timeOfDay"+
            ", SCHEDULE.weekdays AS days, Instructions.instructions AS instructions, Medication.status as active FROM Medication INNER JOIN "+
@@ -45,6 +45,7 @@ public interface ScheduleDAO {
 
     class ScheduleCard{
         public int medicationID;
+        public String medImageURL;
         public String medName;
         public String dosageAmt;
         public long startDate;
@@ -55,7 +56,8 @@ public interface ScheduleDAO {
         public String instructions;
         public boolean active;
 
-        public ScheduleCard(String medName, String dosageAmt, long startDate, long endDate, int doses, long timeOfDay, boolean[] days, String instructions, boolean active) {
+        public ScheduleCard(String medImageURL, String medName, String dosageAmt, long startDate, long endDate, int doses, long timeOfDay, boolean[] days, String instructions, boolean active) {
+            this.medImageURL = medImageURL;
             this.medName = medName;
             this.dosageAmt = dosageAmt;
             this.startDate = startDate;

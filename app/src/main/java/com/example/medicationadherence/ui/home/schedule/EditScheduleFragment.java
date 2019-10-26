@@ -34,10 +34,10 @@ public class EditScheduleFragment extends Fragment implements RootWizardFragment
         wizardModel = new ViewModelProvider(Objects.requireNonNull(Objects.requireNonNull(getParentFragment()).getParentFragment())).get(RootWizardViewModel.class);
         wizardModel.getSchedules();
         wizardModel.getScheduleDays();
-        if ( wizardModel.getThisList().size() < 3)
+        if ( wizardModel.getThisList().size() < 4)
             wizardModel.getThisList().add(this);
-        else if(!wizardModel.getThisList().get(2).equals(this))
-            wizardModel.getThisList().set(2,this);
+        else if(!wizardModel.getThisList().get(3).equals(this))
+            wizardModel.getThisList().set(3,this);
     }
 
     @Override

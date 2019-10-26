@@ -2,6 +2,9 @@ package com.example.medicationadherence.adapter;
 
 import android.app.Activity;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +25,14 @@ import com.example.medicationadherence.ui.medications.MedicationFragment;
 import com.example.medicationadherence.ui.medications.MedicationFragmentDirections;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.IOException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 public class MedicationListAdapter extends RecyclerView.Adapter {
     private List<Medication> medicationList;
     private MainViewModel mainModel;
@@ -54,11 +61,19 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         final MedicationViewHolder holderm = (MedicationViewHolder) holder;
-//        if(medicationList.get(position).getMedImage() != -1){ //If an image is specified it will load, otherwise the default is a pill on a background
-//            holderm.medImage.setImageResource(medicationList.get(position).getMedImage());
-//            holderm.medImage.setBackgroundColor(Integer.parseInt("00FFFFFF",16));
-//            holderm.medImage.setImageTintList(null);
-//        }
+        if(medicationList.get(position).getMedImageURL() != null && !medicationList.get(position).getMedImageURL().equals("")){ //If an image is specified it will load, otherwise the default is a pill on a background
+            System.out.println(medicationList.get(position).getMedImageURL());
+            try {
+                Bitmap image = new SetImageTask(holderm, position).execute().get();
+                if (image != null) {
+                    holderm.medImage.setImageBitmap(image);
+                    holderm.medImage.setBackgroundColor(Integer.parseInt("00FFFFFF", 16));
+                    holderm.medImage.setImageTintList(null);
+                }
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         Doctor doctor = mainModel.getDoctorWithID(medicationList.get(position).getDoctorID());
         if(doctor == null){
             holderm.doctorName.setVisibility(View.GONE);
@@ -71,7 +86,6 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
         holderm.startDate.setText((new SimpleDateFormat("MM/dd/yy", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(new Date(medicationList.get(position).getStartDate()))+" - "));
         long ed = medicationList.get(position).getEndDate();
         holderm.endDate.setText((ed == -1) ? "" : new SimpleDateFormat("MM/dd/yy", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(new Date(ed)));
-        //holderm.expand.setVisibility(View.GONE);
         holderm.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,8 +95,6 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
             }
         });
     }
-
-
 
     @Override
     public int getItemCount() {
@@ -108,10 +120,10 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
         undoBar.setAction("UNDO", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println(justDeleted.size() + " " + justDelPos.size());
                 medicationList.add(justDelPos.get(justDelPos.size()-1), justDeleted.get(justDeleted.size()-1));
                 notifyDataSetChanged();
-                del = false;
+                justDeleted.clear();
+                justDelPos.clear();
             }
         });
         undoBar.show();
@@ -120,11 +132,20 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
             public void onDismissed(Snackbar transientBottomBar, int event) {
                 super.onDismissed(transientBottomBar, event);
                 int i;
-                for (i = 0; i < justDeleted.size(); i++){
-                    if (/*del ||*/ i < justDeleted.size() - 1)//TODO: undo produces null medication when editing still
+                for (i = 0; i < justDeleted.size(); i++)
+                    if (event != DISMISS_EVENT_ACTION && event != DISMISS_EVENT_CONSECUTIVE || i < justDeleted.size() - 1)
                         mainModel.remove(justDeleted.get(i));
+                if(event == DISMISS_EVENT_CONSECUTIVE){
+                    int pos = justDelPos.get(justDelPos.size()-1);
+                    Medication med = justDeleted.get(justDeleted.size()-1);
+                    justDelPos.clear();
+                    justDeleted.clear();
+                    justDelPos.add(pos);
+                    justDeleted.add(med);
+                }else if (event != DISMISS_EVENT_ACTION) {
+                    justDeleted.clear();
+                    justDelPos.clear();
                 }
-                del = true;
             }
         });
     }
@@ -149,6 +170,26 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
             startDate=view.findViewById(R.id.textViewStartDate);
             endDate=view.findViewById(R.id.textViewEndDate);
             card=view.findViewById(R.id.medicationCard);
+        }
+    }
+
+    private class SetImageTask extends AsyncTask<Void, Void, Bitmap>{
+        private MedicationViewHolder holder;
+        private int position;
+
+        public SetImageTask(MedicationViewHolder holder, int position) {
+            this.holder = holder;
+            this.position = position;
+        }
+
+        @Override
+        protected Bitmap doInBackground(Void... voids) {
+            try {
+                return BitmapFactory.decodeStream(new URL(medicationList.get(position).getMedImageURL()).openStream());
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+            return null;
         }
     }
 }

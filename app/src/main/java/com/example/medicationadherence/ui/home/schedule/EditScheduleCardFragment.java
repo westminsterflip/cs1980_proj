@@ -54,10 +54,10 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
         if(fromWizard = Objects.requireNonNull(getParentFragment()).getParentFragment() instanceof RootWizardFragment){
             wizardModel = new ViewModelProvider(getParentFragment().getParentFragment()).get(RootWizardViewModel.class);
             checks = Converters.intToBoolArray(EditScheduleCardFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getDays());
-            if ( wizardModel.getThisList().size() < 4)
+            if ( wizardModel.getThisList().size() < 5)
                 wizardModel.getThisList().add(this);
-            else if(!wizardModel.getThisList().get(3).equals(this))
-                wizardModel.getThisList().set(3,this);
+            else if(!wizardModel.getThisList().get(4).equals(this))
+                wizardModel.getThisList().set(4,this);
         } else {
             //medID = EditScheduleCardFragmentArgs.fromBundle(getArguments()).getMedicationID();
         }

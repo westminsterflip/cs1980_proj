@@ -60,10 +60,10 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
         super.onCreate(savedInstanceState);
         if(fromWiz = (getParentFragment().getParentFragment() instanceof RootWizardFragment)) {
             model = new ViewModelProvider(Objects.requireNonNull(Objects.requireNonNull(getParentFragment()).getParentFragment())).get(RootWizardViewModel.class);
-            if (model.getThisList().size() == 1)
+            if (model.getThisList().size() == 2)
                 model.getThisList().add(this);
-            else if (model.getThisList().get(1) != this)
-                model.getThisList().set(1, this);
+            else if (model.getThisList().get(2) != this)
+                model.getThisList().set(2, this);
         }
         mainModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
         doctorList = mainModel.getRepository().getDoctors();

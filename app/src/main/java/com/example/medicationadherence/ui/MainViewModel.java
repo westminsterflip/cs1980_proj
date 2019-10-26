@@ -109,8 +109,8 @@ public class MainViewModel extends AndroidViewModel {
 
     public Medication getMedWithID(Long medicationID){return repository.getMedWithID(medicationID);}
 
-    public void updateMedication(Long id, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost){
-        repository.updateMedication(id, name, status, doctorID, dosage, startDate, endDate, containerVolume, cost);
+    public void updateMedication(Long id, String medImageURL, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost){
+        repository.updateMedication(id, medImageURL.equals("") ? null : medImageURL, name, status, doctorID, dosage, startDate, endDate, containerVolume, cost);
     }
 
     public List<Schedule> getScheduleFM(Long id){

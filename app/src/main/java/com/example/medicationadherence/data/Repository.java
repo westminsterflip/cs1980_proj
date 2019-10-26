@@ -117,8 +117,8 @@ public class Repository {
         new UpdateDoctorAsyncTask(mDoctorDAO, id, doctorName, practiceName, address, phone).execute();
     }
 
-    public void updateMedication(Long id, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost){
-        new UpdateMedicationTask(mMedicationDAO, id, name, status, doctorID, dosage, startDate, endDate, containerVolume, cost).execute();
+    public void updateMedication(Long id, String medImageURL, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost){
+        new UpdateMedicationTask(mMedicationDAO, id, medImageURL, name, status, doctorID, dosage, startDate, endDate, containerVolume, cost).execute();
     }
 
     public Doctor getDocWithID(Long doctorID){
@@ -405,8 +405,9 @@ public class Repository {
         private long endDate;
         private int containerVolume;
         private double cost;
+        private String medImageURL;
 
-        public UpdateMedicationTask(MedicationDAO medicationDAO, Long id, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost) {
+        public UpdateMedicationTask(MedicationDAO medicationDAO, Long id, String medImageURL, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost) {
             this.medicationDAO = medicationDAO;
             this.id = id;
             this.name = name;
@@ -417,11 +418,12 @@ public class Repository {
             this.endDate = endDate;
             this.containerVolume = containerVolume;
             this.cost = cost;
+            this.medImageURL = medImageURL;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            medicationDAO.update(id, name, status, doctorID, dosage, startDate, endDate, containerVolume, cost);
+            medicationDAO.update(id, medImageURL, name, status, doctorID, dosage, startDate, endDate, containerVolume, cost);
             return null;
         }
     }

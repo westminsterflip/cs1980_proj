@@ -10,8 +10,8 @@
         android:label="fragment_wizard_medicine_detail"
         tools:layout="@layout/fragment_wizard_medicine_detail" >
         <action
-            android:id="@+id/action_wizardMedicineDetailFragment_to_wizardDoctorDetailFragment"
-            app:destination="@id/wizardDoctorDetailFragment" />
+            android:id="@+id/action_wizardMedicineDetailFragment_to_wizardImageSelector"
+            app:destination="@id/wizardImageSelector" />
     </fragment>
     <fragment
         android:id="@+id/wizardDoctorDetailFragment"
@@ -42,5 +42,14 @@
         <action
             android:id="@+id/action_editScheduleFragment2_to_editScheduleCardFragment2"
             app:destination="@id/editScheduleCardFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/wizardImageSelector"
+        android:name="com.example.medicationadherence.ui.medications.wizard.WizardImageSelector"
+        android:label="fragment_wizard_image_selector"
+        tools:layout="@layout/fragment_wizard_image_selector" >
+        <action
+            android:id="@+id/action_wizardImageSelector_to_wizardDoctorDetailFragment"
+            app:destination="@id/wizardDoctorDetailFragment" />
     </fragment>
 </navigation>

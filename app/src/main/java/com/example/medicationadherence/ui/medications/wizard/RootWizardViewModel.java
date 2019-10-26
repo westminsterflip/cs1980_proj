@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 
 public class RootWizardViewModel extends ViewModel {
-    private int medImage = -1;
+    private String medImage = null;
     private String medName;
     private String medDosage;
     private String instructions;
@@ -56,11 +56,11 @@ public class RootWizardViewModel extends ViewModel {
     private MainViewModel mainViewModel;
     private ArrayList<Schedule> removed = new ArrayList<>();
 
-    public int getMedImage() {
+    public String getMedImage() {
         return medImage;
     }
 
-    public void setMedImage(int medImage) {
+    public void setMedImage(String medImage) {
         this.medImage = medImage;
     }
 
@@ -142,11 +142,11 @@ public class RootWizardViewModel extends ViewModel {
     }
 
     public Medication getMedication(){
-        return new Medication(medName, active, doctorID, medDosage, startDate, endDate, containerVol, cost);
+        return new Medication(medImage, medName, active, doctorID, medDosage, startDate, endDate, containerVol, cost);
     }
 
     public Medication getMedicationWID(){
-        return new Medication(sMedID, medName, active, doctorID, medDosage, startDate, endDate, containerVol, cost);
+        return new Medication(sMedID, medImage, medName, active, doctorID, medDosage, startDate, endDate, containerVol, cost);
     }
 
     public Doctor getDoctor(){
@@ -216,7 +216,7 @@ public class RootWizardViewModel extends ViewModel {
     public MutableLiveData<ArrayList<Integer>> getDestinations() {
         if(destinations == null){
             destinations = new MutableLiveData<>();
-            Integer[] destsint = {R.id.wizardMedicineDetailFragment, R.id.wizardDoctorDetailFragment};
+            Integer[] destsint = {R.id.wizardMedicineDetailFragment, R.id.wizardImageSelector, R.id.wizardDoctorDetailFragment};
             ArrayList dests = new ArrayList<>(Arrays.asList(destsint));
             destinations.setValue(dests);
         }
