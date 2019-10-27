@@ -55,6 +55,7 @@ public class RootWizardViewModel extends ViewModel {
     private long sMedID = -1;
     private MainViewModel mainViewModel;
     private ArrayList<Schedule> removed = new ArrayList<>();
+    private RootWizardFragment fragment;
 
     public String getMedImage() {
         return medImage;
@@ -259,7 +260,6 @@ public class RootWizardViewModel extends ViewModel {
     private void loadScheduleLists(){
         if (scheduleDays == null) scheduleDays = new ArrayList<>();
         scheduleDays.clear();
-        System.out.println("len: " + schedules.size());
         for (Schedule s : schedules){
             if (scheduleDays.indexOf(Converters.fromBoolArray(s.getWeekdays())) == -1)
                 scheduleDays.add(Converters.fromBoolArray(s.getWeekdays()));
@@ -360,5 +360,13 @@ public class RootWizardViewModel extends ViewModel {
 
     public ArrayList<Schedule> getRemoved() {
         return removed;
+    }
+
+    public RootWizardFragment getFragment() {
+        return fragment;
+    }
+
+    public void setFragment(RootWizardFragment fragment) {
+        this.fragment = fragment;
     }
 }

@@ -14,13 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.adapter.StartEndDaysScheduleAdapter;
-import com.example.medicationadherence.data.Converters;
-import com.example.medicationadherence.data.room.entities.Schedule;
 import com.example.medicationadherence.ui.medications.wizard.RootWizardFragment;
 import com.example.medicationadherence.ui.medications.wizard.RootWizardViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.sql.Time;
 import java.util.Objects;
 
 public class EditScheduleFragment extends Fragment implements RootWizardFragment.ErrFragment {
@@ -59,10 +56,6 @@ public class EditScheduleFragment extends Fragment implements RootWizardFragment
         ((RootWizardFragment) Objects.requireNonNull(getParentFragment().getParentFragment())).setHasLast(true);
         ((RootWizardFragment)getParentFragment().getParentFragment()).setHasNext(false);
         Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setTitle("Schedule");
-        System.out.println("list:");
-        for (Schedule s : wizardModel.getSchedules()){
-            System.out.println(Converters.fromBoolArray(s.getWeekdays()) + " " + new Time(s.getTime()));
-        }
         return root;
     }
 

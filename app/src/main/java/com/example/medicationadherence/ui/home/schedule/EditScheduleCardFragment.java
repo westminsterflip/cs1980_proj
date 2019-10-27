@@ -61,7 +61,6 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
         } else {
             //medID = EditScheduleCardFragmentArgs.fromBundle(getArguments()).getMedicationID();
         }
-        System.out.println(fromWizard);
         mainModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
     }
 
@@ -170,7 +169,6 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
                             timeText = new SimpleDateFormat("hh:mm aa", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(c.getTimeInMillis());
                         boolean[] days = {sun.isChecked(), mon.isChecked(), tues.isChecked(), wed.isChecked(), thurs.isChecked(), fri.isChecked(), sat.isChecked()};
                         wizardModel.getSchedules().add(new Schedule(null, 1, c.getTimeInMillis(), fill));
-                        System.out.println("days: "+Converters.fromBoolArray(days));
                         wizardModel.getDoseEntries(fill);
                         adapter.notifyDataSetChanged();
                         if(fromWizard && (sun.isChecked() || mon.isChecked() || tues.isChecked() || wed.isChecked() || thurs.isChecked() || fri.isChecked() || sat.isChecked()) && wizardModel.getDoseEntries(fill).size() != 0)
@@ -209,7 +207,6 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
             }
         }
         wizardModel.setDoseNull();
-        System.out.println("paused");
     }
 
     @Override

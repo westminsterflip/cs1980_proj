@@ -3,18 +3,26 @@ package com.example.medicationadherence.ui.medications.wizard;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.text.TextUtils;
 import android.util.JsonReader;
 import android.util.JsonToken;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.ListPreloader;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
+import com.bumptech.glide.util.FixedPreloadSizeProvider;
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.adapter.ImageSelectorAdapter;
 
@@ -24,12 +32,18 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class WizardImageSelector extends Fragment implements RootWizardFragment.ErrFragment {
+public class WizardImageSelector extends Fragment implements RootWizardFragment.ErrFragment, ImageSelectorAdapter.ImageClickListener {
     RootWizardViewModel model;
+    int page = 1;
+    ArrayList<String> images = null;
+    ImageSelectorAdapter adapter;
+    int pos = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,19 +58,48 @@ public class WizardImageSelector extends Fragment implements RootWizardFragment.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_wizard_image_selector, container, false);
-        RecyclerView imageList = root.findViewById(R.id.imageRecyclerView);
+        final RecyclerView imageList = root.findViewById(R.id.imageRecyclerView);
         imageList.setLayoutManager(new GridLayoutManager(getContext(), 3));
         imageList.setHasFixedSize(true);
-        ArrayList<String> images = null;
         try {
-            images = new MedImageTask(model, 1).execute().get();
+            images = new MedImageTask(model, page++).execute().get();
+            if (images == null)
+                images = new ArrayList<>();
+            images.add(0, null);
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
+        ListPreloader.PreloadSizeProvider sizeProvider = new FixedPreloadSizeProvider(1024,1024);
+        MedImagePreloadProvider provider = new MedImagePreloadProvider();
+        RecyclerViewPreloader<ContactsContract.CommonDataKinds.Photo> preloader = new RecyclerViewPreloader<ContactsContract.CommonDataKinds.Photo>(Glide.with(this), provider, sizeProvider, 10);
+        imageList.addOnScrollListener(preloader);
         if (images != null) {
-            imageList.setAdapter(new ImageSelectorAdapter(images));
+            imageList.setAdapter(adapter = new ImageSelectorAdapter(images, model));
         }
-
+        imageList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (!imageList.canScrollVertically(1)) {
+                    ArrayList<String> temp = null;
+                    try {
+                        temp = new MedImageTask(model, page++).execute().get();
+                    } catch (ExecutionException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if(temp != null){
+                        for(String s : temp)
+                            if (!images.contains(s))
+                                images.add(s);
+                        if(adapter != null)
+                            adapter.notifyDataSetChanged();
+                    } else {
+                        imageList.setOnScrollChangeListener(null);
+                    }
+                }
+            }
+        });
+        adapter.setListener(this);
         return root;
     }
 
@@ -74,7 +117,14 @@ public class WizardImageSelector extends Fragment implements RootWizardFragment.
     public boolean isExitable() {
         return true;
     }
-//TODO: cache images, select images, filter images. ppage up when bottom hit
+
+    @Override
+    public void onImageClick(int position) {
+        adapter.setSelected(position);
+        pos = position;
+    }
+
+    //TODO: filter images. cache lifetime doesn't work
     private static class MedImageTask extends AsyncTask<Void, Void, ArrayList<String>> {
         RootWizardViewModel model;
         int page;
@@ -88,7 +138,7 @@ public class WizardImageSelector extends Fragment implements RootWizardFragment.
         protected ArrayList<String> doInBackground(Void... voids) {
             try {
                 ArrayList<String> out = new ArrayList<>();
-                URL medAPI = new URL("https://rximage.nlm.nih.gov/api/rximage/1/rxnav?name=" + model.getMedName() + "&rPage=" + page);
+                URL medAPI = new URL("https://rximage.nlm.nih.gov/api/rximage/1/rxbase?name=" + model.getMedName() + "&rPage=" + page + "&resolution=1024");
                 HttpsURLConnection apiConn = (HttpsURLConnection) medAPI.openConnection();
                 if (apiConn.getResponseCode() == 200) {
                     InputStream response = apiConn.getInputStream();
@@ -113,28 +163,25 @@ public class WizardImageSelector extends Fragment implements RootWizardFragment.
                                 jsonReader.endObject();
                                 break;
                             case NAME:
-                                String j = jsonReader.nextName();
-                                if (j.equals("imageUrl")) {
-                                    out.add(jsonReader.nextString());
-                                    System.out.println(out.get(out.size() - 1));
-                                } else {
-                                    System.out.println("key: " + j);
+                                if (jsonReader.nextName().equals("imageUrl")) {
+                                    String url = jsonReader.nextString();
+                                    if (!out.contains(url))
+                                        out.add(url);
                                 }
                                 break;
                             case NULL:
                                 jsonReader.nextNull();
                                 break;
                             case NUMBER:
-                                System.out.println("num: " + jsonReader.nextDouble());
+                                jsonReader.nextDouble();
                                 break;
                             case STRING:
-                                System.out.println("string: " + jsonReader.nextString());
+                                jsonReader.nextString();
                                 break;
                             default:
                                 System.out.println("UNKNOWN");
                         }
                         token = jsonReader.peek();
-                        System.out.println(token.name());
                     }
                     jsonReader.close();
                     apiConn.disconnect();
@@ -151,5 +198,28 @@ public class WizardImageSelector extends Fragment implements RootWizardFragment.
             }
             return null;
         }
+    }
+
+    private class MedImagePreloadProvider implements ListPreloader.PreloadModelProvider{
+        @NonNull
+        @Override
+        public List getPreloadItems(int position) {
+            String url = images.get(position);
+            if (TextUtils.isEmpty(url))
+                return Collections.emptyList();
+            return Collections.singletonList(url);
+        }
+
+        @Nullable
+        @Override
+        public RequestBuilder<?> getPreloadRequestBuilder(@NonNull Object item) {
+            return Glide.with(getContext()).load((String) item);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        model.setMedImage(images.get(pos));
     }
 }

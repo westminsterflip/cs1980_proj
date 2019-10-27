@@ -1,8 +1,6 @@
 package com.example.medicationadherence.adapter;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,21 +12,23 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.data.room.dao.ScheduleDAO;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.net.URL;
 import java.sql.Time;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class DailyMedicationListAdapter extends RecyclerView.Adapter implements Serializable {
     private List<ScheduleDAO.ScheduleCard> medicationList;
+    private Activity activity;
 
-    public DailyMedicationListAdapter(List<ScheduleDAO.ScheduleCard> medicationList){
+    public DailyMedicationListAdapter(List<ScheduleDAO.ScheduleCard> medicationList, Activity activity){
         this.medicationList = medicationList;
+        this.activity = activity;
     }
 
     @NonNull
@@ -41,20 +41,11 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         final DailyMedicationViewHolder holderm = (DailyMedicationViewHolder) holder;
-        //TODO: https://lhncbc.nlm.nih.gov/rximage-api
         if(medicationList.get(position).medImageURL != null && !medicationList.get(position).medImageURL.equals("")){ //If an image is specified it will load, otherwise the default is a pill on a background
-            try {
-                Bitmap image = new SetImageTask(holderm, position).execute().get();
-                if (image != null) {
-                    holderm.medImage.setImageBitmap(image);
+            Glide.with(activity).load(medicationList.get(position).medImageURL).thumbnail(0.5f).transition(new DrawableTransitionOptions().crossFade()).diskCacheStrategy(DiskCacheStrategy.ALL).into(holderm.medImage);
                     holderm.medImage.setBackgroundColor(Integer.parseInt("00FFFFFF", 16));
                     holderm.medImage.setImageTintList(null);
-                }
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
-        } else
-            System.out.println(medicationList.get(position).medImageURL);
+        }
         holderm.medName.setText(medicationList.get(position).medName);
         String instr = medicationList.get(position).instructions;
         if(instr != null && !instr.equals("")){
@@ -103,26 +94,6 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
             dosageTime=view.findViewById(R.id.textViewDosageTime);
             expand=view.findViewById(R.id.dailyMedicationExpand);
             card=view.findViewById(R.id.dailyCard);
-        }
-    }
-
-    private class SetImageTask extends AsyncTask<Void, Void, Bitmap> {
-        private DailyMedicationViewHolder holder;
-        private int position;
-
-        public SetImageTask(DailyMedicationViewHolder holder, int position) {
-            this.holder = holder;
-            this.position = position;
-        }
-
-        @Override
-        protected Bitmap doInBackground(Void... voids) {
-            try {
-                return BitmapFactory.decodeStream(new URL(medicationList.get(position).medImageURL).openStream());
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-            return null;
         }
     }
 }

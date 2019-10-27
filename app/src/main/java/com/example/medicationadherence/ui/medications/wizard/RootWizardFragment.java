@@ -81,7 +81,6 @@ public class RootWizardFragment extends Fragment {
             Medication m = mainModel.getMedWithID(model.getsMedID());
             model.setMedication(m);
             for (int i = 0; i < medModel.getMedList().size(); i ++){
-                System.out.println(medModel.getMedList().get(i).getMedicationID() + " " + medModel.getMedList().get(i).getName());
                 if (medModel.getMedList().get(i).getMedicationID().equals(model.getsMedID())){
                     index = i;
                     break;
@@ -89,6 +88,7 @@ public class RootWizardFragment extends Fragment {
             }
         }
         model.setMainViewModel(mainModel);
+        model.setFragment(this);
     }
 
     @Nullable
@@ -314,11 +314,9 @@ public class RootWizardFragment extends Fragment {
             model.setsMedID(medID = mainModel.insert(model.getMedication()));
             medModel.getMedList().add(model.getMedicationWID());
         } else {
-            System.out.println(model.getMedName() + " " + model.getsMedID());
-            System.out.println("index: " + index);
             medModel.getMedList().set(index, model.getMedicationWID());
             medicationFragment.sort(mainModel.getMedSortMode());
-            mainModel.updateMedication(medID = model.getsMedID(), "", model.getMedName(), model.isActive(), model.getDoctorID(), model.getMedDosage(), model.getStartDate(), model.getEndDate(), model.getContainerVol(), model.getCost());
+            mainModel.updateMedication(medID = model.getsMedID(), model.getMedImage(), model.getMedName(), model.isActive(), model.getDoctorID(), model.getMedDosage(), model.getStartDate(), model.getEndDate(), model.getContainerVol(), model.getCost());
         }
         Navigation.findNavController(v).navigateUp();
         if (model.getInstructions() != null && !model.getInstructions().equals(""))

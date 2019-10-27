@@ -53,7 +53,6 @@ public class MedicationFragment extends Fragment implements Serializable {
         else
             thisList.set(0, this);
         model.setMedList(mainModel.getMedList());
-        System.out.println("created");
     }
 
 

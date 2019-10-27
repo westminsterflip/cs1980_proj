@@ -166,7 +166,6 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
         scheduleAfter.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                System.out.println("checked: " + isChecked);
                 if (isChecked){
                     Objects.requireNonNull(model.getDestinations().getValue()).add(R.id.editScheduleFragment2);
                     model.getDestinations().getValue().add(R.id.editScheduleCardFragment2);
@@ -188,8 +187,6 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
                         if (doctorList.get(i).getDoctorID().equals(doctorList.get(doctorChooser.getSelectedItemPosition()).getDoctorID())){
                             pos = i;
                             break;
-                        } else {
-                            System.out.println(doctorList.get(i).getDoctorID() + " != " + doctorList.get(doctorChooser.getSelectedItemPosition()).getDoctorID());
                         }
                     }
                     if(pos!=-1)

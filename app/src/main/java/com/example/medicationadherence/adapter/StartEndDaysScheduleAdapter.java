@@ -46,7 +46,6 @@ public class StartEndDaysScheduleAdapter extends RecyclerView.Adapter {
         sedsHolder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("day: " + Converters.fromBoolArray(day));
                 EditScheduleFragmentDirections.ActionEditScheduleFragment2ToEditScheduleCardFragment2 action = EditScheduleFragmentDirections.actionEditScheduleFragment2ToEditScheduleCardFragment2(Converters.fromBoolArray(day));
                 model.getNavController().navigate(action);
             }

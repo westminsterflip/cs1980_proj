@@ -56,7 +56,7 @@ public class DailyMedListViewModel extends ViewModel {
     void setDate(long date) {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(date);
-        System.out.println(day = c.get(Calendar.DAY_OF_WEEK));
+        day = c.get(Calendar.DAY_OF_WEEK);
         dateList.set(1,date);
     }
 
