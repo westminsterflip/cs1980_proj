@@ -20,7 +20,7 @@ import java.util.List;
 public interface MedicationDAO {
     @Insert
     long insert(Medication medications);
- 
+
     @Update
     void update(Medication... medications);
 

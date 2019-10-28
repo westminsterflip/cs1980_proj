@@ -66,13 +66,12 @@ public class StartEndDaysScheduleAdapter extends RecyclerView.Adapter {
     public void delete(int pos){
         justDeleted.add(days.get(pos));
         justDelPos.add(pos);
-        int daySel = days.get(pos);
         days.remove(pos);
         notifyDataSetChanged();
-        showUndo(daySel);
+        showUndo();
     }
 
-    private void showUndo(int daySel){
+    private void showUndo(){
         View view = activity.findViewById(R.id.drawer_layout);
         String s = "Schedule{s} deleted";
         Snackbar undoBar = Snackbar.make(view, s, Snackbar.LENGTH_LONG);

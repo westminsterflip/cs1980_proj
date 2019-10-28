@@ -31,14 +31,13 @@ public class DailyMedListFragment extends Fragment {
     private DailyMedListViewModel model;
     private TextView date;
     private ViewPager2 dailyViewPager;
-    private MainViewModel mainModel;
     private boolean fromCal = true;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         model = new ViewModelProvider(this).get(DailyMedListViewModel.class);
-        mainModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
+        MainViewModel mainModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
         model.getDateList();
         long timeToView = DailyMedListFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getTimeToView();
         if (timeToView == 0){//TODO: removed items showed up on frontpage
@@ -129,7 +128,7 @@ public class DailyMedListFragment extends Fragment {
         } else {
             next.setVisibility(View.INVISIBLE);
             prev.setVisibility(View.INVISIBLE);
-            model.setMedAdapter(new DailyViewPagerAdapter(model.getDateList(), Collections.singletonList(model.getMedications().getValue().get(1)), getActivity()));
+            model.setMedAdapter(new DailyViewPagerAdapter(model.getDateList(), Collections.singletonList(Objects.requireNonNull(model.getMedications().getValue()).get(1)), getActivity()));
             dailyViewPager.setAdapter(model.getMedAdapter());
             dailyViewPager.setUserInputEnabled(false);
         }

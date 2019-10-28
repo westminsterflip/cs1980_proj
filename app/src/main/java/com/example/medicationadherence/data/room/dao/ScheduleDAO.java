@@ -20,13 +20,13 @@ import java.util.List;
 public interface ScheduleDAO {
     @Insert
     void insert(Schedule... schedules);
- 
+
     @Update
     void update(Schedule... schedules);
- 
+
     @Delete
     void delete(Schedule... schedule);
-	
+
 	@Query("SELECT * FROM SCHEDULE")
     List<Schedule> getAllSchedules();
 

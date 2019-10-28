@@ -34,6 +34,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -47,7 +48,7 @@ public class WizardImageSelector extends Fragment implements RootWizardFragment.
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        model = new ViewModelProvider(getParentFragment().getParentFragment()).get(RootWizardViewModel.class);
+        model = new ViewModelProvider(Objects.requireNonNull(Objects.requireNonNull(getParentFragment()).getParentFragment())).get(RootWizardViewModel.class);
         if (model.getThisList().size() == 1)
             model.getThisList().add(this);
         else if (model.getThisList().get(1) != this)
@@ -70,7 +71,7 @@ public class WizardImageSelector extends Fragment implements RootWizardFragment.
         }
         ListPreloader.PreloadSizeProvider sizeProvider = new FixedPreloadSizeProvider(1024,1024);
         MedImagePreloadProvider provider = new MedImagePreloadProvider();
-        //noinspection unchecked,unchecked
+        // noinspection unchecked
         RecyclerViewPreloader<ContactsContract.CommonDataKinds.Photo> preloader = new RecyclerViewPreloader<ContactsContract.CommonDataKinds.Photo>(Glide.with(this), provider, sizeProvider, 10);
         imageList.addOnScrollListener(preloader);
         if (images != null) {
@@ -217,7 +218,7 @@ public class WizardImageSelector extends Fragment implements RootWizardFragment.
         @Nullable
         @Override
         public RequestBuilder<?> getPreloadRequestBuilder(@NonNull Object item) {
-            return Glide.with(getContext()).load((String) item);
+            return Glide.with(Objects.requireNonNull(getContext())).load((String) item);
         }
     }
 

@@ -20,10 +20,10 @@ import java.util.List;
 public interface MedicationLogDAO {
     @Insert
     void insert(MedicationLog... medicationLogs);
- 
+
     @Update
     void update(MedicationLog... medicationLogs);
- 
+
     @Delete
     void delete(MedicationLog... medicationLog);
 

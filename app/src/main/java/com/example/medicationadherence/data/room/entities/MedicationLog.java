@@ -8,7 +8,7 @@ package com.example.medicationadherence.data.room.entities;
    @authors Erin Herlihy, David Stropkey, Nicholas West, Ian Patterson
 */
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 
@@ -20,8 +20,8 @@ public class MedicationLog {
 	private int medicationID;  /* FK Medication.medicationID */
     private long date;
 	private boolean taken;     /* true if taken, false if missed */
-	@Nullable
-    private Integer timeLate = null;
+	@NonNull
+    private Integer timeLate = -1; //Can't be null and a primary key
 	
 	public int getMedicationID() {
         return this.medicationID;
@@ -47,11 +47,11 @@ public class MedicationLog {
         this.taken = taken;
     }
 	
-	public @Nullable Integer getTimeLate() {
+	public @NonNull Integer getTimeLate() {
         return this.timeLate;
     }
  
-    public void setTimeLate(@Nullable Integer timeLate) {
+    public void setTimeLate(@NonNull Integer timeLate) {
         this.timeLate = timeLate;
     }
 }

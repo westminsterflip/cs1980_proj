@@ -62,9 +62,9 @@ public class EditScheduleFragment extends Fragment implements RootWizardFragment
         recyclerView.setAdapter(adapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeDeleteCallback(adapter));
         itemTouchHelper.attachToRecyclerView(recyclerView);
-        ((RootWizardFragment) Objects.requireNonNull(getParentFragment().getParentFragment())).setHasLast(true);
-        ((RootWizardFragment)getParentFragment().getParentFragment()).setHasNext(false);
-        Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setTitle("Schedule");
+        ((RootWizardFragment) Objects.requireNonNull(Objects.requireNonNull(getParentFragment()).getParentFragment())).setHasLast(true);
+        ((RootWizardFragment) Objects.requireNonNull(getParentFragment().getParentFragment())).setHasNext(false);
+        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle("Schedule");
         return root;
     }
 
@@ -92,7 +92,7 @@ public class EditScheduleFragment extends Fragment implements RootWizardFragment
             super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
             this.daysScheduleAdapter = daysScheduleAdapter;
             trashIcon = getResources().getDrawable(R.drawable.ic_delete_24px, null);
-            background = new ColorDrawable(ContextCompat.getColor(getContext(), R.color.summaryMissed));
+            background = new ColorDrawable(ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.summaryMissed));
         }
 
         @Override

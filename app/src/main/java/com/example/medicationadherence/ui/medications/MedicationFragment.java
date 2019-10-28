@@ -41,7 +41,6 @@ public class MedicationFragment extends Fragment implements Serializable {
     private MedicationViewModel model;
     private MainViewModel mainModel;
     private ArrayList<MedicationFragment> thisList = new ArrayList<>();
-    private RecyclerView medRecyclerView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,7 +58,7 @@ public class MedicationFragment extends Fragment implements Serializable {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_medication, container, false);
-        medRecyclerView = root.findViewById(R.id.medicationRecyclerView);
+        RecyclerView medRecyclerView = root.findViewById(R.id.medicationRecyclerView);
         medRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         model.setMedAdapter(new MedicationListAdapter(model.getMedList(), mainModel, thisList, getActivity()));
         medRecyclerView.setAdapter(model.getMedAdapter());
@@ -139,51 +138,51 @@ public class MedicationFragment extends Fragment implements Serializable {
         });
     }
 
-    private void sortStartAsc() {
-        Collections.sort(model.getMedList(), new Comparator<Medication>() {
-            @Override
-            public int compare(Medication o1, Medication o2) {
-                return Long.compare(o1.getStartDate(), o2.getStartDate());
-            }
-        });
-    }
+//    private void sortStartAsc() {
+//        Collections.sort(model.getMedList(), new Comparator<Medication>() {
+//            @Override
+//            public int compare(Medication o1, Medication o2) {
+//                return Long.compare(o1.getStartDate(), o2.getStartDate());
+//            }
+//        });
+//    }
 
-    private void sortStartDesc() {
-        Collections.sort(model.getMedList(), new Comparator<Medication>() {
-            @Override
-            public int compare(Medication o1, Medication o2) {
-                return Long.compare(o2.getStartDate(), o1.getStartDate());
-            }
-        });
-    }
+//    private void sortStartDesc() {
+//        Collections.sort(model.getMedList(), new Comparator<Medication>() {
+//            @Override
+//            public int compare(Medication o1, Medication o2) {
+//                return Long.compare(o2.getStartDate(), o1.getStartDate());
+//            }
+//        });
+//    }
 
-    private void sortEndAsc() {
-        Collections.sort(model.getMedList(), new Comparator<Medication>() {
-            @Override
-            public int compare(Medication o1, Medication o2) {
-                return Long.compare(o1.getEndDate(), o2.getEndDate());
-            }
-        });
-    }
+//    private void sortEndAsc() {
+//        Collections.sort(model.getMedList(), new Comparator<Medication>() {
+//            @Override
+//            public int compare(Medication o1, Medication o2) {
+//                return Long.compare(o1.getEndDate(), o2.getEndDate());
+//            }
+//        });
+//    }
 
-    private void sortEndDesc() {
-        Collections.sort(model.getMedList(), new Comparator<Medication>() {
-            @Override
-            public int compare(Medication o1, Medication o2) {
-                return Long.compare(o2.getEndDate(), o1.getEndDate());
-            }
-        });
-    }
+//    private void sortEndDesc() {
+//        Collections.sort(model.getMedList(), new Comparator<Medication>() {
+//            @Override
+//            public int compare(Medication o1, Medication o2) {
+//                return Long.compare(o2.getEndDate(), o1.getEndDate());
+//            }
+//        });
+//    }
 
-    private void sortActive() { //sorts active/inactive a-z
-        Collections.sort(model.getMedList(), new Comparator<Medication>() {
-            @Override
-            public int compare(Medication o1, Medication o2) {
-                int compared = Boolean.compare(o2.isStatus(), o1.isStatus());
-                return (compared == 0) ? (o1.getName().compareToIgnoreCase(o2.getName())) : compared;
-            }
-        });
-    }
+//    private void sortActive() { //sorts active/inactive a-z
+//        Collections.sort(model.getMedList(), new Comparator<Medication>() {
+//            @Override
+//            public int compare(Medication o1, Medication o2) {
+//                int compared = Boolean.compare(o2.isStatus(), o1.isStatus());
+//                return (compared == 0) ? (o1.getName().compareToIgnoreCase(o2.getName())) : compared;
+//            }
+//        });
+//    }
 
     @Override
     public void onResume() {
@@ -200,7 +199,7 @@ public class MedicationFragment extends Fragment implements Serializable {
             super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
             this.medicationListAdapter = medicationListAdapter;
             trashIcon = getResources().getDrawable(R.drawable.ic_delete_24px, null);
-            background = new ColorDrawable(ContextCompat.getColor(getContext(), R.color.summaryMissed));
+            background = new ColorDrawable(ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.summaryMissed));
         }
 
         @Override

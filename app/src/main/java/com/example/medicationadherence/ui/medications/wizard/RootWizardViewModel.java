@@ -217,6 +217,7 @@ public class RootWizardViewModel extends ViewModel {
         this.doctorID = doctorID;
     }
 
+    @SuppressWarnings("unchecked")
     MutableLiveData<ArrayList<Integer>> getDestinations() {
         if(destinations == null){
             destinations = new MutableLiveData<>();
@@ -332,18 +333,18 @@ public class RootWizardViewModel extends ViewModel {
         this.sMedID = sMedID;
     }
 
-    public void setMedication(String medImage, String medName, boolean active, Long doctorID, String medDosage, long startDate, long endDate, int containerVol, double cost, long late){
-        this.medName = medName;
-        this.active = active;
-        this.doctorID = doctorID;
-        this.medDosage = medDosage;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.containerVol = containerVol;
-        this.cost = cost;
-        this.medImage = medImage;
-        this.late = late;
-    }
+//    public void setMedication(String medImage, String medName, boolean active, Long doctorID, String medDosage, long startDate, long endDate, int containerVol, double cost, long late){
+//        this.medName = medName;
+//        this.active = active;
+//        this.doctorID = doctorID;
+//        this.medDosage = medDosage;
+//        this.startDate = startDate;
+//        this.endDate = endDate;
+//        this.containerVol = containerVol;
+//        this.cost = cost;
+//        this.medImage = medImage;
+//        this.late = late;
+//    }
 
     public void setMedication(Medication m){
         medName = m.getName();

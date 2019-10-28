@@ -37,13 +37,12 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
     private boolean fromWizard;
     private RootWizardViewModel wizardModel;
     private Long medID;
-    private TextView medName, timeErr, dayErr;
+    private TextView timeErr;
+    private TextView dayErr;
     private Switch daily;
     private CheckBox sun, mon, tues, wed, thurs, fri, sat;
-    private Button addTime;
     private boolean exitable = false;
     private boolean[] checks;
-    private RecyclerView times;
     private TimePickerDialog timePickerDialog;
     private boolean cancel = false;
 
@@ -54,7 +53,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(fromWizard = Objects.requireNonNull(getParentFragment()).getParentFragment() instanceof RootWizardFragment){
-            wizardModel = new ViewModelProvider(getParentFragment().getParentFragment()).get(RootWizardViewModel.class);
+            wizardModel = new ViewModelProvider(Objects.requireNonNull(getParentFragment().getParentFragment())).get(RootWizardViewModel.class);
             checks = Converters.intToBoolArray(EditScheduleCardFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getDays());
             if ( wizardModel.getThisList().size() < 5)
                 wizardModel.getThisList().add(this);
@@ -68,9 +67,9 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_edit_schedule_card, container, false);
-        Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setTitle("Schedule");
+        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle("Schedule");
 
-        medName = root.findViewById(R.id.scheduleMedName);
+        TextView medName = root.findViewById(R.id.scheduleMedName);
         daily = root.findViewById(R.id.scheduleDaily);
         sun = root.findViewById(R.id.scheduleSunday);
         mon = root.findViewById(R.id.scheduleMonday);
@@ -79,8 +78,8 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
         thurs = root.findViewById(R.id.scheduleThursday);
         fri = root.findViewById(R.id.scheduleFriday);
         sat = root.findViewById(R.id.scheduleSaturday);
-        addTime = root.findViewById(R.id.scheduleSetTime);
-        times = root.findViewById(R.id.scheduleTimes);
+        Button addTime = root.findViewById(R.id.scheduleSetTime);
+        RecyclerView times = root.findViewById(R.id.scheduleTimes);
         timeErr = root.findViewById(R.id.timeCardTimeErr);
         dayErr = root.findViewById(R.id.timeCardDayErr);
 
@@ -150,6 +149,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
         if(Converters.fromBoolArray(checks) != 0 && wizardModel.getDoseEntries(fill).size() != 0)
             exitable = true;
         final TimePickerDialog.OnTimeSetListener listener = new TimePickerDialog.OnTimeSetListener() {
+            @SuppressWarnings("ConstantConditions")
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 Calendar c = Calendar.getInstance();
@@ -178,8 +178,8 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
         if(fromWizard){
             medName.setHeight(0);
             medName.setVisibility(View.INVISIBLE);
-            ((RootWizardFragment) Objects.requireNonNull(getParentFragment().getParentFragment())).setAdd();
-            ((RootWizardFragment)getParentFragment().getParentFragment()).setHasLast(false);
+            ((RootWizardFragment) Objects.requireNonNull(Objects.requireNonNull(getParentFragment()).getParentFragment())).setAdd();
+            ((RootWizardFragment) Objects.requireNonNull(getParentFragment().getParentFragment())).setHasLast(false);
         } else {
             Medication medication = mainModel.getMedWithID(medID);
             medName.setText(medication.getName());

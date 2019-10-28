@@ -33,7 +33,7 @@ public class Instructions {
 	public long getMedicationID() {
         return this.medicationID;
     }
-	
+
 	public void setInstructions(@NonNull String instructions) {
         this.instructions = instructions;
     }

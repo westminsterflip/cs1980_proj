@@ -75,6 +75,8 @@ public class Doctor {
 
     @Override
     public boolean equals(@Nullable Object obj) {
+	    if (!(obj instanceof Doctor))
+	        return false;
         Doctor doc = (Doctor)obj;
         boolean out = Objects.requireNonNull(doc).getName().equals(name);
         out &= (doc.getPracticeName()==null?practiceName==null:doc.getPracticeName().equals(practiceName));

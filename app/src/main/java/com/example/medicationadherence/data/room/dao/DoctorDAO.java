@@ -22,7 +22,7 @@ import java.util.List;
 public interface DoctorDAO {
     @Insert
     long insert(Doctor doctors);
- 
+
     @Update
     void update(Doctor... doctors);
 

@@ -38,9 +38,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
     private TextInputEditText medName;
     private TextView medNameRequired;
     private Switch active;
-    private Button setStart;
     private TextView startDate;
-    private Button setEnd;
     private TextView endDate;
     private TextInputEditText perPillDosage;
     private Spinner dosageUnitSelector;
@@ -69,9 +67,9 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
         medName = root.findViewById(R.id.wizardMedName);
         medNameRequired = root.findViewById(R.id.wizardMedNameRequired);
         active = root.findViewById(R.id.wizardActive);
-        setStart = root.findViewById(R.id.wizardSetStartDate);
+        Button setStart = root.findViewById(R.id.wizardSetStartDate);
         startDate = root.findViewById(R.id.wizardStartDate);
-        setEnd = root.findViewById(R.id.wizardSetEndDate);
+        Button setEnd = root.findViewById(R.id.wizardSetEndDate);
         endDate = root.findViewById(R.id.wizardEndDate);
         perPillDosage = root.findViewById(R.id.wizardPerPillDosage);
         dosageUnitSelector = root.findViewById(R.id.wizardDosageSpinner);

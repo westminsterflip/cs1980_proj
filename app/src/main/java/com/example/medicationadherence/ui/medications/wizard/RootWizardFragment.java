@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -214,10 +215,10 @@ public class RootWizardFragment extends Fragment {
                                         setHasLast(true);
                                     }
                                 } else {
-                                    int i = 1/0;
+                                    Log.e(this.getClass().getSimpleName(), "Doctor ID not in database");
                                 }
                             } else {
-                                int i = 1/0;//this shouldn't be reachable, so crash app if it is reached
+                                Log.e(this.getClass().getSimpleName(), "Spinner selection negative");
                             }
                         } else {
                             if(currentLoc == destinations.get(destinations.size()-1)){
@@ -304,7 +305,7 @@ public class RootWizardFragment extends Fragment {
         }
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         if (!prefs.getBoolean("enableCaching", false)) {
-            Glide.get(this.getContext()).clearMemory();
+            Glide.get(Objects.requireNonNull(this.getContext())).clearMemory();
             final RootWizardFragment frag = this;
             AsyncTask.execute(new Runnable() {
                 @Override

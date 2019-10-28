@@ -38,7 +38,7 @@ public class Schedule {
 	public void setNumDoses(int numDoses) {
         this.numDoses = numDoses;
     }
-	
+
 	public int getNumDoses() {
         return this.numDoses;
     }
@@ -67,6 +67,7 @@ public class Schedule {
         this.weekdays = weekdays;
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public boolean equals(@Nullable Object obj) {
 	    if (!(obj instanceof Schedule))

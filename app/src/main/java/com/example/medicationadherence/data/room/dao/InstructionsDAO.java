@@ -22,13 +22,13 @@ import java.util.List;
 public interface InstructionsDAO {
     @Insert
     void insert(Instructions... instructions);
- 
+
     @Update
     void update(Instructions... instructions);
- 
+
     @Delete
     void delete(Instructions... instruction);
-	
+
 	@Query("SELECT * FROM INSTRUCTIONS")
     List<Instructions> getAllInstructions();
 

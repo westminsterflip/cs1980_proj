@@ -53,13 +53,13 @@ public class ScheduleTimeAdapter extends RecyclerView.Adapter {
     class TimeHolder extends RecyclerView.ViewHolder{
         private TextView dose;
         private ImageButton remove;
-        private ImageButton edit;
+        //private ImageButton edit;
 
         public TimeHolder(@NonNull View view) {
             super(view);
             this.dose = view.findViewById(R.id.timeCardDoses);
             this.remove = view.findViewById(R.id.timeCardRemove);
-            this.edit = view.findViewById(R.id.timeCardEdit);
+            //this.edit = view.findViewById(R.id.timeCardEdit);
         }
     }
 }

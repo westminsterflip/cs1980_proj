@@ -59,7 +59,7 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(fromWiz = (getParentFragment().getParentFragment() instanceof RootWizardFragment)) {
+        if(fromWiz = (Objects.requireNonNull(getParentFragment()).getParentFragment() instanceof RootWizardFragment)) {
             model = new ViewModelProvider(Objects.requireNonNull(Objects.requireNonNull(getParentFragment()).getParentFragment())).get(RootWizardViewModel.class);
             if (model.getThisList().size() == 2)
                 model.getThisList().add(this);
@@ -73,7 +73,7 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_wizard_doctor_detail, container, false);
-        Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setTitle(fromWiz ? "Add Medication" : "Edit Doctors");
+        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle(fromWiz ? "Add Medication" : "Edit Doctors");
 
         doctorChooser = root.findViewById(R.id.wizardDoctorChooser);
         doctorNameLayout = root.findViewById(R.id.textInputDoctorName);
@@ -189,7 +189,7 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
                         }
                     }
                     if(pos!=-1)
-                        mainModel.updateDoctor(doctorList.get(pos).getDoctorID(), doctorName.getText().toString(), practiceName.getText().toString(), practiceAddress.getText().toString(), phone.getText().toString());
+                        mainModel.updateDoctor(doctorList.get(pos).getDoctorID(), Objects.requireNonNull(doctorName.getText()).toString(), Objects.requireNonNull(practiceName.getText()).toString(), Objects.requireNonNull(practiceAddress.getText()).toString(), Objects.requireNonNull(phone.getText()).toString());
                     adapter.clear();
                     doctorList.get(pos).setName(doctorName.getText().toString());
                     doctorList.get(pos).setPracticeName(practiceName.getText().toString());

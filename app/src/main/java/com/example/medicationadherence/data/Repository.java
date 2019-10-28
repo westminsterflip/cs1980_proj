@@ -310,8 +310,8 @@ public class Repository {
         private DoctorDAO doctorDAO;
         private InstructionsDAO instructionsDAO;
         private MedicationDAO medicationDAO;
-        private MedicationLogDAO medicationLogDAO;
-        private ScheduleDAO scheduleDAO;
+        //private MedicationLogDAO medicationLogDAO;
+        //private ScheduleDAO scheduleDAO;
 
         GetWIDTask(DoctorDAO doctorDAO) {
             this.doctorDAO = doctorDAO;
