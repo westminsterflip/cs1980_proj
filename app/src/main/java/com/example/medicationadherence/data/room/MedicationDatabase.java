@@ -34,7 +34,7 @@ import com.example.medicationadherence.data.room.entities.Medication;
 import com.example.medicationadherence.data.room.entities.MedicationLog;
 import com.example.medicationadherence.data.room.entities.Schedule;
 
-@Database(version = 1, entities = {Medication.class, Instructions.class, Schedule.class, MedicationLog.class, Doctor.class})
+@Database(version = 1, entities = {Medication.class, Instructions.class, Schedule.class, MedicationLog.class, Doctor.class}, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class MedicationDatabase extends RoomDatabase {
 	public abstract MedicationDAO getMedicationDao();
