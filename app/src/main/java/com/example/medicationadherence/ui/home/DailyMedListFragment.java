@@ -79,10 +79,9 @@ public class DailyMedListFragment extends Fragment {
         date = root.findViewById(R.id.dailyDateView);
         updateText();
 
-        //TODO: scroll to current time upon opening list
         //TODO: time separators in recyclerview
         dailyViewPager = root.findViewById(R.id.dailyViewPager);
-        model.setMedAdapter(new DailyViewPagerAdapter(model.getDateList(), model.getMedications().getValue()));
+        model.setMedAdapter(new DailyViewPagerAdapter(model.getDateList(), model.getMedications().getValue(), getActivity()));
         dailyViewPager.setAdapter(model.getMedAdapter());
         dailyViewPager.setCurrentItem(1);
         dailyViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -95,7 +94,7 @@ public class DailyMedListFragment extends Fragment {
                     cal2.add(Calendar.DAY_OF_YEAR, 2*dir);
                     dailyViewPager.post(new Runnable() {
                         @Override
-                        public void run() { //This is kind of bad
+                        public void run() {
                             if(dir < 0){
                                 model.setNextDate(model.getDate());
                                 model.setDate(model.getPrevDate());
@@ -107,7 +106,7 @@ public class DailyMedListFragment extends Fragment {
                                 model.setNextDate(cal2.getTimeInMillis());
                                 model.loadNextMeds();
                             }
-                            dailyViewPager.setAdapter(model.getMedAdapter()); //TODO: change to notify adapter somehow
+                            model.getMedAdapter().notifyDataSetChanged(); //this just works now?
                             dailyViewPager.setCurrentItem(1);
                             updateText();
                         }

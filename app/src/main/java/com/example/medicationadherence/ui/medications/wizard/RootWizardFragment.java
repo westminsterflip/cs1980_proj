@@ -27,6 +27,7 @@ import com.example.medicationadherence.data.room.entities.Instructions;
 import com.example.medicationadherence.data.room.entities.Medication;
 import com.example.medicationadherence.data.room.entities.Schedule;
 import com.example.medicationadherence.ui.MainViewModel;
+import com.example.medicationadherence.ui.home.schedule.EditScheduleCardFragment;
 import com.example.medicationadherence.ui.medications.MedicationFragment;
 import com.example.medicationadherence.ui.medications.MedicationViewModel;
 
@@ -55,15 +56,19 @@ public class RootWizardFragment extends Fragment {
         final Observer<ArrayList<Integer>> destObserver = new Observer<ArrayList<Integer>>() {
             @Override
             public void onChanged(ArrayList<Integer> integers) {
-                if(innerNavController!=null){
-                    if(Objects.requireNonNull(innerNavController.getCurrentDestination()).getId() == destinations.get(0))
-                        setHasLast(false);
-                    else
-                        setHasLast(true);
-                    if(innerNavController.getCurrentDestination().getId() == destinations.get(destinations.size()-1))
-                        setHasNext(false);
-                    else
-                        setHasNext(true);
+                if (model.getListLength() != integers.size()) {
+                    System.out.println(model.getListLength() + "!=" + integers.size());
+                    if (innerNavController != null) {
+                        if (Objects.requireNonNull(innerNavController.getCurrentDestination()).getId() == destinations.get(0))
+                            setHasLast(false);
+                        else
+                            setHasLast(true);
+                        if (innerNavController.getCurrentDestination().getId() == destinations.get(destinations.size() - 1))
+                            setHasNext(false);
+                        else
+                            setHasNext(true);
+                    }
+                    model.setListLength(integers.size());
                 }
             }
         };
@@ -113,7 +118,7 @@ public class RootWizardFragment extends Fragment {
                     Navigation.findNavController(root).navigateUp();
                 } else {
                     if(currentLoc == R.id.editScheduleCardFragment2) {
-                        model.getSchedules().addAll(model.getRemoved());
+                        model.getSchedules().addAll(model.getRemoved());//TODO: cancelling still adds things
                         model.getThisList().get(Objects.requireNonNull(model.getDestinations().getValue()).indexOf(R.id.editScheduleCardFragment2)).pause();
                     }
                     innerNavController.navigateUp();
@@ -125,19 +130,9 @@ public class RootWizardFragment extends Fragment {
             }
         });
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-
             @Override
             public void handleOnBackPressed() {
-                int currentLoc = Objects.requireNonNull(innerNavController.getCurrentDestination()).getId();
-                if (currentLoc == destinations.get(0)){
-                    Navigation.findNavController(root).navigateUp();
-                } else {
-                    innerNavController.navigateUp();
-                    if (innerNavController.getCurrentDestination().getId() == destinations.get(0)){
-                        setHasLast(false);
-                    }
-                    setHasNext(true);
-                }
+                cancelBack.callOnClick();
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
@@ -235,6 +230,7 @@ public class RootWizardFragment extends Fragment {
                             }
                         }
                     } else if(currentLoc == R.id.editScheduleCardFragment2){
+                        ((EditScheduleCardFragment)model.getThisList().get(model.getDestinations().getValue().indexOf(R.id.editScheduleCardFragment2))).cancel();
                         model.getThisList().get(model.getDestinations().getValue().indexOf(R.id.editScheduleCardFragment2)).pause();
                         innerNavController.navigateUp();
                     } else if (currentLoc == R.id.editScheduleFragment2){

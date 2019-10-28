@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -35,18 +36,25 @@ public class SummaryFragment extends Fragment {
     private final Calendar cal = Calendar.getInstance();
     private DisableableScrollView summaryScroll;
     private ImageButton next;
+    private ImageButton prev;
     private SummaryViewModel model;
     private MainViewModel mainModel;
+    private SummaryDetailAdapter detailAdapter;
+    private ProgressBar lateBar;
+    private ProgressBar takenBar;
+    private TextView summaryMissed;
+    private TextView summaryLate;
+    private TextView summaryTaken;
+    private ImageButton summaryExpander;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         model = new ViewModelProvider(this).get(SummaryViewModel.class);
         mainModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
+        model.setMainModel(mainModel);
     }
 
-
-    //TODO: block scrolling before earliest scheduled thing
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_summary, container, false);
         cal.setTimeInMillis(mainModel.getSummaryTimeToView());
@@ -58,6 +66,11 @@ public class SummaryFragment extends Fragment {
         mainModel.setSummaryTimeToView(cal.getTimeInMillis());
         graphLabel = root.findViewById(R.id.summaryDWM);
         changeScale();
+        lateBar = root.findViewById(R.id.summaryLateBar);
+        takenBar = root.findViewById(R.id.summaryTakenBar);
+        summaryMissed = root.findViewById(R.id.summaryMissed);
+        summaryLate = root.findViewById(R.id.summaryLate);
+        summaryTaken = root.findViewById(R.id.summaryTaken);
 
         next = root.findViewById(R.id.summaryNext);
         next.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +84,7 @@ public class SummaryFragment extends Fragment {
         } else {
             next.setEnabled(true);
         }
-        ImageButton prev = root.findViewById(R.id.summaryPrev);
+        prev = root.findViewById(R.id.summaryPrev);
         prev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,7 +109,7 @@ public class SummaryFragment extends Fragment {
 
         final RecyclerView detailView = root.findViewById(R.id.summaryDetail);
 
-        final ImageButton summaryExpander = root.findViewById(R.id.summaryExpand);
+        summaryExpander = root.findViewById(R.id.summaryExpand);
         View.OnClickListener expand = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,7 +139,9 @@ public class SummaryFragment extends Fragment {
             summaryExpander.setRotation(180);
             summaryScroll.setScrollEnabled(true);
         }
-        SummaryDetailAdapter detailAdapter = new SummaryDetailAdapter(model.getDetailList());
+        model.loadList(0,0);
+        detailAdapter = new SummaryDetailAdapter(model.getDetailList());
+
         detailView.setAdapter(detailAdapter);
 
         Button todayButton = root.findViewById(R.id.summaryTodayButton);
@@ -215,6 +230,37 @@ public class SummaryFragment extends Fragment {
     }
 
     private void updateMainGraph(){
-        //TODO: move graph/text values to reflect data from database
+        long timeToView = mainModel.getSummaryTimeToView();
+        Calendar temp = Calendar.getInstance();
+        temp.setTimeInMillis(timeToView);
+        temp.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale()==0) ? 1 : 0));
+        temp.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale()==1) ? 7 : 0));
+        temp.add(Calendar.MONTH, ((mainModel.getSummaryViewScale()==2) ? 1 : 0));
+        model.loadList(timeToView, temp.getTimeInMillis());
+        detailAdapter.notifyDataSetChanged();
+        if (model.getDetailList().size() != 0)
+            summaryExpander.setVisibility(View.VISIBLE);
+        else
+            summaryExpander.setVisibility(View.INVISIBLE);
+        double late = model.getLate(), taken = model.getTaken(), missed = model.getMissed(), total = late + taken + missed;
+        if (total != 0){
+            lateBar.setProgress((int)Math.round(late/total), true);
+            takenBar.setProgress((int)Math.round(taken/total), true);
+            summaryTaken.setText(("On time: " + taken + "/" + total));
+            summaryLate.setText(("Late: " + late + "/" + total));
+            summaryMissed.setText(("Missed: " + missed + "/" + total));
+        } else {
+            takenBar.setProgress(100, true);
+            summaryTaken.setText("");
+            summaryLate.setText("No data");
+            summaryMissed.setText("");
+        }
+        if (model.getEarliest() >= mainModel.getSummaryTimeToView() && model.getEarliest() < temp.getTimeInMillis() || model.getEarliest() == 0){
+            prev.setEnabled(false);
+            prev.setVisibility(View.INVISIBLE);
+        }else{
+            prev.setEnabled(true);
+            prev.setVisibility(View.VISIBLE);
+        }
     }
 }

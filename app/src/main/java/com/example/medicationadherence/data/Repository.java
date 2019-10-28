@@ -156,10 +156,55 @@ public class Repository {
         new RemoveAsyncTask(mMedicationDAO).execute(medication);
     }
 
+    public int getMissed(Long medicationID, long startDate, long endDate){
+        try {
+            return new GetMissedTask(mMedicationLogDAO, medicationID, startDate, endDate).execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int getLate(Long medicationID, long startDate, long endDate){
+        try {
+            return new GetLateTask(mMedicationLogDAO, medicationID, startDate, endDate).execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int getOnTime(Long medicationID, long startDate, long endDate){
+        try {
+            return new GetOnTimeTask(mMedicationLogDAO, medicationID, startDate, endDate).execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public long getEarliestLog(){
+        try {
+            return new GetEarliestTask(mMedicationLogDAO).execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public List<MedicationDAO.IDName> getMedIDs(){
+        try {
+            return new GetMedIDTask(mMedicationDAO).execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private static class GWNAsyncTask extends AsyncTask<String, Void, List<Doctor>>{
         private DoctorDAO doctorDAO;
 
-        public GWNAsyncTask(DoctorDAO doctorDAO) {
+        GWNAsyncTask(DoctorDAO doctorDAO) {
             this.doctorDAO = doctorDAO;
         }
 
@@ -176,23 +221,23 @@ public class Repository {
         private MedicationLogDAO medicationLogDAO;
         private ScheduleDAO scheduleDAO;
 
-        public InsertAsyncTask(InstructionsDAO instructionsDAO) {
+        InsertAsyncTask(InstructionsDAO instructionsDAO) {
             this.instructionsDAO = instructionsDAO;
         }
 
-        public InsertAsyncTask(DoctorDAO doctorDAO) {
+        InsertAsyncTask(DoctorDAO doctorDAO) {
             this.doctorDAO = doctorDAO;
         }
 
-        public InsertAsyncTask(MedicationDAO medicationDAO) {
+        InsertAsyncTask(MedicationDAO medicationDAO) {
             this.medicationDAO = medicationDAO;
         }
 
-        public InsertAsyncTask(MedicationLogDAO medicationLogDAO) {
+        InsertAsyncTask(MedicationLogDAO medicationLogDAO) {
             this.medicationLogDAO = medicationLogDAO;
         }
 
-        public InsertAsyncTask(ScheduleDAO scheduleDAO) {
+        InsertAsyncTask(ScheduleDAO scheduleDAO) {
             this.scheduleDAO = scheduleDAO;
         }
 
@@ -220,23 +265,23 @@ public class Repository {
         private MedicationLogDAO medicationLogDAO;
         private ScheduleDAO scheduleDAO;
 
-        public RemoveAsyncTask(DoctorDAO doctorDAO) {
+        RemoveAsyncTask(DoctorDAO doctorDAO) {
             this.doctorDAO = doctorDAO;
         }
 
-        public RemoveAsyncTask(InstructionsDAO instructionsDAO) {
+        RemoveAsyncTask(InstructionsDAO instructionsDAO) {
             this.instructionsDAO = instructionsDAO;
         }
 
-        public RemoveAsyncTask(MedicationDAO medicationDAO) {
+        RemoveAsyncTask(MedicationDAO medicationDAO) {
             this.medicationDAO = medicationDAO;
         }
 
-        public RemoveAsyncTask(MedicationLogDAO medicationLogDAO) {
+        RemoveAsyncTask(MedicationLogDAO medicationLogDAO) {
             this.medicationLogDAO = medicationLogDAO;
         }
 
-        public RemoveAsyncTask(ScheduleDAO scheduleDAO) {
+        RemoveAsyncTask(ScheduleDAO scheduleDAO) {
             this.scheduleDAO = scheduleDAO;
         }
 
@@ -264,15 +309,15 @@ public class Repository {
         private MedicationLogDAO medicationLogDAO;
         private ScheduleDAO scheduleDAO;
 
-        public GetWIDTask(DoctorDAO doctorDAO) {
+        GetWIDTask(DoctorDAO doctorDAO) {
             this.doctorDAO = doctorDAO;
         }
 
-        public GetWIDTask(InstructionsDAO instructionsDAO) {
+        GetWIDTask(InstructionsDAO instructionsDAO) {
             this.instructionsDAO = instructionsDAO;
         }
 
-        public GetWIDTask(MedicationDAO medicationDAO){
+        GetWIDTask(MedicationDAO medicationDAO){
             this.medicationDAO = medicationDAO;
         }
 
@@ -319,7 +364,7 @@ public class Repository {
     private static class GetMedListTask extends AsyncTask<Void, Void, List<Medication>>{
         private MedicationDAO medicationDAO;
 
-        public GetMedListTask(MedicationDAO medicationDAO) {
+        GetMedListTask(MedicationDAO medicationDAO) {
             this.medicationDAO = medicationDAO;
         }
 
@@ -333,7 +378,7 @@ public class Repository {
         private ScheduleDAO scheduleDAO;
         private Long id;
 
-        public GetScheduleFMTask(ScheduleDAO scheduleDAO, Long id) {
+        GetScheduleFMTask(ScheduleDAO scheduleDAO, Long id) {
             this.scheduleDAO = scheduleDAO;
             this.id = id;
         }
@@ -347,7 +392,7 @@ public class Repository {
     private static class GetCardTask extends AsyncTask<Void, Void, List<ScheduleDAO.ScheduleCard>>{
         private ScheduleDAO scheduleDAO;
 
-        public GetCardTask(ScheduleDAO scheduleDAO) {
+        GetCardTask(ScheduleDAO scheduleDAO) {
             this.scheduleDAO = scheduleDAO;
         }
 
@@ -360,7 +405,7 @@ public class Repository {
     private static class GetAllDoctorsAsyncTask extends AsyncTask<Void , Void, List<Doctor>>{
         DoctorDAO doctorDAO;
 
-        public GetAllDoctorsAsyncTask(DoctorDAO doctorDAO) {
+        GetAllDoctorsAsyncTask(DoctorDAO doctorDAO) {
             this.doctorDAO = doctorDAO;
         }
 
@@ -378,7 +423,7 @@ public class Repository {
         private String address;
         private String phone;
 
-        public UpdateDoctorAsyncTask(DoctorDAO doctorDAO, Long id, String doctorName, String practice, String address, String phone) {
+        UpdateDoctorAsyncTask(DoctorDAO doctorDAO, Long id, String doctorName, String practice, String address, String phone) {
             this.doctorDAO = doctorDAO;
             this.id = id;
             this.doctorName = doctorName;
@@ -407,7 +452,7 @@ public class Repository {
         private double cost;
         private String medImageURL;
 
-        public UpdateMedicationTask(MedicationDAO medicationDAO, Long id, String medImageURL, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost) {
+        UpdateMedicationTask(MedicationDAO medicationDAO, Long id, String medImageURL, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost) {
             this.medicationDAO = medicationDAO;
             this.id = id;
             this.name = name;
@@ -425,6 +470,89 @@ public class Repository {
         protected Void doInBackground(Void... voids) {
             medicationDAO.update(id, medImageURL, name, status, doctorID, dosage, startDate, endDate, containerVolume, cost);
             return null;
+        }
+    }
+
+    private static class GetMissedTask extends AsyncTask<Void, Void, Integer>{
+        private MedicationLogDAO medicationLogDAO;
+        private Long id;
+        private long startDate;
+        private long endDate;
+
+        GetMissedTask(MedicationLogDAO medicationLogDAO, Long id, long startDate, long endDate) {
+            this.medicationLogDAO = medicationLogDAO;
+            this.id = id;
+            this.startDate = startDate;
+            this.endDate = endDate;
+        }
+
+        @Override
+        protected Integer doInBackground(Void... voids) {
+            return medicationLogDAO.getMissed(id, startDate, endDate);
+        }
+    }
+
+    private static class GetLateTask extends AsyncTask<Void, Void, Integer>{
+        private MedicationLogDAO medicationLogDAO;
+        private Long id;
+        private long startDate;
+        private long endDate;
+
+        GetLateTask(MedicationLogDAO medicationLogDAO, Long id, long startDate, long endDate) {
+            this.medicationLogDAO = medicationLogDAO;
+            this.id = id;
+            this.startDate = startDate;
+            this.endDate = endDate;
+        }
+
+        @Override
+        protected Integer doInBackground(Void... voids) {
+            return medicationLogDAO.getLate(id, startDate, endDate);
+        }
+    }
+
+    private static class GetOnTimeTask extends AsyncTask<Void, Void, Integer>{
+        private MedicationLogDAO medicationLogDAO;
+        private Long id;
+        private long startDate;
+        private long endDate;
+
+        GetOnTimeTask(MedicationLogDAO medicationLogDAO, Long id, long startDate, long endDate) {
+            this.medicationLogDAO = medicationLogDAO;
+            this.id = id;
+            this.startDate = startDate;
+            this.endDate = endDate;
+        }
+
+        @Override
+        protected Integer doInBackground(Void... voids) {
+            return medicationLogDAO.getOnTime(id, startDate, endDate);
+        }
+    }
+
+    private static class GetEarliestTask extends AsyncTask<Void, Void, Long>{
+        private MedicationLogDAO medicationLogDAO;
+
+        GetEarliestTask(MedicationLogDAO medicationLogDAO) {
+            this.medicationLogDAO = medicationLogDAO;
+        }
+
+        @Override
+        protected Long doInBackground(Void... voids) {
+            return medicationLogDAO.getEarliestLog();
+        }
+    }
+
+    private static class GetMedIDTask extends AsyncTask<Void, Void, List<MedicationDAO.IDName>>{
+        private MedicationDAO medicationDAO;
+
+        GetMedIDTask(MedicationDAO medicationDAO) {
+            this.medicationDAO = medicationDAO;
+        }
+
+        @Override
+        protected List<MedicationDAO.IDName> doInBackground(Void... voids) {
+            return medicationDAO.getMedIDs();
         }
     }
 }

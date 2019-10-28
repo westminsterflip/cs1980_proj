@@ -6,6 +6,7 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.example.medicationadherence.data.Repository;
+import com.example.medicationadherence.data.room.dao.MedicationDAO;
 import com.example.medicationadherence.data.room.entities.Doctor;
 import com.example.medicationadherence.data.room.entities.Instructions;
 import com.example.medicationadherence.data.room.entities.Medication;
@@ -110,7 +111,10 @@ public class MainViewModel extends AndroidViewModel {
     public Medication getMedWithID(Long medicationID){return repository.getMedWithID(medicationID);}
 
     public void updateMedication(Long id, String medImageURL, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost){
-        repository.updateMedication(id, medImageURL.equals("") ? null : medImageURL, name, status, doctorID, dosage, startDate, endDate, containerVolume, cost);
+        if (medImageURL == null || medImageURL.equals(""))
+            repository.updateMedication(id, null, name, status, doctorID, dosage, startDate, endDate, containerVolume, cost);
+        else
+            repository.updateMedication(id, medImageURL, name, status, doctorID, dosage, startDate, endDate, containerVolume, cost);
     }
 
     public List<Schedule> getScheduleFM(Long id){
@@ -123,5 +127,25 @@ public class MainViewModel extends AndroidViewModel {
 
     public void remove(Medication medication){
         repository.remove(medication);
+    }
+
+    public int getMissed(Long medicationID, long startDate, long endDate){
+        return repository.getMissed(medicationID, startDate, endDate);
+    }
+
+    public int getLate(Long medicationID, long startDate, long endDate){
+        return repository.getLate(medicationID, startDate, endDate);
+    }
+
+    public int getOnTime(Long medicationID, long startDate, long endDate){
+        return repository.getOnTime(medicationID, startDate, endDate);
+    }
+
+    public List<MedicationDAO.IDName> getMedIDs(){
+        return repository.getMedIDs();
+    }
+
+    public long getEarliestLog(){
+        return repository.getEarliestLog();
     }
 }

@@ -32,4 +32,16 @@ public interface MedicationLogDAO {
 
     @Query("DELETE FROM MEDICATIONLOG")
     void clearTable();
+
+    @Query("select count(*) from medicationlog where not taken and medicationID = :medicationID and date >= :startDate and date < :endDate")
+    int getMissed(Long medicationID, long startDate, long endDate);
+
+    @Query("select count(*) from medicationlog inner join medication on medicationlog.medicationID = medication.medicationID where medicationlog.taken and medicationlog.timeLate <= medication.lateTime and medicationlog.medicationID = :medicationID and date >= :startDate and date < :endDate")
+    int getOnTime(Long medicationID, long startDate, long endDate);
+
+    @Query("select count(*) from medicationlog inner join medication on medicationlog.medicationID = medication.medicationID where medicationlog.taken and medicationlog.timeLate > medication.lateTime and medicationlog.medicationID = :medicationID and date >= :startDate and date < :endDate")
+    int getLate(Long medicationID, long startDate, long endDate);
+
+    @Query("select min(date) from medicationlog")
+    long getEarliestLog();
 }

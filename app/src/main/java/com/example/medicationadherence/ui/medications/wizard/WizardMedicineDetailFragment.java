@@ -53,6 +53,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
     private boolean start = true;
     private TextView endBefore;
     private boolean exitable = false;
+    private Spinner timeChooser;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,6 +81,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
         asNeeded = root.findViewById(R.id.wizardAsNeeded);
         instructions = root.findViewById(R.id.wizardInstructions);
         endBefore = root.findViewById(R.id.wizardEndDateBefore);
+        timeChooser = root.findViewById(R.id.medicineLate);
 
         if(savedInstanceState != null) {
             medNameRequired.setVisibility((savedInstanceState.getBoolean("medNameRequiredVisible", false)) ? View.VISIBLE : View.INVISIBLE);
@@ -293,6 +295,8 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
             model.getThisList().add(this);
         else if (model.getThisList().get(0) != this)
             model.getThisList().set(0, this);
+        if (model.getLate() != null)
+            timeChooser.setSelection(Arrays.asList(getResources().getStringArray(R.array.lateTimes)).indexOf(model.getLate()));
         super.onResume();
     }
 
@@ -344,6 +348,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
         if(!Objects.requireNonNull(cost.getText()).toString().equals(""))
             model.setCost(Double.parseDouble(cost.getText().toString()));
         model.setAsNeeded(asNeeded.isChecked());
+        model.setLate((String)timeChooser.getSelectedItem());
     }
 
     @Override

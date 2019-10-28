@@ -56,6 +56,8 @@ public class RootWizardViewModel extends ViewModel {
     private MainViewModel mainViewModel;
     private ArrayList<Schedule> removed = new ArrayList<>();
     private RootWizardFragment fragment;
+    private int listLength = 0;
+    private long late;
 
     public String getMedImage() {
         return medImage;
@@ -143,11 +145,11 @@ public class RootWizardViewModel extends ViewModel {
     }
 
     public Medication getMedication(){
-        return new Medication(medImage, medName, active, doctorID, medDosage, startDate, endDate, containerVol, cost);
+        return new Medication(medImage, medName, active, doctorID, medDosage, startDate, endDate, containerVol, cost, late);
     }
 
     public Medication getMedicationWID(){
-        return new Medication(sMedID, medImage, medName, active, doctorID, medDosage, startDate, endDate, containerVol, cost);
+        return new Medication(sMedID, medImage, medName, active, doctorID, medDosage, startDate, endDate, containerVol, cost, late);
     }
 
     public Doctor getDoctor(){
@@ -368,5 +370,42 @@ public class RootWizardViewModel extends ViewModel {
 
     public void setFragment(RootWizardFragment fragment) {
         this.fragment = fragment;
+    }
+
+    public int getListLength() {
+        return listLength;
+    }
+
+    public void setListLength(int listLength) {
+        this.listLength = listLength;
+    }
+
+    public String getLate() {
+        Calendar c = Calendar.getInstance();
+        c.clear();
+        c.setTimeInMillis(late);
+        String out;
+        if (c.get(Calendar.MINUTE) == 0){
+            out = c.get(Calendar.HOUR_OF_DAY) + "hr";
+        } else {
+            out = c.get(Calendar.MINUTE) + "min";
+        }
+        String[] list = fragment.getResources().getStringArray(R.array.lateTimes);
+        for (String s : list) {
+            if (s.contains(out))
+                return out;
+        }
+        return null;
+    }
+
+    public void setLate(String late) {
+        Calendar c = Calendar.getInstance();
+        c.clear();
+        if (late.contains("hr")){
+            c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(late.replaceAll("[\\D]", "")));
+        } else {
+            c.set(Calendar.MINUTE, Integer.parseInt(late.replaceAll("[\\D]", "")));
+        }
+        this.late = c.getTimeInMillis();
     }
 }

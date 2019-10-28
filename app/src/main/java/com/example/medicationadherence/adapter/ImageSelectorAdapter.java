@@ -72,14 +72,9 @@ public class ImageSelectorAdapter extends RecyclerView.Adapter {
 
         @Override
         public void onClick(View v) {
-            if (selectedItems.get(getAdapterPosition(), false)){
-                selectedItems.delete(getAdapterPosition());
-                check.setVisibility(View.INVISIBLE);
-            } else {
-                selectedItems.put(selected, false);
-                check.setVisibility(View.VISIBLE);
-                selectedItems.put(getAdapterPosition(),true);
-            }
+            selectedItems.put(selected, false);
+            check.setVisibility(View.VISIBLE);
+            selectedItems.put(getAdapterPosition(),true);
             listener.onImageClick(getAdapterPosition());
         }
     }

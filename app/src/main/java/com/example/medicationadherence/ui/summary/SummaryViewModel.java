@@ -2,18 +2,23 @@ package com.example.medicationadherence.ui.summary;
 
 import androidx.lifecycle.ViewModel;
 
+import com.example.medicationadherence.data.room.dao.MedicationDAO;
 import com.example.medicationadherence.model.DetailSummary;
+import com.example.medicationadherence.ui.MainViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class SummaryViewModel extends ViewModel {
     private List<DetailSummary> detailList;
+    private double taken = 0;
+    private double late = 0;
+    private List<MedicationDAO.IDName> idList;
+    private MainViewModel mainModel;
+    private long earliest = 0;
+    private double missed = 0;
 
     public List<DetailSummary> getDetailList() {
-        if(detailList == null)
-            loadList();
         return detailList;
     }
 
@@ -21,13 +26,56 @@ public class SummaryViewModel extends ViewModel {
         this.detailList = detailList;
     }
 
-    private void loadList(){
-        detailList = new ArrayList<>();
+    public void loadList(long startDate, long endDate){
+        if (detailList == null)
+            detailList = new ArrayList<>();
+        else
+            detailList.clear();
         //TODO: actual data population
-        for (int i=0; i<20; i++){
-            double percTaken = new Random().nextDouble()*100%100.0;
-            double percLate = new Random().nextDouble()*100%(100.0-percTaken);
-            detailList.add(new DetailSummary("DailyMedication " + i, percTaken, percLate));
+        if (idList == null)
+            idList = mainModel.getMedIDs();
+        if (idList != null && idList.size()!=0){
+            double oMissed = 0;
+            double oLate = 0;
+            double oOnTime = 0;
+            for (MedicationDAO.IDName idName :idList){
+                long id = idName.medicationID;
+                double missed = mainModel.getMissed(id, startDate, endDate);
+                double late = mainModel.getLate(id, startDate, endDate);
+                double onTime = mainModel.getOnTime(id, startDate, endDate);
+                double total = missed + late + onTime;
+                if (total != 0){
+                    oMissed += missed;
+                    oLate += late;
+                    oOnTime += onTime;
+                    detailList.add(new DetailSummary(idName.name, onTime/total, late/total));
+                }
+            }
+            taken = oOnTime;
+            late = oLate;
+            missed = oMissed;
         }
+    }
+
+    public long getEarliest() {
+        if (earliest == 0)
+            earliest = mainModel.getEarliestLog();
+        return earliest;
+    }
+
+    public double getTaken() {
+        return taken;
+    }
+
+    public double getLate() {
+        return late;
+    }
+
+    public double getMissed() {
+        return missed;
+    }
+
+    public void setMainModel(MainViewModel mainModel) {
+        this.mainModel = mainModel;
     }
 }

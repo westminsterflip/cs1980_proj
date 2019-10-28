@@ -20,14 +20,6 @@
     <PreferenceCategory app:title="App Settings">
 
         <!--Time after which to consider medication late-->
-        <!--TODO: write custom dropdownpref to show value?-->
-        <DropDownPreference
-            app:defaultValue="0hrs"
-            app:entries="@array/latePreferenceItems"
-            app:entryValues="@array/latePreferenceValues"
-            app:key="lateTime"
-            app:summary="@string/late_setting_summary"
-            app:title="@string/late_setting_title" />
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="enableDMOverride"

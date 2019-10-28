@@ -1,5 +1,6 @@
 package com.example.medicationadherence.adapter;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +17,12 @@ import java.util.List;
 public class DailyViewPagerAdapter extends RecyclerView.Adapter {
     private List<Long> dateList;
     private List<List<ScheduleDAO.ScheduleCard>> medLists;
+    private Activity activity;
 
-    public DailyViewPagerAdapter(List<Long> dateList, List<List<ScheduleDAO.ScheduleCard>> medLists){
+    public DailyViewPagerAdapter(List<Long> dateList, List<List<ScheduleDAO.ScheduleCard>> medLists, Activity activity){
         this.dateList = dateList;
         this.medLists = medLists;
+        this.activity = activity;
     }
 
     @NonNull
@@ -33,7 +36,7 @@ public class DailyViewPagerAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         DailyViewPagerHolder holderd = (DailyViewPagerHolder) holder;
         holderd.recyclerView.setLayoutManager(new LinearLayoutManager(holderd.recyclerView.getContext()));
-        holderd.recyclerView.setAdapter(new DailyMedicationListAdapter(medLists.get(position)));
+        holderd.recyclerView.setAdapter(new DailyMedicationListAdapter(medLists.get(position), activity));
     }
 
     @Override

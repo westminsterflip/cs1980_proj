@@ -15,8 +15,6 @@ import androidx.room.ForeignKey;
 
 import com.example.medicationadherence.data.Converters;
 
-import java.util.Objects;
-
 import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(primaryKeys = {"medicationID", "time", "weekdays"}, foreignKeys =
@@ -73,6 +71,6 @@ public class Schedule {
     @Override
     public boolean equals(@Nullable Object obj) {
         Schedule s = (Schedule) obj;
-	    return Objects.requireNonNull(s).medicationID.equals(this.medicationID) && s.numDoses == this.numDoses && s.time == this.time && Converters.fromBoolArray(s.weekdays) == Converters.fromBoolArray(this.weekdays);
+	    return (s.medicationID == null && this.medicationID == null || s.medicationID.equals(this.medicationID)) && s.numDoses == this.numDoses && s.time == this.time && Converters.fromBoolArray(s.weekdays) == Converters.fromBoolArray(this.weekdays);
     }
 }

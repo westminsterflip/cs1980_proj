@@ -32,6 +32,7 @@ public class Medication {
 	private long endDate;              /* FORMAT: YYYY-MM-DD (for now) */
 	private int containerVolume;
 	private double cost;
+	private long lateTime;
 
     public Long getMedicationID() {
         return medicationID;
@@ -113,7 +114,7 @@ public class Medication {
         this.cost = cost;
     }
 
-    public Medication(String medImageURL, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost) {
+    public Medication(String medImageURL, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost, long lateTime) {
         this.medImageURL = medImageURL;
         this.name = name;
         this.status = status;
@@ -123,10 +124,11 @@ public class Medication {
         this.endDate = endDate;
         this.containerVolume = containerVolume;
         this.cost = cost;
+        this.lateTime = lateTime;
     }
 
     @Ignore
-    public Medication(Long medicationID, String medImageURL, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost) {
+    public Medication(Long medicationID, String medImageURL, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost, long lateTime) {
         this.medicationID = medicationID;
         this.medImageURL = medImageURL;
         this.name = name;
@@ -137,5 +139,14 @@ public class Medication {
         this.endDate = endDate;
         this.containerVolume = containerVolume;
         this.cost = cost;
+        this.lateTime = lateTime;
+    }
+
+    public long getLateTime() {
+        return lateTime;
+    }
+
+    public void setLateTime(long lateTime) {
+        this.lateTime = lateTime;
     }
 }

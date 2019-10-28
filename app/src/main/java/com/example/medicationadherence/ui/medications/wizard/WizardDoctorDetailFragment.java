@@ -176,7 +176,7 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
                 model.getDestinations().postValue(model.getDestinations().getValue());
             }
         });
-        if (!fromWiz) {
+        if (!fromWiz) {//TODO: remove button
             scheduleAfter.setVisibility(View.GONE);
             update.setVisibility(View.VISIBLE);
             update.setOnClickListener(new View.OnClickListener() {

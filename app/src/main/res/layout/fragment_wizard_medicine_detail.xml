@@ -148,7 +148,7 @@
             android:textColor="@android:color/holo_red_light"
             android:visibility="invisible"
             app:layout_constraintStart_toStartOf="@+id/textInputLayout5"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout5" />
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputOnHand"
@@ -183,6 +183,24 @@
                 android:hint="Container cost"
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Acceptable delay: "
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/wizardActive"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout5" />
+
+        <Spinner
+            android:id="@+id/medicineLate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/lateTimes"
+            app:layout_constraintStart_toEndOf="@+id/textView2"
+            app:layout_constraintTop_toTopOf="@+id/textView2" />
 
         <CheckBox
             android:id="@+id/wizardAsNeeded"

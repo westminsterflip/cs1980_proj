@@ -1,7 +1,6 @@
 package com.example.medicationadherence.ui.home.schedule;
 
 import android.app.TimePickerDialog;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -14,7 +13,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import androidx.core.os.ConfigurationCompat;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,7 +29,7 @@ import com.example.medicationadherence.ui.MainViewModel;
 import com.example.medicationadherence.ui.medications.wizard.RootWizardFragment;
 import com.example.medicationadherence.ui.medications.wizard.RootWizardViewModel;
 
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -44,6 +44,8 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
     private boolean exitable = false;
     private boolean[] checks;
     private RecyclerView times;
+    private TimePickerDialog timePickerDialog;
+    private boolean cancel = false;
 
     boolean[] fill = {false,false,false,false,false,false,false,true};
     private MainViewModel mainModel;
@@ -58,15 +60,16 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
                 wizardModel.getThisList().add(this);
             else if(!wizardModel.getThisList().get(4).equals(this))
                 wizardModel.getThisList().set(4,this);
-        } else {
-            //medID = EditScheduleCardFragmentArgs.fromBundle(getArguments()).getMedicationID();
         }
+        cancel = Converters.fromBoolArray(checks) == 0;
+        System.out.println("CHECKS: " + Converters.fromBoolArray(checks));
         mainModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_edit_schedule_card, container, false);
+        Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setTitle("Schedule");
 
         medName = root.findViewById(R.id.scheduleMedName);
         daily = root.findViewById(R.id.scheduleDaily);
@@ -147,34 +150,28 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
 
         if(Converters.fromBoolArray(checks) != 0 && wizardModel.getDoseEntries(fill).size() != 0)
             exitable = true;
-
+        final TimePickerDialog.OnTimeSetListener listener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                Calendar c = Calendar.getInstance();
+                c.clear();
+                c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                c.set(Calendar.MINUTE, minute);
+                if ( fromWizard)
+                    wizardModel.setScheduleTime(c.getTimeInMillis());
+                wizardModel.getSchedules().add(new Schedule(null, 1, c.getTimeInMillis(), fill));
+                wizardModel.getDoseEntries(fill);
+                adapter.notifyDataSetChanged();
+                if(fromWizard && (sun.isChecked() || mon.isChecked() || tues.isChecked() || wed.isChecked() || thurs.isChecked() || fri.isChecked() || sat.isChecked()) && wizardModel.getDoseEntries(fill).size() != 0)
+                    exitable = true;
+            }
+        };
         addTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO: add dose selector
                 Calendar c = Calendar.getInstance();
-                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        Calendar c = Calendar.getInstance();
-                        c.clear();
-                        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                        c.set(Calendar.MINUTE, minute);
-                        if ( fromWizard)
-                            wizardModel.setScheduleTime(c.getTimeInMillis());
-                        String timeText;
-                        if(DateFormat.is24HourFormat(getContext()))
-                            timeText = new SimpleDateFormat("kk:mm", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(c.getTimeInMillis());
-                        else
-                            timeText = new SimpleDateFormat("hh:mm aa", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(c.getTimeInMillis());
-                        boolean[] days = {sun.isChecked(), mon.isChecked(), tues.isChecked(), wed.isChecked(), thurs.isChecked(), fri.isChecked(), sat.isChecked()};
-                        wizardModel.getSchedules().add(new Schedule(null, 1, c.getTimeInMillis(), fill));
-                        wizardModel.getDoseEntries(fill);
-                        adapter.notifyDataSetChanged();
-                        if(fromWizard && (sun.isChecked() || mon.isChecked() || tues.isChecked() || wed.isChecked() || thurs.isChecked() || fri.isChecked() || sat.isChecked()) && wizardModel.getDoseEntries(fill).size() != 0)
-                            exitable = true;
-                    }
-                }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), DateFormat.is24HourFormat(getContext()));
+                timePickerDialog = new TimePickerDialog(getContext(), listener, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), DateFormat.is24HourFormat(getContext()));
                 timePickerDialog.show();
             }
         });
@@ -188,7 +185,12 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
             Medication medication = mainModel.getMedWithID(medID);
             medName.setText(medication.getName());
         }
-
+        if (savedInstanceState != null){
+            if (savedInstanceState.getBoolean("timePickerVisible", false)){
+                timePickerDialog = new TimePickerDialog(getContext(), listener, 0,0, DateFormat.is24HourFormat(getContext()));
+                timePickerDialog.onRestoreInstanceState(savedInstanceState.getBundle("timePickerBundle"));
+            }
+        }
         return root;
     }
 
@@ -200,12 +202,27 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
 
     @Override
     public void pause() {
+        boolean[] days = {sun.isChecked(), mon.isChecked(), tues.isChecked(), wed.isChecked(), thurs.isChecked(), fri.isChecked(), sat.isChecked()};
         for (Schedule s : wizardModel.getSchedules()){
-            if(s.getWeekdays() == fill){
-                boolean[] days = {sun.isChecked(), mon.isChecked(), tues.isChecked(), wed.isChecked(), thurs.isChecked(), fri.isChecked(), sat.isChecked()};
+            if(Converters.fromBoolArray(s.getWeekdays()) == Converters.fromBoolArray(fill)){
                 s.setWeekdays(days);
             }
         }
+        wizardModel.setDoseNull();
+    }
+
+    public void cancel(){
+        ArrayList<Schedule> remove = new ArrayList<>();
+        for (Schedule s : wizardModel.getSchedules()){
+            if(Converters.fromBoolArray(s.getWeekdays()) == Converters.fromBoolArray(fill)){
+                if (cancel)
+                    remove.add(s);
+                else
+                    s.setWeekdays(checks);
+            }
+        }
+        if (cancel)
+            wizardModel.getSchedules().removeAll(remove);
         wizardModel.setDoseNull();
     }
 
@@ -217,6 +234,18 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
     @Override
     public void onPause() {
         super.onPause();
-        pause();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        if (this.isVisible()){
+            if (timePickerDialog != null){
+                outState.putBoolean("timePickerVisible", timePickerDialog.isShowing());
+                outState.putBundle("timePickerBundle", timePickerDialog.onSaveInstanceState());
+            }
+        }
+        if (timePickerDialog != null)
+            timePickerDialog.dismiss();
+        super.onSaveInstanceState(outState);
     }
 }

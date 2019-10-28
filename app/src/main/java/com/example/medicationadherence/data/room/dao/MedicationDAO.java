@@ -38,4 +38,17 @@ public interface MedicationDAO {
 
 	@Query("SELECT * FROM MEDICATION WHERE medicationID = :medicationID")
     Medication getMedWithID(Long medicationID);
+
+	@Query("select distinct(medication.medicationID), medication.name from medication inner join medicationlog where medication.medicationid = medicationlog.medicationid")
+	List<IDName> getMedIDs();
+
+	public class IDName{
+	    public Long medicationID;
+	    public String name;
+
+        public IDName(Long medicationID, String name) {
+            this.medicationID = medicationID;
+            this.name = name;
+        }
+    }
 }
