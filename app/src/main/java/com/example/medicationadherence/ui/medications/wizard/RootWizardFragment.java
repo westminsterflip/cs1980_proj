@@ -32,6 +32,7 @@ import com.example.medicationadherence.data.room.entities.Instructions;
 import com.example.medicationadherence.data.room.entities.Medication;
 import com.example.medicationadherence.data.room.entities.Schedule;
 import com.example.medicationadherence.ui.MainViewModel;
+import com.example.medicationadherence.ui.home.schedule.EditScheduleCardFragment;
 import com.example.medicationadherence.ui.medications.MedicationFragment;
 import com.example.medicationadherence.ui.medications.MedicationViewModel;
 
@@ -122,7 +123,7 @@ public class RootWizardFragment extends Fragment {
                 } else {
                     if(currentLoc == R.id.editScheduleCardFragment2) {
                         model.getSchedules().addAll(model.getRemoved());
-                        model.getThisList().get(Objects.requireNonNull(model.getDestinations().getValue()).indexOf(R.id.editScheduleCardFragment2)).pause();
+                        ((EditScheduleCardFragment)model.getThisList().get(Objects.requireNonNull(model.getDestinations().getValue()).indexOf(R.id.editScheduleCardFragment2))).cancel();
                     }
                     innerNavController.navigateUp();
                     if (innerNavController.getCurrentDestination().getId() == destinations.get(0)){
