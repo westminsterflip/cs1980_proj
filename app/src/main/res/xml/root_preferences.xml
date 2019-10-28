@@ -45,6 +45,11 @@
             app:title="@string/data_delete_title"
             app:summary="@string/data_delete_summary"
             />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="enableCaching"
+            android:title="Enable image caching"
+            android:summary="Decreases data usage/loading times for images but increases disk usage"/>
 
     </PreferenceCategory>
 

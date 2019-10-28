@@ -3,6 +3,8 @@ package com.example.medicationadherence.ui.medications.wizard;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +22,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.preference.PreferenceManager;
 
+import com.bumptech.glide.Glide;
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.data.room.entities.Doctor;
 import com.example.medicationadherence.data.room.entities.Instructions;
@@ -56,7 +60,6 @@ public class RootWizardFragment extends Fragment {
             @Override
             public void onChanged(ArrayList<Integer> integers) {
                 if (model.getListLength() != integers.size()) {
-                    System.out.println(model.getListLength() + "!=" + integers.size());
                     if (innerNavController != null) {
                         if (Objects.requireNonNull(innerNavController.getCurrentDestination()).getId() == destinations.get(0))
                             setHasLast(false);
@@ -299,6 +302,17 @@ public class RootWizardFragment extends Fragment {
         if (getActivity().getCurrentFocus() != null) {
             Objects.requireNonNull(manager).hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        if (!prefs.getBoolean("enableCaching", false)) {
+            Glide.get(this.getContext()).clearMemory();
+            final RootWizardFragment frag = this;
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    Glide.get(frag.getContext()).clearDiskCache();
+                }
+            });
+        }
         super.onDetach();
     }
 
@@ -321,7 +335,6 @@ public class RootWizardFragment extends Fragment {
                 s.setMedicationID(medID);
                 if (!tmp.contains(s)) {
                     mainModel.insert(s);
-                    System.out.println("inserted " + s.getMedicationID());
                 }
             }
             tmp.removeAll(model.getSchedules());

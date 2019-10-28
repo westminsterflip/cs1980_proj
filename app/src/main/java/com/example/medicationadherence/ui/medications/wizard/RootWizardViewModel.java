@@ -398,7 +398,6 @@ public class RootWizardViewModel extends ViewModel {
         String[] list = fragment.getResources().getStringArray(R.array.lateTimes);
         for (String s : list) {
             if (s.contains(out)) {
-                System.out.println("out: " + s);
                 return s;
             }
         }
@@ -408,7 +407,6 @@ public class RootWizardViewModel extends ViewModel {
     public void setLate(String late) {
         Calendar c = Calendar.getInstance();
         c.clear();
-        System.out.println(late);
         if (late.contains("hr")){
             c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(late.replaceAll("[\\D]", "")));
         } else {

@@ -62,7 +62,6 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
                 wizardModel.getThisList().set(4,this);
         }
         cancel = Converters.fromBoolArray(checks) == 0;
-        System.out.println("CHECKS: " + Converters.fromBoolArray(checks));
         mainModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
     }
 

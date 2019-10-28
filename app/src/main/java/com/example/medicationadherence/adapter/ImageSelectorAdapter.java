@@ -30,6 +30,7 @@ public class ImageSelectorAdapter extends RecyclerView.Adapter {
         context = model.getFragment();
         selectedItems = new SparseBooleanArray();
         selectedItems.put(first ? 0 : 1 ,true);
+        selected = first ? 0 : 1;
     }
 
     @NonNull
@@ -48,9 +49,9 @@ public class ImageSelectorAdapter extends RecyclerView.Adapter {
             holderm.imageItem.setBackgroundColor(context.getResources().getColor(R.color.colorAccent, null));
             holderm.imageItem.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_pill, null));
         }
-        if (selectedItems.get(position))
+        if (selectedItems.get(position)) {
             holderm.check.setVisibility(View.VISIBLE);
-        else
+        }else
             holderm.check.setVisibility(View.INVISIBLE);
     }
 
