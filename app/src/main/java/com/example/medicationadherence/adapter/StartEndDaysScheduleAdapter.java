@@ -1,5 +1,6 @@
 package com.example.medicationadherence.adapter;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +14,21 @@ import com.example.medicationadherence.R;
 import com.example.medicationadherence.data.Converters;
 import com.example.medicationadherence.ui.home.schedule.EditScheduleFragmentDirections;
 import com.example.medicationadherence.ui.medications.wizard.RootWizardViewModel;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
 public class StartEndDaysScheduleAdapter extends RecyclerView.Adapter {
     ArrayList<Integer> days;
     RootWizardViewModel model;
+    private ArrayList<Integer> justDeleted = new ArrayList<>();
+    private ArrayList<Integer> justDelPos = new ArrayList<>();
+    private Activity activity;
 
-    public StartEndDaysScheduleAdapter(ArrayList<Integer> days, RootWizardViewModel model) {
+    public StartEndDaysScheduleAdapter(ArrayList<Integer> days, RootWizardViewModel model, Activity activity) {
         this.days = days;
         this.model = model;
+        this.activity = activity;
     }
 
     @NonNull
@@ -55,6 +61,52 @@ public class StartEndDaysScheduleAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         return days.size();
+    }
+
+    public void delete(int pos){
+        justDeleted.add(days.get(pos));
+        justDelPos.add(pos);
+        int daySel = days.get(pos);
+        days.remove(pos);
+        notifyDataSetChanged();
+        showUndo(daySel);
+    }
+
+    private void showUndo(int daySel){
+        View view = activity.findViewById(R.id.drawer_layout);
+        String s = "Schedule{s} deleted";
+        Snackbar undoBar = Snackbar.make(view, s, Snackbar.LENGTH_LONG);
+        undoBar.setAction("UNDO", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                days.add(justDelPos.get(justDelPos.size()-1), justDeleted.get(justDeleted.size()-1));
+                notifyDataSetChanged();
+                justDeleted.clear();
+                justDelPos.clear();
+            }
+        });
+        undoBar.show();
+        undoBar.addCallback(new Snackbar.Callback(){
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                super.onDismissed(transientBottomBar, event);
+                int i;
+                for (i = 0; i < justDeleted.size(); i++)
+                    if (event != DISMISS_EVENT_ACTION && event != DISMISS_EVENT_CONSECUTIVE || i < justDeleted.size() - 1)
+                        model.removeSchedules(justDeleted.get(i));
+                if(event == DISMISS_EVENT_CONSECUTIVE){
+                    int pos = justDelPos.get(justDelPos.size()-1);
+                    int med = justDeleted.get(justDeleted.size()-1);
+                    justDelPos.clear();
+                    justDeleted.clear();
+                    justDelPos.add(pos);
+                    justDeleted.add(med);
+                }else if (event != DISMISS_EVENT_ACTION) {
+                    justDeleted.clear();
+                    justDelPos.clear();
+                }
+            }
+        });
     }
 
     class SEDSHolder extends RecyclerView.ViewHolder{

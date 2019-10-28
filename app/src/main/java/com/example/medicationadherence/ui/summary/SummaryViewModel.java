@@ -31,7 +31,6 @@ public class SummaryViewModel extends ViewModel {
             detailList = new ArrayList<>();
         else
             detailList.clear();
-        //TODO: actual data population
         if (idList == null)
             idList = mainModel.getMedIDs();
         if (idList != null && idList.size()!=0){

@@ -27,7 +27,6 @@ import com.example.medicationadherence.data.room.entities.Instructions;
 import com.example.medicationadherence.data.room.entities.Medication;
 import com.example.medicationadherence.data.room.entities.Schedule;
 import com.example.medicationadherence.ui.MainViewModel;
-import com.example.medicationadherence.ui.home.schedule.EditScheduleCardFragment;
 import com.example.medicationadherence.ui.medications.MedicationFragment;
 import com.example.medicationadherence.ui.medications.MedicationViewModel;
 
@@ -118,7 +117,7 @@ public class RootWizardFragment extends Fragment {
                     Navigation.findNavController(root).navigateUp();
                 } else {
                     if(currentLoc == R.id.editScheduleCardFragment2) {
-                        model.getSchedules().addAll(model.getRemoved());//TODO: cancelling still adds things
+                        model.getSchedules().addAll(model.getRemoved());
                         model.getThisList().get(Objects.requireNonNull(model.getDestinations().getValue()).indexOf(R.id.editScheduleCardFragment2)).pause();
                     }
                     innerNavController.navigateUp();
@@ -230,7 +229,6 @@ public class RootWizardFragment extends Fragment {
                             }
                         }
                     } else if(currentLoc == R.id.editScheduleCardFragment2){
-                        ((EditScheduleCardFragment)model.getThisList().get(model.getDestinations().getValue().indexOf(R.id.editScheduleCardFragment2))).cancel();
                         model.getThisList().get(model.getDestinations().getValue().indexOf(R.id.editScheduleCardFragment2)).pause();
                         innerNavController.navigateUp();
                     } else if (currentLoc == R.id.editScheduleFragment2){
@@ -321,8 +319,10 @@ public class RootWizardFragment extends Fragment {
             List<Schedule> tmp = mainModel.getScheduleFM(medID);
             for (Schedule s : model.getSchedules()) {
                 s.setMedicationID(medID);
-                if (!tmp.contains(s))
+                if (!tmp.contains(s)) {
                     mainModel.insert(s);
+                    System.out.println("inserted " + s.getMedicationID());
+                }
             }
             tmp.removeAll(model.getSchedules());
             for (Schedule s : tmp){

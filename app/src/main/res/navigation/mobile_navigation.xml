@@ -3,8 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@id/dailyMedListFragment2">
 
+    <fragment
+        android:id="@+id/dailyMedListFragment2"
+        android:name="com.example.medicationadherence.ui.home.DailyMedListFragment"
+        android:label="@string/title_activity_daily_medication_list"
+        tools:layout="@layout/fragment_daily_med_list">
+        <argument
+            android:name="timeToView"
+            android:defaultValue="0L"
+            app:argType="long" />
+    </fragment>
     <fragment
         android:id="@+id/nav_home"
         android:name="com.example.medicationadherence.ui.home.HomeFragment"
@@ -41,7 +51,8 @@
         tools:layout="@layout/fragment_daily_med_list" >
         <argument
             android:name="timeToView"
-            app:argType="long"/>
+            app:argType="long"
+            android:defaultValue="0L" />
     </fragment>
     <fragment
         android:id="@+id/rootWizardFragment"

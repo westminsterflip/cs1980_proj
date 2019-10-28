@@ -25,11 +25,11 @@ public class ImageSelectorAdapter extends RecyclerView.Adapter {
     private SparseBooleanArray selectedItems;
     private ImageClickListener listener;
 
-    public ImageSelectorAdapter(ArrayList<String> URLs, RootWizardViewModel model) {
+    public ImageSelectorAdapter(ArrayList<String> URLs, RootWizardViewModel model, boolean first) {
         this.URLs = URLs;
         context = model.getFragment();
         selectedItems = new SparseBooleanArray();
-        selectedItems.put(0,true);
+        selectedItems.put(first ? 0 : 1 ,true);
     }
 
     @NonNull

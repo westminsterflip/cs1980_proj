@@ -20,13 +20,12 @@
 
             <ImageView
                 android:id="@+id/medImage"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="80dp"
                 android:layout_marginStart="5dp"
                 android:background="@color/colorAccent"
                 android:tint="#FFFFFF"
                 app:layout_constraintBottom_toBottomOf="@+id/textViewDosageTime"
-                app:layout_constraintDimensionRatio="1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/textViewMedName"
                 app:srcCompat="@drawable/ic_pill" />
@@ -36,7 +35,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
                 android:text="Ibuprofen"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 app:layout_constraintStart_toEndOf="@+id/medImage"

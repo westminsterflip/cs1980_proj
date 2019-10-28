@@ -1,7 +1,9 @@
 package com.example.medicationadherence.adapter;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.os.ConfigurationCompat;
 import androidx.navigation.Navigation;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -37,12 +40,15 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
     private ArrayList<Medication> justDeleted = new ArrayList<>();
     private ArrayList<Integer> justDelPos = new ArrayList<>();
     private Activity activity;
+    private boolean larger;
 
     public MedicationListAdapter(List<Medication> medicationList, MainViewModel mainModel, ArrayList thisList, Activity activity){
         this.medicationList = medicationList;
         this.mainModel = mainModel;
         this.thisList = thisList;
         this.activity = activity;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+        larger = prefs.getBoolean("useWideImages", false);
     }
 
 
@@ -62,6 +68,8 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
             holderm.medImage.setBackgroundColor(Integer.parseInt("00FFFFFF", 16));
             holderm.medImage.setImageTintList(null);
         }
+        if (!larger)
+            holderm.medImage.getLayoutParams().width = 80 * activity.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT;
         Doctor doctor = mainModel.getDoctorWithID(medicationList.get(position).getDoctorID());
         if(doctor == null){
             holderm.doctorName.setVisibility(View.GONE);

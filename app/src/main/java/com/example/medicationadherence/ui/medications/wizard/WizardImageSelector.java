@@ -43,7 +43,6 @@ public class WizardImageSelector extends Fragment implements RootWizardFragment.
     int page = 1;
     ArrayList<String> images = null;
     ImageSelectorAdapter adapter;
-    int pos = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,7 +73,7 @@ public class WizardImageSelector extends Fragment implements RootWizardFragment.
         RecyclerViewPreloader<ContactsContract.CommonDataKinds.Photo> preloader = new RecyclerViewPreloader<ContactsContract.CommonDataKinds.Photo>(Glide.with(this), provider, sizeProvider, 10);
         imageList.addOnScrollListener(preloader);
         if (images != null) {
-            imageList.setAdapter(adapter = new ImageSelectorAdapter(images, model));
+            imageList.setAdapter(adapter = new ImageSelectorAdapter(images, model, model.getMedImage() == null));
         }
         imageList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -121,7 +120,7 @@ public class WizardImageSelector extends Fragment implements RootWizardFragment.
     @Override
     public void onImageClick(int position) {
         adapter.setSelected(position);
-        pos = position;
+        model.setSelPos(position);
     }
 
     //TODO: filter images. cache lifetime doesn't work
@@ -138,6 +137,10 @@ public class WizardImageSelector extends Fragment implements RootWizardFragment.
         protected ArrayList<String> doInBackground(Void... voids) {
             try {
                 ArrayList<String> out = new ArrayList<>();
+                if (model.getMedImage() != null) {
+                    out.add(model.getMedImage());
+                    model.setSelPos(1);
+                }
                 URL medAPI = new URL("https://rximage.nlm.nih.gov/api/rximage/1/rxbase?name=" + model.getMedName() + "&rPage=" + page + "&resolution=1024");
                 HttpsURLConnection apiConn = (HttpsURLConnection) medAPI.openConnection();
                 if (apiConn.getResponseCode() == 200) {
@@ -220,6 +223,6 @@ public class WizardImageSelector extends Fragment implements RootWizardFragment.
     @Override
     public void onPause() {
         super.onPause();
-        model.setMedImage(images.get(pos));
+        model.setMedImage(images.get(model.getSelPos()));
     }
 }

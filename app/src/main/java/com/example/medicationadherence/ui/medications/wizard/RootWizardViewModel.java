@@ -58,6 +58,7 @@ public class RootWizardViewModel extends ViewModel {
     private RootWizardFragment fragment;
     private int listLength = 0;
     private long late;
+    private int selPos = 0;
 
     public String getMedImage() {
         return medImage;
@@ -330,7 +331,7 @@ public class RootWizardViewModel extends ViewModel {
         this.sMedID = sMedID;
     }
 
-    public void setMedication(String medName, boolean active, Long doctorID, String medDosage, long startDate, long endDate, int containerVol, double cost){
+    public void setMedication(String medImage, String medName, boolean active, Long doctorID, String medDosage, long startDate, long endDate, int containerVol, double cost, long late){
         this.medName = medName;
         this.active = active;
         this.doctorID = doctorID;
@@ -339,6 +340,8 @@ public class RootWizardViewModel extends ViewModel {
         this.endDate = endDate;
         this.containerVol = containerVol;
         this.cost = cost;
+        this.medImage = medImage;
+        this.late = late;
     }
 
     public void setMedication(Medication m){
@@ -350,6 +353,8 @@ public class RootWizardViewModel extends ViewModel {
         endDate = m.getEndDate();
         containerVol = m.getContainerVolume();
         cost = m.getCost();
+        late = m.getLateTime();
+        medImage = m.getMedImageURL();
     }
 
     public MainViewModel getMainViewModel() {
@@ -392,8 +397,10 @@ public class RootWizardViewModel extends ViewModel {
         }
         String[] list = fragment.getResources().getStringArray(R.array.lateTimes);
         for (String s : list) {
-            if (s.contains(out))
-                return out;
+            if (s.contains(out)) {
+                System.out.println("out: " + s);
+                return s;
+            }
         }
         return null;
     }
@@ -401,11 +408,29 @@ public class RootWizardViewModel extends ViewModel {
     public void setLate(String late) {
         Calendar c = Calendar.getInstance();
         c.clear();
+        System.out.println(late);
         if (late.contains("hr")){
             c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(late.replaceAll("[\\D]", "")));
         } else {
             c.set(Calendar.MINUTE, Integer.parseInt(late.replaceAll("[\\D]", "")));
         }
         this.late = c.getTimeInMillis();
+    }
+
+    public void removeSchedules(int days){
+        ArrayList<Schedule> temp = new ArrayList<>();
+        for (Schedule s : schedules){
+            if(Converters.fromBoolArray(s.getWeekdays()) == days)
+                temp.add(s);
+        }
+        schedules.removeAll(temp);
+    }
+
+    public int getSelPos() {
+        return selPos;
+    }
+
+    public void setSelPos(int selPos) {
+        this.selPos = selPos;
     }
 }

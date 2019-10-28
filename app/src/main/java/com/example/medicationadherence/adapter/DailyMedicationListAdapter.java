@@ -1,6 +1,8 @@
 package com.example.medicationadherence.adapter;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -25,10 +28,13 @@ import java.util.List;
 public class DailyMedicationListAdapter extends RecyclerView.Adapter implements Serializable {
     private List<ScheduleDAO.ScheduleCard> medicationList;
     private Activity activity;
+    private boolean larger;
 
     public DailyMedicationListAdapter(List<ScheduleDAO.ScheduleCard> medicationList, Activity activity){
         this.medicationList = medicationList;
         this.activity = activity;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+        larger = prefs.getBoolean("useWideImages", false);
     }
 
     @NonNull
@@ -43,9 +49,11 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
         final DailyMedicationViewHolder holderm = (DailyMedicationViewHolder) holder;
         if(medicationList.get(position).medImageURL != null && !medicationList.get(position).medImageURL.equals("")){ //If an image is specified it will load, otherwise the default is a pill on a background
             Glide.with(activity).load(medicationList.get(position).medImageURL).thumbnail(0.5f).transition(new DrawableTransitionOptions().crossFade()).diskCacheStrategy(DiskCacheStrategy.ALL).into(holderm.medImage);
-                    holderm.medImage.setBackgroundColor(Integer.parseInt("00FFFFFF", 16));
-                    holderm.medImage.setImageTintList(null);
+            holderm.medImage.setBackgroundColor(Integer.parseInt("00FFFFFF", 16));
+            holderm.medImage.setImageTintList(null);
         }
+        if (!larger)
+            holderm.medImage.getLayoutParams().width = 80 * activity.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT;
         holderm.medName.setText(medicationList.get(position).medName);
         String instr = medicationList.get(position).instructions;
         if(instr != null && !instr.equals("")){

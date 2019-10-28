@@ -22,6 +22,11 @@
         <!--Time after which to consider medication late-->
         <CheckBoxPreference
             android:defaultValue="false"
+            android:key="useWideImages"
+            android:title="Use larger images"
+            android:summary="Use larger images on medication cards (may cause visual inconsistencies)"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
             android:key="enableDMOverride"
             android:title="Override system theme"
             android:summary="Manually set dark/light mode for this app"/>

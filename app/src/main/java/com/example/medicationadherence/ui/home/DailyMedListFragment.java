@@ -23,6 +23,7 @@ import com.example.medicationadherence.ui.MainViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,6 +32,7 @@ public class DailyMedListFragment extends Fragment {
     private TextView date;
     private ViewPager2 dailyViewPager;
     private MainViewModel mainModel;
+    private boolean fromCal = true;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,6 +41,18 @@ public class DailyMedListFragment extends Fragment {
         mainModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
         model.getDateList();
         long timeToView = DailyMedListFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getTimeToView();
+        if (timeToView == 0){//TODO: removed items showed up on frontpage
+            Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+            c.clear();
+            c.set(Calendar.YEAR, year);
+            c.set(Calendar.MONTH, month);
+            c.set(Calendar.DAY_OF_MONTH, day);
+            timeToView = c.getTimeInMillis();
+            fromCal = false;
+        }
         if(model.getDate() == -1){
             model.setDate(timeToView);
             Calendar cal = Calendar.getInstance();
@@ -67,53 +81,58 @@ public class DailyMedListFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_daily_med_list, container, false);
         ImageButton next = root.findViewById(R.id.dailyNextButton);
         ImageButton prev = root.findViewById(R.id.dailyPrevButton);
-        final View.OnClickListener changeDay = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeDate((v.getId()==R.id.dailyNextButton) ? 1 : -1);
-            }
-        };
-        next.setOnClickListener(changeDay);
-        prev.setOnClickListener(changeDay);
-
+        dailyViewPager = root.findViewById(R.id.dailyViewPager);
         date = root.findViewById(R.id.dailyDateView);
         updateText();
-
-        //TODO: time separators in recyclerview
-        dailyViewPager = root.findViewById(R.id.dailyViewPager);
-        model.setMedAdapter(new DailyViewPagerAdapter(model.getDateList(), model.getMedications().getValue(), getActivity()));
-        dailyViewPager.setAdapter(model.getMedAdapter());
-        dailyViewPager.setCurrentItem(1);
-        dailyViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                if (position != 1) {
-                    final int dir = position - 1;
-                    final Calendar cal2 = Calendar.getInstance();
-                    cal2.setTimeInMillis(model.getDate());
-                    cal2.add(Calendar.DAY_OF_YEAR, 2*dir);
-                    dailyViewPager.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(dir < 0){
-                                model.setNextDate(model.getDate());
-                                model.setDate(model.getPrevDate());
-                                model.setPrevDate(cal2.getTimeInMillis());
-                                model.loadPrevMeds();
-                            } else if (dir == 1){
-                                model.setPrevDate(model.getDate());
-                                model.setDate(model.getNextDate());
-                                model.setNextDate(cal2.getTimeInMillis());
-                                model.loadNextMeds();
-                            }
-                            model.getMedAdapter().notifyDataSetChanged(); //this just works now?
-                            dailyViewPager.setCurrentItem(1);
-                            updateText();
-                        }
-                    });
+        if (fromCal) {
+            final View.OnClickListener changeDay = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    changeDate((v.getId() == R.id.dailyNextButton) ? 1 : -1);
                 }
-            }
-        });
+            };
+            next.setOnClickListener(changeDay);
+            prev.setOnClickListener(changeDay);
+            model.setMedAdapter(new DailyViewPagerAdapter(model.getDateList(), model.getMedications().getValue(), getActivity()));
+            dailyViewPager.setAdapter(model.getMedAdapter());
+            dailyViewPager.setCurrentItem(1);
+            dailyViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                @Override
+                public void onPageSelected(int position) {
+                    if (position != 1) {
+                        final int dir = position - 1;
+                        final Calendar cal2 = Calendar.getInstance();
+                        cal2.setTimeInMillis(model.getDate());
+                        cal2.add(Calendar.DAY_OF_YEAR, 2*dir);
+                        dailyViewPager.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(dir < 0){
+                                    model.setNextDate(model.getDate());
+                                    model.setDate(model.getPrevDate());
+                                    model.setPrevDate(cal2.getTimeInMillis());
+                                    model.loadPrevMeds();
+                                } else if (dir == 1){
+                                    model.setPrevDate(model.getDate());
+                                    model.setDate(model.getNextDate());
+                                    model.setNextDate(cal2.getTimeInMillis());
+                                    model.loadNextMeds();
+                                }
+                                model.getMedAdapter().notifyDataSetChanged(); //this just works now?
+                                dailyViewPager.setCurrentItem(1);
+                                updateText();
+                            }
+                        });
+                    }
+                }
+            });
+        } else {
+            next.setVisibility(View.INVISIBLE);
+            prev.setVisibility(View.INVISIBLE);
+            model.setMedAdapter(new DailyViewPagerAdapter(model.getDateList(), Collections.singletonList(model.getMedications().getValue().get(1)), getActivity()));
+            dailyViewPager.setAdapter(model.getMedAdapter());
+            dailyViewPager.setUserInputEnabled(false);
+        }
         return root;
     }
 
