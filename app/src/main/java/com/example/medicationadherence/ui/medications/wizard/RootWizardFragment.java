@@ -150,7 +150,7 @@ public class RootWizardFragment extends Fragment {
                 if(model.getThisList().get(Objects.requireNonNull(model.getDestinations().getValue()).indexOf(currentLoc)).isExitable()) {
 
                     if(currentLoc == R.id.wizardDoctorDetailFragment){
-                        model.getThisList().get(1).pause();
+                        model.getThisList().get(destinations.indexOf(R.id.wizardDoctorDetailFragment)).pause();
                         if(model.getDoctorName()!= null && !model.getDoctorName().equals("")){
                             if(model.getSpinnerSelection() == 1) {//add new doctor if doesn't exist
                                 if(mainModel.getDocWithName(model.getDoctorName())==null || mainModel.getDocWithName(model.getDoctorName()).size()==0){
@@ -292,7 +292,7 @@ public class RootWizardFragment extends Fragment {
     }
 
     public void setAdd(){
-        nextFinish.setText("Add");
+        nextFinish.setText(("Add"));
         nextArrow.setVisibility(View.INVISIBLE);
     }
 
@@ -316,7 +316,7 @@ public class RootWizardFragment extends Fragment {
         super.onDetach();
     }
 
-    void addMedGoUp(View v){
+    private void addMedGoUp(View v){
         long medID;
         if(index == -1){
             model.setsMedID(medID = mainModel.insert(model.getMedication()));

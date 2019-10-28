@@ -60,19 +60,19 @@ public class RootWizardViewModel extends ViewModel {
     private long late;
     private int selPos = 0;
 
-    public String getMedImage() {
+    String getMedImage() {
         return medImage;
     }
 
-    public void setMedImage(String medImage) {
+    void setMedImage(String medImage) {
         this.medImage = medImage;
     }
 
-    public String getMedName() {
+    String getMedName() {
         return medName;
     }
 
-    public void setMedName(String medName) {
+    void setMedName(String medName) {
         this.medName = medName;
     }
 
@@ -84,19 +84,19 @@ public class RootWizardViewModel extends ViewModel {
         this.instructions = instructions;
     }
 
-    public boolean isActive() {
+    boolean isActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    void setActive(boolean active) {
         this.active = active;
     }
 
-    public String getDoctorName() {
+    String getDoctorName() {
         return doctorName;
     }
 
-    public void setDoctorName(String doctorName) {
+    void setDoctorName(String doctorName) {
         this.doctorName = doctorName;
     }
 
@@ -116,32 +116,32 @@ public class RootWizardViewModel extends ViewModel {
         this.endDate = endDate;
     }
 
-    public int getOnHand() {
+    int getOnHand() {
         return onHand;
     }
 
-    public void setOnHand(int onHand) {
+    void setOnHand(int onHand) {
         this.onHand = onHand;
         containerVol = onHand;
     }
 
-    public int getContainerVol() {
+    int getContainerVol() {
         return containerVol;
     }
 
-    public double getCost() {
+    double getCost() {
         return cost;
     }
 
-    public void setCost(double cost) {
+    void setCost(double cost) {
         this.cost = cost;
     }
 
-    public boolean isAsNeeded() {
+    boolean isAsNeeded() {
         return asNeeded;
     }
 
-    public void setAsNeeded(boolean asNeeded) {
+    void setAsNeeded(boolean asNeeded) {
         this.asNeeded = asNeeded;
     }
 
@@ -149,7 +149,7 @@ public class RootWizardViewModel extends ViewModel {
         return new Medication(medImage, medName, active, doctorID, medDosage, startDate, endDate, containerVol, cost, late);
     }
 
-    public Medication getMedicationWID(){
+    Medication getMedicationWID(){
         return new Medication(sMedID, medImage, medName, active, doctorID, medDosage, startDate, endDate, containerVol, cost, late);
     }
 
@@ -157,7 +157,7 @@ public class RootWizardViewModel extends ViewModel {
         return new Doctor(doctorName, practiceName, practiceAddress, phone);
     }
 
-    public void setMedDosage(String medDosage) {
+    void setMedDosage(String medDosage) {
         this.medDosage = medDosage;
     }
 
@@ -165,11 +165,11 @@ public class RootWizardViewModel extends ViewModel {
         return model;
     }
 
-    public MedicationViewModel setModel(MedicationViewModel model) {
+    MedicationViewModel setModel(MedicationViewModel model) {
         return this.model = model;
     }
 
-    public String getMedDosage() {
+    String getMedDosage() {
         return medDosage;
     }
 
@@ -177,35 +177,35 @@ public class RootWizardViewModel extends ViewModel {
         return thisList;
     }
 
-    public int getSpinnerSelection() {
+    int getSpinnerSelection() {
         return spinnerSelection;
     }
 
-    public void setSpinnerSelection(int spinnerSelection) {
+    void setSpinnerSelection(int spinnerSelection) {
         this.spinnerSelection = spinnerSelection;
     }
 
-    public String getPracticeName() {
+    String getPracticeName() {
         return practiceName;
     }
 
-    public void setPracticeName(String practiceName) {
+    void setPracticeName(String practiceName) {
         this.practiceName = practiceName;
     }
 
-    public String getPracticeAddress() {
+    String getPracticeAddress() {
         return practiceAddress;
     }
 
-    public void setPracticeAddress(String practiceAddress) {
+    void setPracticeAddress(String practiceAddress) {
         this.practiceAddress = practiceAddress;
     }
 
-    public String getPhone() {
+    String getPhone() {
         return phone;
     }
 
-    public void setPhone(String phone) {
+    void setPhone(String phone) {
         this.phone = phone;
     }
 
@@ -217,7 +217,7 @@ public class RootWizardViewModel extends ViewModel {
         this.doctorID = doctorID;
     }
 
-    public MutableLiveData<ArrayList<Integer>> getDestinations() {
+    MutableLiveData<ArrayList<Integer>> getDestinations() {
         if(destinations == null){
             destinations = new MutableLiveData<>();
             Integer[] destsint = {R.id.wizardMedicineDetailFragment, R.id.wizardImageSelector, R.id.wizardDoctorDetailFragment};
@@ -227,19 +227,19 @@ public class RootWizardViewModel extends ViewModel {
         return destinations;
     }
 
-    public DatePickerDialog getDatePickerDialog() {
+    DatePickerDialog getDatePickerDialog() {
         return datePickerDialog;
     }
 
-    public void setDatePickerDialog(DatePickerDialog datePickerDialog) {
+    void setDatePickerDialog(DatePickerDialog datePickerDialog) {
         this.datePickerDialog = datePickerDialog;
     }
 
-    public boolean isScheduleAfter() {
+    boolean isScheduleAfter() {
         return scheduleAfter;
     }
 
-    public void setScheduleAfter(boolean scheduleAfter) {
+    void setScheduleAfter(boolean scheduleAfter) {
         this.scheduleAfter = scheduleAfter;
     }
 
@@ -251,6 +251,7 @@ public class RootWizardViewModel extends ViewModel {
         this.scheduleTime = scheduleTime;
     }
 
+    @SuppressWarnings("unchecked")
     public ArrayList<Schedule> getSchedules() {
         if(schedules == null)
             if(sMedID == -1)
@@ -278,7 +279,7 @@ public class RootWizardViewModel extends ViewModel {
         return navController;
     }
 
-    public void setNavController(NavController navController) {
+    void setNavController(NavController navController) {
         this.navController = navController;
     }
 
@@ -323,11 +324,11 @@ public class RootWizardViewModel extends ViewModel {
         doseEntries = null;
     }
 
-    public long getsMedID() {
+    long getsMedID() {
         return sMedID;
     }
 
-    public void setsMedID(long sMedID) {
+    void setsMedID(long sMedID) {
         this.sMedID = sMedID;
     }
 
@@ -361,11 +362,11 @@ public class RootWizardViewModel extends ViewModel {
         return mainViewModel;
     }
 
-    public void setMainViewModel(MainViewModel mainViewModel) {
+    void setMainViewModel(MainViewModel mainViewModel) {
         this.mainViewModel = mainViewModel;
     }
 
-    public ArrayList<Schedule> getRemoved() {
+    ArrayList<Schedule> getRemoved() {
         return removed;
     }
 
@@ -377,15 +378,15 @@ public class RootWizardViewModel extends ViewModel {
         this.fragment = fragment;
     }
 
-    public int getListLength() {
+    int getListLength() {
         return listLength;
     }
 
-    public void setListLength(int listLength) {
+    void setListLength(int listLength) {
         this.listLength = listLength;
     }
 
-    public String getLate() {
+    String getLate() {
         Calendar c = Calendar.getInstance();
         c.clear();
         c.setTimeInMillis(late);
@@ -404,7 +405,7 @@ public class RootWizardViewModel extends ViewModel {
         return null;
     }
 
-    public void setLate(String late) {
+    void setLate(String late) {
         Calendar c = Calendar.getInstance();
         c.clear();
         if (late.contains("hr")){
@@ -424,11 +425,11 @@ public class RootWizardViewModel extends ViewModel {
         schedules.removeAll(temp);
     }
 
-    public int getSelPos() {
+    int getSelPos() {
         return selPos;
     }
 
-    public void setSelPos(int selPos) {
+    void setSelPos(int selPos) {
         this.selPos = selPos;
     }
 }

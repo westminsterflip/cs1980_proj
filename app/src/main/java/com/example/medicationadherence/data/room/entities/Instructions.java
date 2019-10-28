@@ -12,16 +12,16 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 
-import static androidx.room.ForeignKey.CASCADE;
+import static androidx.room.ForeignKey.SET_NULL;
 
 @Entity(primaryKeys = {"medicationID", "instructions"}, foreignKeys =
-@ForeignKey(entity = Medication.class, parentColumns = "medicationID", childColumns = "medicationID", onDelete = CASCADE))
+@ForeignKey(entity = Medication.class, parentColumns = "medicationID", childColumns = "medicationID", onDelete = SET_NULL))
 public class Instructions {
 	private long medicationID;           /* FK Medication.medicationID */
     @NonNull
-	private String instructions = "";
+	private String instructions;
 
-    public Instructions(long medicationID, String instructions) {
+    public Instructions(long medicationID, @NonNull String instructions) {
         this.medicationID = medicationID;
         this.instructions = instructions;
     }
@@ -34,11 +34,11 @@ public class Instructions {
         return this.medicationID;
     }
 	
-	public void setInstructions(String instructions) {
+	public void setInstructions(@NonNull String instructions) {
         this.instructions = instructions;
     }
 
-	public String getInstructions() {
+	public @NonNull String getInstructions() {
         return this.instructions;
     }
 	

@@ -8,19 +8,19 @@ package com.example.medicationadherence.data.room.entities;
    @authors Erin Herlihy, David Stropkey, Nicholas West, Ian Patterson
 */
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 
-import static androidx.room.ForeignKey.CASCADE;
+import static androidx.room.ForeignKey.SET_NULL;
 
 @Entity(primaryKeys = {"medicationID", "date", "timeLate"}, foreignKeys =
-@ForeignKey(entity = Medication.class, parentColumns = "medicationID", childColumns = "medicationID", onDelete = CASCADE))
+@ForeignKey(entity = Medication.class, parentColumns = "medicationID", childColumns = "medicationID", onDelete = SET_NULL))
 public class MedicationLog {
 	private int medicationID;  /* FK Medication.medicationID */
     private long date;
 	private boolean taken;     /* true if taken, false if missed */
-	@NonNull
+	@Nullable
     private Integer timeLate = null;
 	
 	public int getMedicationID() {
@@ -47,11 +47,11 @@ public class MedicationLog {
         this.taken = taken;
     }
 	
-	public Integer getTimeLate() {
+	public @Nullable Integer getTimeLate() {
         return this.timeLate;
     }
  
-    public void setTimeLate(Integer timeLate) {
+    public void setTimeLate(@Nullable Integer timeLate) {
         this.timeLate = timeLate;
     }
 }

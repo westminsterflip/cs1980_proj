@@ -15,10 +15,10 @@ import androidx.room.ForeignKey;
 
 import com.example.medicationadherence.data.Converters;
 
-import static androidx.room.ForeignKey.CASCADE;
+import static androidx.room.ForeignKey.SET_NULL;
 
 @Entity(primaryKeys = {"medicationID", "time", "weekdays"}, foreignKeys =
-@ForeignKey(entity = Medication.class, parentColumns = "medicationID", childColumns = "medicationID", onDelete = CASCADE))
+@ForeignKey(entity = Medication.class, parentColumns = "medicationID", childColumns = "medicationID", onDelete = SET_NULL))
 public class Schedule {
     @NonNull
 	private Long medicationID;       /* FK Medication.medicationID */
@@ -27,11 +27,11 @@ public class Schedule {
 	@NonNull
 	private boolean[] weekdays;     //boolean array for scheduled on day {SMTWTFS}
 
-	public void setMedicationID(Long medicationID) {
+	public void setMedicationID(@NonNull Long medicationID) {
         this.medicationID = medicationID;
     }
 	
-	public Long getMedicationID() {
+	public @NonNull Long getMedicationID() {
         return this.medicationID;
     }
 
@@ -47,7 +47,6 @@ public class Schedule {
         this.time = time;
     }
 
-    @NonNull
     public long getTime() {
         return this.time;
     }
@@ -61,7 +60,7 @@ public class Schedule {
         this.weekdays = weekdays;
     }
 
-    public Schedule(Long medicationID, int numDoses, long time, @NonNull boolean[] weekdays) {
+    public Schedule(@NonNull Long medicationID, int numDoses, long time, @NonNull boolean[] weekdays) {
         this.medicationID = medicationID;
         this.numDoses = numDoses;
         this.time = time;
@@ -70,6 +69,8 @@ public class Schedule {
 
     @Override
     public boolean equals(@Nullable Object obj) {
+	    if (!(obj instanceof Schedule))
+	        return false;
         Schedule s = (Schedule) obj;
 	    return (s.medicationID == null && this.medicationID == null || s.medicationID.equals(this.medicationID)) && s.numDoses == this.numDoses && s.time == this.time && Converters.fromBoolArray(s.weekdays) == Converters.fromBoolArray(this.weekdays);
     }

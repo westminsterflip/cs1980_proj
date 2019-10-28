@@ -42,6 +42,7 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
     private Activity activity;
     private boolean larger;
 
+    @SuppressWarnings("unchecked")
     public MedicationListAdapter(List<Medication> medicationList, MainViewModel mainModel, ArrayList thisList, Activity activity){
         this.medicationList = medicationList;
         this.mainModel = mainModel;

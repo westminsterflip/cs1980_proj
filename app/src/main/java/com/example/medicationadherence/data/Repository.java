@@ -156,6 +156,10 @@ public class Repository {
         new RemoveAsyncTask(mMedicationDAO).execute(medication);
     }
 
+    public void remove(Doctor doctor){
+        new RemoveAsyncTask(mDoctorDAO).execute(doctor);
+    }
+
     public int getMissed(Long medicationID, long startDate, long endDate){
         try {
             return new GetMissedTask(mMedicationLogDAO, medicationID, startDate, endDate).execute().get();

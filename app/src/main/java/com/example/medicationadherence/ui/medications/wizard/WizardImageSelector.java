@@ -39,10 +39,10 @@ import java.util.concurrent.ExecutionException;
 import javax.net.ssl.HttpsURLConnection;
 
 public class WizardImageSelector extends Fragment implements RootWizardFragment.ErrFragment, ImageSelectorAdapter.ImageClickListener {
-    RootWizardViewModel model;
-    int page = 1;
-    ArrayList<String> images = null;
-    ImageSelectorAdapter adapter;
+    private RootWizardViewModel model;
+    private int page = 1;
+    private ArrayList<String> images = null;
+    private ImageSelectorAdapter adapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,6 +70,7 @@ public class WizardImageSelector extends Fragment implements RootWizardFragment.
         }
         ListPreloader.PreloadSizeProvider sizeProvider = new FixedPreloadSizeProvider(1024,1024);
         MedImagePreloadProvider provider = new MedImagePreloadProvider();
+        //noinspection unchecked,unchecked
         RecyclerViewPreloader<ContactsContract.CommonDataKinds.Photo> preloader = new RecyclerViewPreloader<ContactsContract.CommonDataKinds.Photo>(Glide.with(this), provider, sizeProvider, 10);
         imageList.addOnScrollListener(preloader);
         if (images != null) {
@@ -128,7 +129,7 @@ public class WizardImageSelector extends Fragment implements RootWizardFragment.
         RootWizardViewModel model;
         int page;
 
-        public MedImageTask(RootWizardViewModel model, int page) {
+        MedImageTask(RootWizardViewModel model, int page) {
             this.model = model;
             this.page = page;
         }
@@ -182,7 +183,7 @@ public class WizardImageSelector extends Fragment implements RootWizardFragment.
                                 jsonReader.nextString();
                                 break;
                             default:
-                                System.out.println("UNKNOWN");
+                                //unknown symbol
                         }
                         token = jsonReader.peek();
                     }

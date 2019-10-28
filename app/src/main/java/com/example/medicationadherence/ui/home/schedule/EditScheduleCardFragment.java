@@ -47,7 +47,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
     private TimePickerDialog timePickerDialog;
     private boolean cancel = false;
 
-    boolean[] fill = {false,false,false,false,false,false,false,true};
+    private boolean[] fill = {false,false,false,false,false,false,false,true};
     private MainViewModel mainModel;
 
     @Override
@@ -228,11 +228,6 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
     @Override
     public boolean isExitable() {
         return exitable;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
     }
 
     @Override

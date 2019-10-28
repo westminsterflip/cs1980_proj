@@ -38,7 +38,7 @@ import java.util.Objects;
 //TODO: https://developer.android.com/guide/topics/text/autofill
 public class WizardDoctorDetailFragment extends Fragment implements RootWizardFragment.ErrFragment {
     private RootWizardViewModel model;
-    public Spinner doctorChooser;
+    Spinner doctorChooser;
     private TextInputLayout doctorNameLayout;
     private TextInputEditText doctorName;
     private TextView doctorNameRequired;
@@ -52,6 +52,7 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
     private MainViewModel mainModel;
     private CheckBox scheduleAfter;
     private Button update;
+    private Button remove;
     private boolean exitable = true;
     private boolean fromWiz = true;
 
@@ -86,6 +87,7 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
         phone = root.findViewById(R.id.wizardPhone);
         scheduleAfter = root.findViewById(R.id.wizardScheduleAfter);
         update = root.findViewById(R.id.update_doctor);
+        remove = root.findViewById(R.id.remove_doctor);
 
         ArrayList<String> doctors = fromWiz ? new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.doctorChooserItems))) : new ArrayList<String>();
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), R.layout.support_simple_spinner_dropdown_item, doctors);
@@ -120,11 +122,14 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
                         if (fromWiz)
                             model.setDoctorID(doctorList.get(position-2).getDoctorID());
                     } else {
-                        doctorName.setText("");
-                        practiceName.setText("");
-                        practiceAddress.setText("");
-                        phone.setText("");
+                        if (model.getSpinnerSelection() != position) {
+                            doctorName.setText("");
+                            practiceName.setText("");
+                            practiceAddress.setText("");
+                            phone.setText("");
+                        }
                         exitable = !Objects.requireNonNull(doctorName.getText()).toString().equals("");
+
                     }
                     doctorNameLayout.setVisibility(View.VISIBLE);
                     if(savedInstanceState == null)
@@ -142,12 +147,6 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
                 //This shouldn't happen
             }
         });
-        if(savedInstanceState == null) {
-            if(fromWiz) {
-                doctorChooser.setSelection(model.getSpinnerSelection());
-                scheduleAfter.setChecked(model.isScheduleAfter());
-            }
-        }
         doctorName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -176,7 +175,7 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
                 model.getDestinations().postValue(model.getDestinations().getValue());
             }
         });
-        if (!fromWiz) {//TODO: remove button
+        if (!fromWiz) {
             scheduleAfter.setVisibility(View.GONE);
             update.setVisibility(View.VISIBLE);
             update.setOnClickListener(new View.OnClickListener() {
@@ -200,9 +199,39 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
                     adapter.notifyDataSetChanged();
                 }
             });
+            remove.setVisibility(View.VISIBLE);
+            remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    for(int i = 0; i < doctorList.size(); i++){
+                        if (doctorList.get(i).getDoctorID().equals(doctorList.get(doctorChooser.getSelectedItemPosition()).getDoctorID())){
+                            mainModel.remove(doctorList.get(i));
+                            adapter.remove(doctorList.get(i).getName());
+                            adapter.notifyDataSetChanged();
+                            doctorList.remove(i);
+                            break;
+                        }
+                    }
+                    if (doctorList.size() == 0){
+                        doctorNameLayout.setVisibility(View.GONE);
+                        doctorNameRequired.setVisibility(View.GONE);
+                        practiceNameLayout.setVisibility(View.GONE);
+                        practiceAddressLayout.setVisibility(View.GONE);
+                        phoneLayout.setVisibility(View.GONE);
+                        update.setEnabled(false);
+                        remove.setEnabled(false);
+                    } else {
+                        doctorChooser.setSelection(0);
+                    }
+                }
+            });
+            if (doctorList.size() == 0){
+                update.setEnabled(false);
+                remove.setEnabled(false);
+            }
         }
         if(fromWiz && model.getsMedID() != -1){
-            scheduleAfter.setChecked(true);
+            model.setScheduleAfter(true);
             scheduleAfter.setVisibility(View.GONE);
             int i;
             for (i = 0; i < doctorList.size(); i++){
@@ -223,6 +252,8 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
     @Override
     public void onResume() {
         if(fromWiz) {
+            doctorChooser.setSelection(model.getSpinnerSelection());
+            scheduleAfter.setChecked(model.isScheduleAfter());
             if (model.getDoctorName() != null)
                 doctorName.setText(model.getDoctorName());
             if (model.getPracticeName() != null)
@@ -267,6 +298,7 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
         return exitable;
     }
 
+    @SuppressWarnings("unchecked")
     private ArrayList<String> getNames(List<Doctor> doctorList){
         ArrayList<String> names = new ArrayList();
         for (Doctor d : doctorList){

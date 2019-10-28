@@ -129,6 +129,10 @@ public class MainViewModel extends AndroidViewModel {
         repository.remove(medication);
     }
 
+    public void remove(Doctor doctor){
+        repository.remove(doctor);
+    }
+
     public int getMissed(Long medicationID, long startDate, long endDate){
         return repository.getMissed(medicationID, startDate, endDate);
     }
