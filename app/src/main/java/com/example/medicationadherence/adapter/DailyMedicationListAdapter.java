@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -92,6 +93,8 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
         final TextView dosageTime;
         final ImageButton expand;
         final CardView card;
+        final RadioButton missed;
+        final RadioButton taken;
 
         DailyMedicationViewHolder(View view){
             super(view);
@@ -101,6 +104,8 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
             medDosage=view.findViewById(R.id.textViewMedDosage);
             dosageTime=view.findViewById(R.id.textViewDosageTime);
             expand=view.findViewById(R.id.dailyMedicationExpand);
+            missed=view.findViewById(R.id.dailyMedMissed);
+            taken=view.findViewById(R.id.dailyMedTaken);
             card=view.findViewById(R.id.dailyCard);
         }
     }

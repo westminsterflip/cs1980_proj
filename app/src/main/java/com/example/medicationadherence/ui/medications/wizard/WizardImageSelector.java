@@ -125,7 +125,7 @@ public class WizardImageSelector extends Fragment implements RootWizardFragment.
         model.setSelPos(position);
     }
 
-    //TODO: filter images. cache lifetime doesn't work
+    //TODO: filter images
     private static class MedImageTask extends AsyncTask<Void, Void, ArrayList<String>> {
         RootWizardViewModel model;
         int page;

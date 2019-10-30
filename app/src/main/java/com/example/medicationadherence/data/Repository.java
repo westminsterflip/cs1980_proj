@@ -205,6 +205,19 @@ public class Repository {
         return null;
     }
 
+    public List<MedicationLog> getDailyLogs(long date, long nextDay){
+        try {
+            return new GetDailyLogTask(mMedicationLogDAO, date, nextDay).execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void updateLog(Long medicationID, long date, Integer oldTimeLate, Integer newTimeLate, boolean taken){
+        new UpdateLogTask(mMedicationLogDAO, medicationID, date, oldTimeLate, newTimeLate, taken).execute();
+    }
+
     private static class GWNAsyncTask extends AsyncTask<String, Void, List<Doctor>>{
         private DoctorDAO doctorDAO;
 
@@ -215,6 +228,47 @@ public class Repository {
         @Override
         protected List<Doctor> doInBackground(String... strings) {
             return doctorDAO.getWithName(strings[0]);
+        }
+    }
+
+    private static class GetDailyLogTask extends AsyncTask<Void, Void, List<MedicationLog>>{
+        private MedicationLogDAO medicationLogDAO;
+        private long date;
+        private long nextDay;
+
+        public GetDailyLogTask(MedicationLogDAO medicationLogDAO, long date, long nextDay) {
+            this.medicationLogDAO = medicationLogDAO;
+            this.date = date;
+            this.nextDay = nextDay;
+        }
+
+        @Override
+        protected List<MedicationLog> doInBackground(Void... voids) {
+            return medicationLogDAO.getDailyLogs(date, nextDay);
+        }
+    }
+
+    private static class UpdateLogTask extends AsyncTask<Void, Void, Void>{
+        private MedicationLogDAO medicationLogDAO;
+        private Long medicationID;
+        private long date;
+        private long oldTimeLate;
+        private long newTimeLate;
+        private boolean taken;
+
+        public UpdateLogTask(MedicationLogDAO medicationLogDAO, Long medicationID, long date, long oldTimeLate, long newTimeLate, boolean taken) {
+            this.medicationLogDAO = medicationLogDAO;
+            this.medicationID = medicationID;
+            this.date = date;
+            this.oldTimeLate = oldTimeLate;
+            this.newTimeLate = newTimeLate;
+            this.taken = taken;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            medicationLogDAO.update(medicationID, date, oldTimeLate, newTimeLate, taken);
+            return null;
         }
     }
 

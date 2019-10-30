@@ -50,13 +50,13 @@ public interface ScheduleDAO {
         public String dosageAmt;
         public long startDate;
         public long endDate;
-        public int doses;
+        public double doses;
         public long timeOfDay;
         public boolean[] days;
         public String instructions;
         public boolean active;
 
-        public ScheduleCard(String medImageURL, String medName, String dosageAmt, long startDate, long endDate, int doses, long timeOfDay, boolean[] days, String instructions, boolean active) {
+        public ScheduleCard(String medImageURL, String medName, String dosageAmt, long startDate, long endDate, double doses, long timeOfDay, boolean[] days, String instructions, boolean active) {
             this.medImageURL = medImageURL;
             this.medName = medName;
             this.dosageAmt = dosageAmt;

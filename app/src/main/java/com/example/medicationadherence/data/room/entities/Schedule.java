@@ -22,7 +22,7 @@ import static androidx.room.ForeignKey.SET_NULL;
 public class Schedule {
     @NonNull
 	private Long medicationID;       /* FK Medication.medicationID */
-	private int numDoses;
+	private double numDoses;
 	private long time;
 	@NonNull
 	private boolean[] weekdays;     //boolean array for scheduled on day {SMTWTFS}
@@ -35,11 +35,11 @@ public class Schedule {
         return this.medicationID;
     }
 
-	public void setNumDoses(int numDoses) {
+	public void setNumDoses(double numDoses) {
         this.numDoses = numDoses;
     }
 
-	public int getNumDoses() {
+	public double getNumDoses() {
         return this.numDoses;
     }
 	
@@ -60,7 +60,7 @@ public class Schedule {
         this.weekdays = weekdays;
     }
 
-    public Schedule(@NonNull Long medicationID, int numDoses, long time, @NonNull boolean[] weekdays) {
+    public Schedule(@NonNull Long medicationID, double numDoses, long time, @NonNull boolean[] weekdays) {
         this.medicationID = medicationID;
         this.numDoses = numDoses;
         this.time = time;

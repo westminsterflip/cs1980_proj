@@ -55,7 +55,7 @@ public class EditScheduleFragment extends Fragment implements RootWizardFragment
                 EditScheduleFragmentDirections.ActionEditScheduleFragment2ToEditScheduleCardFragment2 action = EditScheduleFragmentDirections.actionEditScheduleFragment2ToEditScheduleCardFragment2(0);
                 wizardModel.getNavController().navigate(action);
             }
-        });//TODO: add ability to remove achedule
+        });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         StartEndDaysScheduleAdapter adapter = new StartEndDaysScheduleAdapter(wizardModel.getScheduleDays(), wizardModel, getActivity());

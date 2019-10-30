@@ -1,7 +1,11 @@
 package com.example.medicationadherence.ui.home.schedule;
 
+import android.app.AlertDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -45,9 +51,14 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
     private boolean[] checks;
     private TimePickerDialog timePickerDialog;
     private boolean cancel = false;
-
+    private AlertDialog.Builder doseCountDialog;
     private boolean[] fill = {false,false,false,false,false,false,false,true};
     private MainViewModel mainModel;
+    private int numDoses;
+    private EditText doseCount;
+    private ImageButton increaseDoses;
+    private ImageButton decreaseDoses;
+    private TextView doseCountSize;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,7 +76,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_edit_schedule_card, container, false);
         Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle("Schedule");
 
@@ -78,7 +89,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
         thurs = root.findViewById(R.id.scheduleThursday);
         fri = root.findViewById(R.id.scheduleFriday);
         sat = root.findViewById(R.id.scheduleSaturday);
-        Button addTime = root.findViewById(R.id.scheduleSetTime);
+        final Button addTime = root.findViewById(R.id.scheduleSetTime);
         RecyclerView times = root.findViewById(R.id.scheduleTimes);
         timeErr = root.findViewById(R.id.timeCardTimeErr);
         dayErr = root.findViewById(R.id.timeCardDayErr);
@@ -125,18 +136,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
         thurs.setOnCheckedChangeListener(dayListener);
         fri.setOnCheckedChangeListener(dayListener);
         sat.setOnCheckedChangeListener(dayListener);
-//        increaseDoses.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                double doseVal = Double.parseDouble(doseCount.getText().toString());
-//                doseVal = Math.ceil(doseVal * 2.0) / 2.0;
-//                if(Double.parseDouble(doseCount.getText().toString()) != doseVal){
-//                    doseCount.setText((doseVal + ""));
-//                } else {
-//                    doseCount.setText(((doseVal += .5) + ""));
-//                }
-//            }
-//        });
+
         for (Schedule s : wizardModel.getSchedules()){
             if (Converters.fromBoolArray(s.getWeekdays()) == Converters.fromBoolArray(checks))
                 s.setWeekdays(fill);
@@ -151,18 +151,82 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
         final TimePickerDialog.OnTimeSetListener listener = new TimePickerDialog.OnTimeSetListener() {
             @SuppressWarnings("ConstantConditions")
             @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                Calendar c = Calendar.getInstance();
-                c.clear();
-                c.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                c.set(Calendar.MINUTE, minute);
-                if ( fromWizard)
-                    wizardModel.setScheduleTime(c.getTimeInMillis());
-                wizardModel.getSchedules().add(new Schedule(null, 1, c.getTimeInMillis(), fill));
-                wizardModel.getDoseEntries(fill);
-                adapter.notifyDataSetChanged();
-                if(fromWizard && (sun.isChecked() || mon.isChecked() || tues.isChecked() || wed.isChecked() || thurs.isChecked() || fri.isChecked() || sat.isChecked()) && wizardModel.getDoseEntries(fill).size() != 0)
-                    exitable = true;
+            public void onTimeSet(TimePicker view, final int hourOfDay, final int minute) {
+                View v = inflater.inflate(R.layout.layout_dose_selector, null, false); //TODO: dialog too wide
+                increaseDoses = v.findViewById(R.id.doseCountUp);
+                increaseDoses.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        double doseVal = Double.parseDouble(doseCount.getText().toString());
+                        doseVal = Math.ceil(doseVal * 2.0) / 2.0;
+                        if(Double.parseDouble(doseCount.getText().toString()) != doseVal){
+                            doseCount.setText((doseVal + ""));
+                        } else {
+                            doseCount.setText(((doseVal += .5) + ""));
+                        }
+                        if (doseVal - .5 > 0)
+                            decreaseDoses.setEnabled(true);
+                    }
+                });
+                doseCount = v.findViewById(R.id.doseCountText);
+                doseCount.setText((0+""));
+                doseCount.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        double doseVal = Double.parseDouble(s.toString());
+                        decreaseDoses.setEnabled(doseVal - .5 > 0);
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+                doseCountSize = v.findViewById(R.id.doseCountSize);
+                doseCountSize.setText(("@ " + wizardModel.getMedDosage()));
+                decreaseDoses = v.findViewById(R.id.doseCountDown);
+                decreaseDoses.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        double doseVal = Double.parseDouble(doseCount.getText().toString());
+                        doseVal = Math.floor(doseVal * 2.0) / 2.0;
+                        if(Double.parseDouble(doseCount.getText().toString()) != doseVal){
+                            doseCount.setText((doseVal + ""));
+                        } else {
+                            doseCount.setText(((doseVal -= .5) + ""));
+                        }
+                        if (doseVal - .5 <= 0)
+                            decreaseDoses.setEnabled(false);
+                    }
+                });
+                decreaseDoses.setEnabled(false);
+                doseCountDialog = new AlertDialog.Builder(getActivity()).setView(v).setTitle("Select dose count").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Calendar c = Calendar.getInstance();
+                        c.clear();
+                        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        c.set(Calendar.MINUTE, minute);
+                        if ( fromWizard)
+                            wizardModel.setScheduleTime(c.getTimeInMillis());
+                        wizardModel.getSchedules().add(new Schedule(null, Double.parseDouble(doseCount.getText().toString()), c.getTimeInMillis(), fill));
+                        wizardModel.getDoseEntries(fill);
+                        adapter.notifyDataSetChanged();
+                        if(fromWizard && (sun.isChecked() || mon.isChecked() || tues.isChecked() || wed.isChecked() || thurs.isChecked() || fri.isChecked() || sat.isChecked()) && wizardModel.getDoseEntries(fill).size() != 0)
+                            exitable = true;
+                    }
+                }).setNegativeButton("BACK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        timePickerDialog.show();
+                    }
+                });
+                doseCountDialog.show();
             }
         };
         addTime.setOnClickListener(new View.OnClickListener() {

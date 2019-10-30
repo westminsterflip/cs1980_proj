@@ -44,4 +44,11 @@ public interface MedicationLogDAO {
 
     @Query("select min(date) from medicationlog")
     long getEarliestLog();
+
+    //nextDay should be the end of the day + 1L
+    @Query("select * from medicationlog where date >= :date and date < :nextDay")
+    List<MedicationLog> getDailyLogs(long date, long nextDay);
+
+    @Query("update medicationlog set timeLate = :newTimeLate, taken = :taken where medicationID = :medicationID and date = :date and timeLate = :oldTimeLate")
+    void update(Long medicationID, long date, long oldTimeLate, long newTimeLate, boolean taken);
 }

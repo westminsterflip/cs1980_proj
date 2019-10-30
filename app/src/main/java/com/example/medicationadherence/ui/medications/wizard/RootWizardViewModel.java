@@ -169,7 +169,7 @@ public class RootWizardViewModel extends ViewModel {
         return this.model = model;
     }
 
-    String getMedDosage() {
+    public String getMedDosage() {
         return medDosage;
     }
 

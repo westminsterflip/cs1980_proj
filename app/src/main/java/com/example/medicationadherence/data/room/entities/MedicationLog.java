@@ -8,26 +8,24 @@ package com.example.medicationadherence.data.room.entities;
    @authors Erin Herlihy, David Stropkey, Nicholas West, Ian Patterson
 */
 
-import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 
-import static androidx.room.ForeignKey.SET_NULL;
+import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(primaryKeys = {"medicationID", "date", "timeLate"}, foreignKeys =
-@ForeignKey(entity = Medication.class, parentColumns = "medicationID", childColumns = "medicationID", onDelete = SET_NULL))
+@ForeignKey(entity = Medication.class, parentColumns = "medicationID", childColumns = "medicationID", onDelete = CASCADE))
 public class MedicationLog {
-	private int medicationID;  /* FK Medication.medicationID */
+	private Long medicationID;  /* FK Medication.medicationID */
     private long date;
 	private boolean taken;     /* true if taken, false if missed */
-	@NonNull
-    private Integer timeLate = -1; //Can't be null and a primary key
+    private long timeLate = -1L; //Can't be null and a primary key
 	
-	public int getMedicationID() {
+	public Long getMedicationID() {
         return this.medicationID;
     }
  
-    public void setMedicationID(int medicationID) {
+    public void setMedicationID(Long medicationID) {
         this.medicationID = medicationID;
     }
 	
@@ -47,11 +45,11 @@ public class MedicationLog {
         this.taken = taken;
     }
 	
-	public @NonNull Integer getTimeLate() {
+	public long getTimeLate() {
         return this.timeLate;
     }
  
-    public void setTimeLate(@NonNull Integer timeLate) {
+    public void setTimeLate(long timeLate) {
         this.timeLate = timeLate;
     }
 }

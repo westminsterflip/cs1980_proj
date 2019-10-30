@@ -9,6 +9,7 @@ import com.example.medicationadherence.ui.MainViewModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,6 +45,12 @@ public class DailyMedListViewModel extends ViewModel {
                 if(s.days[(day + 5 + o) % 7] && s.startDate <= dateList.get(1) && (s.endDate >= dateList.get(1) || s.endDate == -1) && s.active)
                     medList.add(s);
             }
+            medList.sort(new Comparator<ScheduleDAO.ScheduleCard>() {
+                @Override
+                public int compare(ScheduleDAO.ScheduleCard o1, ScheduleDAO.ScheduleCard o2) {
+                    return Long.compare(o1.timeOfDay, o2.timeOfDay);
+                }
+            });
             bigMedList.add(medList);
         }
         medications.setValue(bigMedList);
@@ -84,6 +91,12 @@ public class DailyMedListViewModel extends ViewModel {
             if(s.days[day % 7] && s.startDate <= dateList.get(2) && (s.endDate >= dateList.get(2) || s.endDate == -1))
                 medList1.add(s);
         }
+        medList1.sort(new Comparator<ScheduleDAO.ScheduleCard>() {
+            @Override
+            public int compare(ScheduleDAO.ScheduleCard o1, ScheduleDAO.ScheduleCard o2) {
+                return Long.compare(o1.timeOfDay, o2.timeOfDay);
+            }
+        });
         medList.add(medList1);
         medications.setValue(medList);
     }
@@ -96,6 +109,12 @@ public class DailyMedListViewModel extends ViewModel {
             if(s.days[(day + 5) % 7]&& s.startDate <= dateList.get(0) && (s.endDate >= dateList.get(0) || s.endDate == -1))
                 medList1.add(s);
         }
+        medList1.sort(new Comparator<ScheduleDAO.ScheduleCard>() {
+            @Override
+            public int compare(ScheduleDAO.ScheduleCard o1, ScheduleDAO.ScheduleCard o2) {
+                return Long.compare(o1.timeOfDay, o2.timeOfDay);
+            }
+        });
         medList.add(0,medList1);
         medications.setValue(medList);
     }
@@ -103,9 +122,9 @@ public class DailyMedListViewModel extends ViewModel {
     public List<Long> getDateList() {
         if(dateList == null) {
             dateList = new ArrayList<>();
-            dateList.add((long)-1);
-            dateList.add((long)-1);
-            dateList.add((long)-1);
+            dateList.add(-1L);
+            dateList.add(-1L);
+            dateList.add(-1L);
         }
         return dateList;
     }

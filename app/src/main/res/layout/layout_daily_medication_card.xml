@@ -61,7 +61,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="6:00pm"
-                app:layout_constraintBottom_toTopOf="@+id/dailyInstructions"
                 app:layout_constraintStart_toStartOf="@+id/textViewMedDosage"
                 app:layout_constraintTop_toBottomOf="@+id/textViewMedDosage" />
 
@@ -70,9 +69,31 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#00FFFFFF"
-                app:layout_constraintBottom_toBottomOf="@+id/textViewDosageTime"
+                app:layout_constraintBottom_toBottomOf="@+id/radioGroup3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:srcCompat="@drawable/ic_expand_more_24px" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toEndOf="@+id/medImage"
+                app:layout_constraintTop_toBottomOf="@+id/textViewDosageTime">
+
+                <RadioButton
+                    android:id="@+id/dailyMedMissed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="5dp"
+                    android:text="Missed" />
+
+                <RadioButton
+                    android:id="@+id/dailyMedTaken"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Taken" />
+            </RadioGroup>
 
             <TextView
                 android:id="@+id/dailyInstructions"
@@ -82,7 +103,7 @@
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textViewDosageTime"
-                app:layout_constraintTop_toBottomOf="@+id/textViewDosageTime" />
+                app:layout_constraintTop_toBottomOf="@+id/radioGroup3" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
