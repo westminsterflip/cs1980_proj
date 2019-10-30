@@ -393,15 +393,13 @@ public class RootWizardViewModel extends ViewModel {
     }
 
     String getLate() {
-        Calendar c = Calendar.getInstance();
-        c.clear();
-        c.setTimeInMillis(late);
         String out;
-        if (c.get(Calendar.MINUTE) == 0){
-            out = c.get(Calendar.HOUR_OF_DAY) + "hr";
+        if (late%3600000 == 0 || late == 0){
+            out = TimeUnit.MILLISECONDS.toHours(late) + "hr";
         } else {
-            out = c.get(Calendar.MINUTE) + "min";
+            out = TimeUnit.MILLISECONDS.toMinutes(late) + "min";
         }
+        System.out.println("OUT: " + out + " LATE: " + late);
         String[] list = fragment.getResources().getStringArray(R.array.lateTimes);
         for (String s : list) {
             if (s.contains(out)) {
@@ -451,5 +449,9 @@ public class RootWizardViewModel extends ViewModel {
 
     public void setScheduleTimeAdapter(ScheduleTimeAdapter scheduleTimeAdapter) {
         this.scheduleTimeAdapter = scheduleTimeAdapter;
+    }
+
+    public long getLateNS(){
+        return late;
     }
 }

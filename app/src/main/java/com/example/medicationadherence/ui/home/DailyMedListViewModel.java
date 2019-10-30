@@ -1,5 +1,7 @@
 package com.example.medicationadherence.ui.home;
 
+import android.app.TimePickerDialog;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -20,6 +22,7 @@ public class DailyMedListViewModel extends ViewModel {
     private MainViewModel mainModel;
     private int day;
     private List<ScheduleDAO.ScheduleCard> cardList;
+    private TimePickerDialog timePickerDialog;
 
     DailyViewPagerAdapter getMedAdapter() {
         return medAdapter;
@@ -143,5 +146,13 @@ public class DailyMedListViewModel extends ViewModel {
 
     public void setCardList(List<ScheduleDAO.ScheduleCard> cardList) {
         this.cardList = cardList;
+    }
+
+    public TimePickerDialog getTimePickerDialog() {
+        return timePickerDialog;
+    }
+
+    public void setTimePickerDialog(TimePickerDialog timePickerDialog) {
+        this.timePickerDialog = timePickerDialog;
     }
 }

@@ -30,6 +30,7 @@ import com.example.medicationadherence.R;
 import com.example.medicationadherence.data.room.dao.ScheduleDAO;
 import com.example.medicationadherence.data.room.entities.MedicationLog;
 import com.example.medicationadherence.ui.MainViewModel;
+import com.example.medicationadherence.ui.home.DailyMedListViewModel;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -44,9 +45,9 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
     private List<MedicationLog> logList;
     private MainViewModel mainModel;
     private long date;
-    private TimePickerDialog timePickerDialog;
+    private DailyMedListViewModel dailyModel;
 
-    public DailyMedicationListAdapter(List<ScheduleDAO.ScheduleCard> medicationList, Activity activity, MainViewModel mainModel, List<MedicationLog> logList, long date){
+    public DailyMedicationListAdapter(List<ScheduleDAO.ScheduleCard> medicationList, Activity activity, MainViewModel mainModel, List<MedicationLog> logList, long date, DailyMedListViewModel dailyModel){
         this.medicationList = medicationList;
         this.activity = activity;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
@@ -54,6 +55,7 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
         this.mainModel = mainModel;
         this.logList = logList;
         this.date = date;
+        this.dailyModel = dailyModel;
     }
 
     @NonNull
@@ -217,8 +219,8 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
                                     mainModel.insert(new MedicationLog(medicationList.get(position).medicationID, medDate, true, out1.getTimeInMillis()-out.getTimeInMillis()));
                                 }
                             };
-                            timePickerDialog = new TimePickerDialog(activity, listener, out.get(Calendar.HOUR_OF_DAY), out.get(Calendar.MINUTE), DateFormat.is24HourFormat(activity));
-                            timePickerDialog.show();
+                            dailyModel.setTimePickerDialog(new TimePickerDialog(activity, listener, out.get(Calendar.HOUR_OF_DAY), out.get(Calendar.MINUTE), DateFormat.is24HourFormat(activity)));
+                            dailyModel.getTimePickerDialog().show();
                         } else {
                             final int pos1 = pos;
                             final Calendar out = Calendar.getInstance();
@@ -246,11 +248,16 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
                                     out1.set(Calendar.MINUTE, temp.get(Calendar.MINUTE));
                                     out1.set(Calendar.MILLISECOND, 0);
                                     out1.set(Calendar.SECOND, 0);
-                                    mainModel.updateMedLog(logList.get(pos1).getMedicationID(), logList.get(pos1).getDate(), logList.get(pos1).getTimeLate(), out1.getTimeInMillis() - out.getTimeInMillis(), true);
+                                    Calendar out2 = Calendar.getInstance();
+                                    out2.setTimeInMillis(date);
+                                    temp.setTimeInMillis(medicationList.get(position).timeOfDay);
+                                    out2.set(Calendar.HOUR_OF_DAY, temp.get(Calendar.HOUR_OF_DAY));
+                                    out2.set(Calendar.MINUTE, temp.get(Calendar.MINUTE));
+                                    mainModel.updateMedLog(logList.get(pos1).getMedicationID(), logList.get(pos1).getDate(), logList.get(pos1).getTimeLate(), out1.getTimeInMillis() - out2.getTimeInMillis(), true);
                                 }
                             };
-                            timePickerDialog = new TimePickerDialog(activity, listener, temp.get(Calendar.HOUR_OF_DAY), temp.get(Calendar.MINUTE), DateFormat.is24HourFormat(activity));
-                            timePickerDialog.show();
+                            dailyModel.setTimePickerDialog(new TimePickerDialog(activity, listener, temp.get(Calendar.HOUR_OF_DAY), temp.get(Calendar.MINUTE), DateFormat.is24HourFormat(activity)));
+                            dailyModel.getTimePickerDialog().show();
                         }
                     }
                 }

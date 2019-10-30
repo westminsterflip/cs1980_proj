@@ -326,7 +326,7 @@ public class RootWizardFragment extends Fragment {
         } else {
             medModel.getMedList().set(index, model.getMedicationWID());
             medicationFragment.sort(mainModel.getMedSortMode());
-            mainModel.updateMedication(medID = model.getsMedID(), model.getMedImage(), model.getMedName(), model.isActive(), model.getDoctorID(), model.getMedDosage(), model.getStartDate(), model.getEndDate(), model.getContainerVol(), model.getCost());
+            mainModel.updateMedication(medID = model.getsMedID(), model.getMedImage(), model.getMedName(), model.isActive(), model.getDoctorID(), model.getMedDosage(), model.getStartDate(), model.getEndDate(), model.getContainerVol(), model.getCost(), model.getLateNS());
         }
         Navigation.findNavController(v).navigateUp();
         if (model.getInstructions() != null && !model.getInstructions().equals(""))

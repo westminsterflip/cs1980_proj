@@ -16,6 +16,7 @@ import com.example.medicationadherence.data.room.entities.Schedule;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class MainViewModel extends AndroidViewModel {
     private long summaryTimeToView = -1;
@@ -28,6 +29,14 @@ public class MainViewModel extends AndroidViewModel {
     public MainViewModel (Application application){
         super(application);
         repository = new Repository(application);
+        List<Medication> medList = getMedList();
+        for (Medication m : medList){
+            System.out.println("med: " + m.getMedicationID()+": "+m.getLateTime() + " " + m.getName());
+        }
+        List<MedicationLog> medLogList = repository.getDailyLogs(repository.getEarliestLog(), Calendar.getInstance().getTimeInMillis()+ TimeUnit.DAYS.toMillis(30));
+        for (MedicationLog m : medLogList){
+            System.out.println("log: "+m.getMedicationID()+": "+m.getTimeLate());
+        }
     }
 
     public List<Medication> getMedList(){return repository.getMedList();}
@@ -111,11 +120,11 @@ public class MainViewModel extends AndroidViewModel {
 
     public Medication getMedWithID(Long medicationID){return repository.getMedWithID(medicationID);}
 
-    public void updateMedication(Long id, String medImageURL, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost){
+    public void updateMedication(Long id, String medImageURL, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost, long lateTime){
         if (medImageURL == null || medImageURL.equals(""))
-            repository.updateMedication(id, null, name, status, doctorID, dosage, startDate, endDate, containerVolume, cost);
+            repository.updateMedication(id, null, name, status, doctorID, dosage, startDate, endDate, containerVolume, cost, lateTime);
         else
-            repository.updateMedication(id, medImageURL, name, status, doctorID, dosage, startDate, endDate, containerVolume, cost);
+            repository.updateMedication(id, medImageURL, name, status, doctorID, dosage, startDate, endDate, containerVolume, cost, lateTime);
     }
 
     public List<Schedule> getScheduleFM(Long id){

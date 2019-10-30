@@ -118,8 +118,8 @@ public class Repository {
         new UpdateDoctorAsyncTask(mDoctorDAO, id, doctorName, practiceName, address, phone).execute();
     }
 
-    public void updateMedication(Long id, String medImageURL, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost){
-        new UpdateMedicationTask(mMedicationDAO, id, medImageURL, name, status, doctorID, dosage, startDate, endDate, containerVolume, cost).execute();
+    public void updateMedication(Long id, String medImageURL, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost, long lateTime){
+        new UpdateMedicationTask(mMedicationDAO, id, medImageURL, name, status, doctorID, dosage, startDate, endDate, containerVolume, cost, lateTime).execute();
     }
 
     public Doctor getDocWithID(Long doctorID){
@@ -511,8 +511,9 @@ public class Repository {
         private int containerVolume;
         private double cost;
         private String medImageURL;
+        long lateTime;
 
-        UpdateMedicationTask(MedicationDAO medicationDAO, Long id, String medImageURL, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost) {
+        UpdateMedicationTask(MedicationDAO medicationDAO, Long id, String medImageURL, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost, long lateTime) {
             this.medicationDAO = medicationDAO;
             this.id = id;
             this.name = name;
@@ -524,11 +525,12 @@ public class Repository {
             this.containerVolume = containerVolume;
             this.cost = cost;
             this.medImageURL = medImageURL;
+            this.lateTime = lateTime;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            medicationDAO.update(id, medImageURL, name, status, doctorID, dosage, startDate, endDate, containerVolume, cost);
+            medicationDAO.update(id, medImageURL, name, status, doctorID, dosage, startDate, endDate, containerVolume, cost, lateTime);
             return null;
         }
     }

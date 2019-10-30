@@ -93,7 +93,7 @@ public class DailyMedListFragment extends Fragment {
             };
             next.setOnClickListener(changeDay);
             prev.setOnClickListener(changeDay);
-            model.setMedAdapter(new DailyViewPagerAdapter(model.getDateList(), model.getMedications().getValue(), getActivity(), mainModel));
+            model.setMedAdapter(new DailyViewPagerAdapter(model.getDateList(), model.getMedications().getValue(), getActivity(), mainModel, model));
             dailyViewPager.setAdapter(model.getMedAdapter());
             dailyViewPager.setCurrentItem(1);
             dailyViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -129,9 +129,16 @@ public class DailyMedListFragment extends Fragment {
         } else {
             next.setVisibility(View.INVISIBLE);
             prev.setVisibility(View.INVISIBLE);
-            model.setMedAdapter(new DailyViewPagerAdapter(Collections.singletonList(model.getDateList().get(1)), Collections.singletonList(Objects.requireNonNull(model.getMedications().getValue()).get(1)), getActivity(), mainModel));
+            model.setMedAdapter(new DailyViewPagerAdapter(Collections.singletonList(model.getDateList().get(1)), Collections.singletonList(Objects.requireNonNull(model.getMedications().getValue()).get(1)), getActivity(), mainModel, model));
             dailyViewPager.setAdapter(model.getMedAdapter());
             dailyViewPager.setUserInputEnabled(false);
+        }
+        if (savedInstanceState != null){
+            if (model.getTimePickerDialog() != null){
+                model.getTimePickerDialog().onRestoreInstanceState(savedInstanceState.getBundle("timePickerBundle"));
+                if (savedInstanceState.getBoolean("timePickerVisible", false))
+                    model.getTimePickerDialog().show();
+            }
         }
         return root;
     }
@@ -147,5 +154,16 @@ public class DailyMedListFragment extends Fragment {
             dateText += " " + year;
         }
         date.setText(dateText);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        if (model.getTimePickerDialog() != null){
+            outState.putBundle("timePickerBundle", model.getTimePickerDialog().onSaveInstanceState());
+            outState.putBoolean("timePickerVIsible", model.getTimePickerDialog().isShowing());
+        }
+        if (model.getTimePickerDialog().isShowing())
+            model.getTimePickerDialog().dismiss();
+        super.onSaveInstanceState(outState);
     }
 }
