@@ -51,7 +51,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
     private boolean[] checks;
     private TimePickerDialog timePickerDialog;
     private boolean cancel = false;
-    private AlertDialog.Builder doseCountDialog;
+    private AlertDialog doseCountDialog;
     private boolean[] fill = {false,false,false,false,false,false,false,true};
     private MainViewModel mainModel;
     private int numDoses;
@@ -143,8 +143,9 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
         }
 
         times.setLayoutManager(new LinearLayoutManager(getContext()));
-        final ScheduleTimeAdapter adapter = new ScheduleTimeAdapter(wizardModel, wizardModel.getDoseEntries(fill), fill);
-        times.setAdapter(adapter);
+        if (wizardModel.getScheduleTimeAdapter() == null)
+            wizardModel.setScheduleTimeAdapter(new ScheduleTimeAdapter(wizardModel, wizardModel.getDoseEntries(fill), fill));
+        times.setAdapter(wizardModel.getScheduleTimeAdapter());
 
         if(Converters.fromBoolArray(checks) != 0 && wizardModel.getDoseEntries(fill).size() != 0)
             exitable = true;
@@ -178,8 +179,10 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        double doseVal = Double.parseDouble(s.toString());
-                        decreaseDoses.setEnabled(doseVal - .5 > 0);
+                        if (s != null && !s.equals("") && count != 0) {
+                            double doseVal = Double.parseDouble(s.toString());
+                            decreaseDoses.setEnabled(doseVal - .5 > 0);
+                        }
                     }
 
                     @Override
@@ -216,7 +219,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
                             wizardModel.setScheduleTime(c.getTimeInMillis());
                         wizardModel.getSchedules().add(new Schedule(null, Double.parseDouble(doseCount.getText().toString()), c.getTimeInMillis(), fill));
                         wizardModel.getDoseEntries(fill);
-                        adapter.notifyDataSetChanged();
+                        wizardModel.getScheduleTimeAdapter().notifyDataSetChanged();
                         if(fromWizard && (sun.isChecked() || mon.isChecked() || tues.isChecked() || wed.isChecked() || thurs.isChecked() || fri.isChecked() || sat.isChecked()) && wizardModel.getDoseEntries(fill).size() != 0)
                             exitable = true;
                     }
@@ -225,7 +228,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
                     public void onClick(DialogInterface dialog, int which) {
                         timePickerDialog.show();
                     }
-                });
+                }).create();
                 doseCountDialog.show();
             }
         };
@@ -252,6 +255,10 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
             if (savedInstanceState.getBoolean("timePickerVisible", false)){
                 timePickerDialog = new TimePickerDialog(getContext(), listener, 0,0, DateFormat.is24HourFormat(getContext()));
                 timePickerDialog.onRestoreInstanceState(savedInstanceState.getBundle("timePickerBundle"));
+            }
+            if (savedInstanceState.getBoolean("doseDialogVisible", false)){
+                doseCountDialog = wizardModel.getDoseDialog();
+                doseCountDialog.show();
             }
         }
         return root;
@@ -301,9 +308,15 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
                 outState.putBoolean("timePickerVisible", timePickerDialog.isShowing());
                 outState.putBundle("timePickerBundle", timePickerDialog.onSaveInstanceState());
             }
+            if (doseCountDialog != null){
+                outState.putBoolean("doseDialogVisible", doseCountDialog.isShowing());
+                wizardModel.setDoseDialog(doseCountDialog);
+            }
         }
         if (timePickerDialog != null)
             timePickerDialog.dismiss();
+        if (doseCountDialog != null)
+            doseCountDialog.dismiss();
         super.onSaveInstanceState(outState);
     }
 }

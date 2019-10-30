@@ -1,5 +1,6 @@
 package com.example.medicationadherence.adapter;
 
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +8,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.medicationadherence.R;
@@ -30,11 +32,12 @@ public class SummaryDetailAdapter extends RecyclerView.Adapter {
     }
 
     //assumes percTaken + percLate <= 100%
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         DetailViewHolder detailHolder = (DetailViewHolder) holder;
         detailHolder.medName.setText(detailList.get(position).getMedName());
-        double percLate = detailList.get(position).getPercLate(), percTaken = detailList.get(position).getPercTaken();
+        double percLate = detailList.get(position).getPercLate()*100.0, percTaken = detailList.get(position).getPercTaken()*100.0;
         String temp = String.format(Locale.ENGLISH,"%.2f",percLate)+"% taken late";
         detailHolder.percLate.setText(temp);
         temp = String.format(Locale.ENGLISH, "%.2f",percTaken)+"% taken on time";

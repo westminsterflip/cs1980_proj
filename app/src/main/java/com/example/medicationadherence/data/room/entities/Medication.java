@@ -15,10 +15,10 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-import static androidx.room.ForeignKey.SET_NULL;
+import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(foreignKeys =
-@ForeignKey(entity = Doctor.class, parentColumns = "doctorID", childColumns = "doctorID", onDelete = SET_NULL), indices = {
+@ForeignKey(entity = Doctor.class, parentColumns = "doctorID", childColumns = "doctorID", onDelete = CASCADE), indices = {
 @Index("doctorID")})
 public class Medication {
 	@PrimaryKey(autoGenerate = true)

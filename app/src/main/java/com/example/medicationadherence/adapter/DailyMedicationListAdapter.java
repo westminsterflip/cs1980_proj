@@ -1,7 +1,11 @@
 package com.example.medicationadherence.adapter;
 
 import android.app.Activity;
+import android.app.TimePickerDialog;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.os.Build;
+import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,9 +14,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
+import androidx.core.os.ConfigurationCompat;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,21 +28,32 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.data.room.dao.ScheduleDAO;
+import com.example.medicationadherence.data.room.entities.MedicationLog;
+import com.example.medicationadherence.ui.MainViewModel;
 
 import java.io.Serializable;
-import java.sql.Time;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class DailyMedicationListAdapter extends RecyclerView.Adapter implements Serializable {
     private List<ScheduleDAO.ScheduleCard> medicationList;
     private Activity activity;
     private boolean larger;
+    private List<MedicationLog> logList;
+    private MainViewModel mainModel;
+    private long date;
+    private TimePickerDialog timePickerDialog;
 
-    public DailyMedicationListAdapter(List<ScheduleDAO.ScheduleCard> medicationList, Activity activity){
+    public DailyMedicationListAdapter(List<ScheduleDAO.ScheduleCard> medicationList, Activity activity, MainViewModel mainModel, List<MedicationLog> logList, long date){
         this.medicationList = medicationList;
         this.activity = activity;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
         larger = prefs.getBoolean("useWideImages", false);
+        this.mainModel = mainModel;
+        this.logList = logList;
+        this.date = date;
     }
 
     @NonNull
@@ -45,6 +63,7 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
         return new DailyMedicationViewHolder(medicationView);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         final DailyMedicationViewHolder holderm = (DailyMedicationViewHolder) holder;
@@ -77,7 +96,171 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
             holderm.expand.setVisibility(View.GONE);
         }
         holderm.medDosage.setText((medicationList.get(position).doses + "@" + medicationList.get(position).dosageAmt));
-        holderm.dosageTime.setText(new Time(medicationList.get(position).timeOfDay).toString());
+        String st = "";
+        if(DateFormat.is24HourFormat(activity))
+            st += new SimpleDateFormat("kk:mm", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(medicationList.get(position).timeOfDay);
+        else
+            st += new SimpleDateFormat("hh:mm aa", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(medicationList.get(position).timeOfDay);
+        holderm.dosageTime.setText(st);
+
+        int pos = -1;
+        for (int i = 0; i < logList.size(); i++) {
+            MedicationLog m = logList.get(i);
+            Calendar c = Calendar.getInstance();
+            c.setTimeInMillis(m.getDate());
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+            c.clear();
+            c.set(Calendar.HOUR_OF_DAY, hour);
+            c.set(Calendar.MINUTE, minute);
+            if (c.getTimeInMillis() == medicationList.get(position).timeOfDay)
+                pos = i;
+        }
+        if (pos != -1){
+            MedicationLog medicationLog = logList.get(pos);
+            if (medicationLog.getTaken()){
+                holderm.taken.setChecked(true);
+                Calendar c = Calendar.getInstance();
+                c.setTimeInMillis(medicationLog.getDate());
+                System.out.println("old: " + new Date(c.getTimeInMillis()));
+                c.setTimeInMillis(medicationLog.getDate() + logList.get(pos).getTimeLate());
+                System.out.println("nums: " + medicationLog.getDate() + "+" + medicationLog.getTimeLate() + "=" + (medicationLog.getTimeLate() + medicationLog.getDate()));
+                System.out.println("new: " + new Date(c.getTimeInMillis()));
+                st = "Taken @ ";
+                if(DateFormat.is24HourFormat(activity))
+                    st += new SimpleDateFormat("kk:mm", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(c.getTimeInMillis());
+                else
+                    st += new SimpleDateFormat("hh:mm aa", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(c.getTimeInMillis());
+                holderm.taken.setText(st);
+            } else {
+                holderm.missed.setChecked(true);
+            }
+        }
+
+        Calendar temp = Calendar.getInstance();
+        temp.clear(Calendar.MILLISECOND);
+        temp.clear(Calendar.SECOND);
+        temp.clear(Calendar.MINUTE);
+        temp.clear(Calendar.HOUR_OF_DAY);
+        temp.clear(Calendar.HOUR);
+        temp.clear(Calendar.AM_PM);
+        if(date == temp.getTimeInMillis()) {
+            View.OnClickListener radioListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = -1;
+                    for (int i = 0; i < logList.size(); i++) {
+                        MedicationLog m = logList.get(i);
+                        Calendar c = Calendar.getInstance();
+                        c.setTimeInMillis(m.getDate());
+                        int hour = c.get(Calendar.HOUR_OF_DAY);
+                        int minute = c.get(Calendar.MINUTE);
+                        c.clear();
+                        c.set(Calendar.HOUR_OF_DAY, hour);
+                        c.set(Calendar.MINUTE, minute);
+
+                        Calendar c1 = Calendar.getInstance();
+                        c1.setTimeInMillis(medicationList.get(position).timeOfDay);
+                        hour = c1.get(Calendar.HOUR_OF_DAY);
+                        minute = c1.get(Calendar.MINUTE);
+                        c1.clear();
+                        c1.set(Calendar.HOUR_OF_DAY, hour);
+                        c1.set(Calendar.MINUTE, minute);
+
+                        if (c.getTimeInMillis() == c1.getTimeInMillis())
+                            pos = i;
+                    }
+                    if (v.getId() == R.id.dailyMedMissed) {
+                        holderm.taken.setText(("Taken"));
+                        if (pos == -1) {
+                            Calendar out = Calendar.getInstance();
+                            out.setTimeInMillis(date);
+                            Calendar temp = Calendar.getInstance();
+                            temp.setTimeInMillis(medicationList.get(position).timeOfDay);
+                            out.set(Calendar.HOUR_OF_DAY, temp.get(Calendar.HOUR_OF_DAY));
+                            out.set(Calendar.MINUTE, temp.get(Calendar.MINUTE));
+                            long medDate = out.getTimeInMillis();
+                            mainModel.insert(new MedicationLog(medicationList.get(position).medicationID, medDate, false, 0));
+                        } else {
+                            if (logList.get(pos).getTaken())
+                                mainModel.updateMedLog(logList.get(pos).getMedicationID(), logList.get(pos).getDate(), logList.get(pos).getTimeLate(), 0, false);
+                        }
+                    } else {
+                        if (pos == -1){
+                            final int pos1 = pos;
+                            final Calendar out = Calendar.getInstance();
+                            out.setTimeInMillis(date);
+                            Calendar temp = Calendar.getInstance();
+                            temp.setTimeInMillis(medicationList.get(position).timeOfDay);
+                            out.set(Calendar.HOUR_OF_DAY, temp.get(Calendar.HOUR_OF_DAY));
+                            out.set(Calendar.MINUTE, temp.get(Calendar.MINUTE));
+                            final long medDate = out.getTimeInMillis();
+                            TimePickerDialog.OnTimeSetListener listener = new TimePickerDialog.OnTimeSetListener() {
+                                @Override
+                                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                    Calendar temp = Calendar.getInstance();
+                                    temp.clear();
+                                    temp.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                                    temp.set(Calendar.MINUTE, minute);
+                                    String st = "Taken @ ";
+                                    if(DateFormat.is24HourFormat(activity))
+                                        st += new SimpleDateFormat("kk:mm", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(temp.getTimeInMillis());
+                                    else
+                                        st += new SimpleDateFormat("hh:mm aa", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(temp.getTimeInMillis());
+                                    holderm.taken.setText(st);
+                                    Calendar out1 = Calendar.getInstance();
+                                    out1.setTimeInMillis(out.getTimeInMillis());
+                                    out1.set(Calendar.HOUR_OF_DAY, temp.get(Calendar.HOUR_OF_DAY));
+                                    out1.set(Calendar.MINUTE, temp.get(Calendar.MINUTE));
+                                    out1.set(Calendar.MILLISECOND, 0);
+                                    out1.set(Calendar.SECOND, 0);
+                                    mainModel.insert(new MedicationLog(medicationList.get(position).medicationID, medDate, true, out1.getTimeInMillis()-out.getTimeInMillis()));
+                                }
+                            };
+                            timePickerDialog = new TimePickerDialog(activity, listener, out.get(Calendar.HOUR_OF_DAY), out.get(Calendar.MINUTE), DateFormat.is24HourFormat(activity));
+                            timePickerDialog.show();
+                        } else {
+                            final int pos1 = pos;
+                            final Calendar out = Calendar.getInstance();
+                            out.setTimeInMillis(date);
+                            Calendar temp = Calendar.getInstance();
+                            temp.setTimeInMillis(medicationList.get(position).timeOfDay + logList.get(pos).getTimeLate());
+                            out.set(Calendar.HOUR_OF_DAY, temp.get(Calendar.HOUR_OF_DAY));
+                            out.set(Calendar.MINUTE, temp.get(Calendar.MINUTE));
+                            TimePickerDialog.OnTimeSetListener listener = new TimePickerDialog.OnTimeSetListener() {
+                                @Override
+                                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                    Calendar temp = Calendar.getInstance();
+                                    temp.clear();
+                                    temp.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                                    temp.set(Calendar.MINUTE, minute);
+                                    String st = "Taken @ ";
+                                    if(DateFormat.is24HourFormat(activity))
+                                        st += new SimpleDateFormat("kk:mm", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(temp.getTimeInMillis());
+                                    else
+                                        st += new SimpleDateFormat("hh:mm aa", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(temp.getTimeInMillis());
+                                    holderm.taken.setText(st);
+                                    Calendar out1 = Calendar.getInstance();
+                                    out1.setTimeInMillis(out1.getTimeInMillis());
+                                    out1.set(Calendar.HOUR_OF_DAY, temp.get(Calendar.HOUR_OF_DAY));
+                                    out1.set(Calendar.MINUTE, temp.get(Calendar.MINUTE));
+                                    out1.set(Calendar.MILLISECOND, 0);
+                                    out1.set(Calendar.SECOND, 0);
+                                    mainModel.updateMedLog(logList.get(pos1).getMedicationID(), logList.get(pos1).getDate(), logList.get(pos1).getTimeLate(), out1.getTimeInMillis() - out.getTimeInMillis(), true);
+                                }
+                            };
+                            timePickerDialog = new TimePickerDialog(activity, listener, temp.get(Calendar.HOUR_OF_DAY), temp.get(Calendar.MINUTE), DateFormat.is24HourFormat(activity));
+                            timePickerDialog.show();
+                        }
+                    }
+                }
+            };
+            holderm.missed.setOnClickListener(radioListener);
+            holderm.taken.setOnClickListener(radioListener);
+        } else {
+            holderm.missed.setEnabled(false);
+            holderm.taken.setEnabled(false);
+        }
     }
 
     @Override

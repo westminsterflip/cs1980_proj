@@ -32,12 +32,13 @@ public class DailyMedListFragment extends Fragment {
     private TextView date;
     private ViewPager2 dailyViewPager;
     private boolean fromCal = true;
+    private MainViewModel mainModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         model = new ViewModelProvider(this).get(DailyMedListViewModel.class);
-        MainViewModel mainModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
+        mainModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
         model.getDateList();
         long timeToView = DailyMedListFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getTimeToView();
         if (timeToView == 0){//TODO: removed items showed up on frontpage
@@ -92,7 +93,7 @@ public class DailyMedListFragment extends Fragment {
             };
             next.setOnClickListener(changeDay);
             prev.setOnClickListener(changeDay);
-            model.setMedAdapter(new DailyViewPagerAdapter(model.getDateList(), model.getMedications().getValue(), getActivity()));
+            model.setMedAdapter(new DailyViewPagerAdapter(model.getDateList(), model.getMedications().getValue(), getActivity(), mainModel));
             dailyViewPager.setAdapter(model.getMedAdapter());
             dailyViewPager.setCurrentItem(1);
             dailyViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -128,7 +129,7 @@ public class DailyMedListFragment extends Fragment {
         } else {
             next.setVisibility(View.INVISIBLE);
             prev.setVisibility(View.INVISIBLE);
-            model.setMedAdapter(new DailyViewPagerAdapter(model.getDateList(), Collections.singletonList(Objects.requireNonNull(model.getMedications().getValue()).get(1)), getActivity()));
+            model.setMedAdapter(new DailyViewPagerAdapter(Collections.singletonList(model.getDateList().get(1)), Collections.singletonList(Objects.requireNonNull(model.getMedications().getValue()).get(1)), getActivity(), mainModel));
             dailyViewPager.setAdapter(model.getMedAdapter());
             dailyViewPager.setUserInputEnabled(false);
         }

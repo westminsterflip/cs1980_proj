@@ -13,6 +13,7 @@ import com.example.medicationadherence.data.room.entities.Medication;
 import com.example.medicationadherence.data.room.entities.MedicationLog;
 import com.example.medicationadherence.data.room.entities.Schedule;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
@@ -162,11 +163,13 @@ public class MainViewModel extends AndroidViewModel {
         c.clear();
         c.set(Calendar.YEAR, year);
         c.set(Calendar.MONTH, month);
-        c.set(Calendar.DAY_OF_YEAR, day);
+        c.set(Calendar.DAY_OF_YEAR, day+1);
         return repository.getDailyLogs(date, c.getTimeInMillis());
     }
 
-    public void updateMedLog(Long medicationID, long date, Integer oldTimeLate, Integer newTimeLate, boolean taken){
+    public void updateMedLog(Long medicationID, long date, long oldTimeLate, long newTimeLate, boolean taken){
+        System.out.println("vm: " + oldTimeLate + "->" + newTimeLate);
+        System.out.println("update log vm: " + new SimpleDateFormat("kk:mm").format(date + oldTimeLate) + "->" + new SimpleDateFormat("kk:mm").format(date + newTimeLate));
         repository.updateLog(medicationID, date, oldTimeLate, newTimeLate, taken);
     }
 }

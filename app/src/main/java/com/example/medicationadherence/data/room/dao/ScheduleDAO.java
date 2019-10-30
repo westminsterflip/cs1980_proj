@@ -44,7 +44,7 @@ public interface ScheduleDAO {
     List<Schedule> getScheduleForMed(Long id);
 
     class ScheduleCard{
-        public int medicationID;
+        public Long medicationID;
         public String medImageURL;
         public String medName;
         public String dosageAmt;
@@ -56,7 +56,7 @@ public interface ScheduleDAO {
         public String instructions;
         public boolean active;
 
-        public ScheduleCard(String medImageURL, String medName, String dosageAmt, long startDate, long endDate, double doses, long timeOfDay, boolean[] days, String instructions, boolean active) {
+        public ScheduleCard(Long medicationID, String medImageURL, String medName, String dosageAmt, long startDate, long endDate, double doses, long timeOfDay, boolean[] days, String instructions, boolean active) {
             this.medImageURL = medImageURL;
             this.medName = medName;
             this.dosageAmt = dosageAmt;
@@ -67,6 +67,7 @@ public interface ScheduleDAO {
             this.days = days;
             this.instructions = instructions;
             this.active = active;
+            this.medicationID = medicationID;
         }
     }
 }

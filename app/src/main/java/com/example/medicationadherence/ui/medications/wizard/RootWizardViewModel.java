@@ -1,5 +1,6 @@
 package com.example.medicationadherence.ui.medications.wizard;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.res.Resources;
@@ -11,6 +12,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.navigation.NavController;
 
 import com.example.medicationadherence.R;
+import com.example.medicationadherence.adapter.ScheduleTimeAdapter;
 import com.example.medicationadherence.data.Converters;
 import com.example.medicationadherence.data.room.entities.Doctor;
 import com.example.medicationadherence.data.room.entities.Medication;
@@ -22,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 public class RootWizardViewModel extends ViewModel {
     private String medImage = null;
@@ -59,6 +62,8 @@ public class RootWizardViewModel extends ViewModel {
     private int listLength = 0;
     private long late;
     private int selPos = 0;
+    private AlertDialog doseDialog;
+    private ScheduleTimeAdapter scheduleTimeAdapter;
 
     String getMedImage() {
         return medImage;
@@ -407,14 +412,12 @@ public class RootWizardViewModel extends ViewModel {
     }
 
     void setLate(String late) {
-        Calendar c = Calendar.getInstance();
-        c.clear();
         if (late.contains("hr")){
-            c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(late.replaceAll("[\\D]", "")));
+            this.late = TimeUnit.HOURS.toMillis(Integer.parseInt(late.replaceAll("[\\D]", "")));
         } else {
-            c.set(Calendar.MINUTE, Integer.parseInt(late.replaceAll("[\\D]", "")));
+            this.late = TimeUnit.MINUTES.toMillis(Integer.parseInt(late.replaceAll("[\\D]", "")));
         }
-        this.late = c.getTimeInMillis();
+        System.out.println("late: " + this.late);
     }
 
     public void removeSchedules(int days){
@@ -432,5 +435,21 @@ public class RootWizardViewModel extends ViewModel {
 
     void setSelPos(int selPos) {
         this.selPos = selPos;
+    }
+
+    public AlertDialog getDoseDialog() {
+        return doseDialog;
+    }
+
+    public void setDoseDialog(AlertDialog doseDialog) {
+        this.doseDialog = doseDialog;
+    }
+
+    public ScheduleTimeAdapter getScheduleTimeAdapter() {
+        return scheduleTimeAdapter;
+    }
+
+    public void setScheduleTimeAdapter(ScheduleTimeAdapter scheduleTimeAdapter) {
+        this.scheduleTimeAdapter = scheduleTimeAdapter;
     }
 }

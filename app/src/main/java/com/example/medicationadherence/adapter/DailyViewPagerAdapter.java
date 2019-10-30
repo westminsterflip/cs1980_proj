@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.data.room.dao.ScheduleDAO;
+import com.example.medicationadherence.ui.MainViewModel;
 
 import java.util.List;
 
@@ -18,11 +19,13 @@ public class DailyViewPagerAdapter extends RecyclerView.Adapter {
     private List<Long> dateList;
     private List<List<ScheduleDAO.ScheduleCard>> medLists;
     private Activity activity;
+    private MainViewModel mainModel;
 
-    public DailyViewPagerAdapter(List<Long> dateList, List<List<ScheduleDAO.ScheduleCard>> medLists, Activity activity){
+    public DailyViewPagerAdapter(List<Long> dateList, List<List<ScheduleDAO.ScheduleCard>> medLists, Activity activity, MainViewModel mainModel){
         this.dateList = dateList;
         this.medLists = medLists;
         this.activity = activity;
+        this.mainModel = mainModel;
     }
 
     @NonNull
@@ -36,7 +39,7 @@ public class DailyViewPagerAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         DailyViewPagerHolder holderd = (DailyViewPagerHolder) holder;
         holderd.recyclerView.setLayoutManager(new LinearLayoutManager(holderd.recyclerView.getContext()));
-        holderd.recyclerView.setAdapter(new DailyMedicationListAdapter(medLists.get(position), activity));
+        holderd.recyclerView.setAdapter(new DailyMedicationListAdapter(medLists.get(position), activity, mainModel, mainModel.getDailyLogs(dateList.get(position)), dateList.get(position)));
     }
 
     @Override

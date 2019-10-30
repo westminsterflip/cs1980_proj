@@ -15,6 +15,7 @@ import com.example.medicationadherence.data.room.entities.Medication;
 import com.example.medicationadherence.data.room.entities.MedicationLog;
 import com.example.medicationadherence.data.room.entities.Schedule;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -214,7 +215,8 @@ public class Repository {
         return null;
     }
 
-    public void updateLog(Long medicationID, long date, Integer oldTimeLate, Integer newTimeLate, boolean taken){
+    public void updateLog(Long medicationID, long date, long oldTimeLate, long newTimeLate, boolean taken){
+        System.out.println("update log repo: " + new SimpleDateFormat("kk:mm").format(date + oldTimeLate) + "->" + new SimpleDateFormat("kk:mm").format(date + newTimeLate));
         new UpdateLogTask(mMedicationLogDAO, medicationID, date, oldTimeLate, newTimeLate, taken).execute();
     }
 
@@ -412,9 +414,9 @@ public class Repository {
         protected Void doInBackground(Void... voids) {
             doctorDAO.clearTable();
             instructionsDAO.clearTable();
-            medicationDAO.clearTable();
             medicationLogDAO.clearTable();
             scheduleDAO.clearTable();
+            medicationDAO.clearTable();
             return null;
         }
     }

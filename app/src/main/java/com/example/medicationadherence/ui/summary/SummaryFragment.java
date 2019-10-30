@@ -244,11 +244,11 @@ public class SummaryFragment extends Fragment {
             summaryExpander.setVisibility(View.INVISIBLE);
         double late = model.getLate(), taken = model.getTaken(), missed = model.getMissed(), total = late + taken + missed;
         if (total != 0){
-            lateBar.setProgress((int)Math.round(late/total), true);
-            takenBar.setProgress((int)Math.round(taken/total), true);
-            summaryTaken.setText(("On time: " + taken + "/" + total));
-            summaryLate.setText(("Late: " + late + "/" + total));
-            summaryMissed.setText(("Missed: " + missed + "/" + total));
+            lateBar.setProgress((int)Math.round(late/total*100.0), true);
+            takenBar.setProgress((int)Math.round(taken/total*100.0), true);
+            summaryTaken.setText(("On time: " + (int)taken + "/" + (int)total));
+            summaryLate.setText(("Late: " + (int)late + "/" + (int)total));
+            summaryMissed.setText(("Missed: " + (int)missed + "/" + (int)total));
         } else {
             takenBar.setProgress(100, true);
             summaryTaken.setText("");
