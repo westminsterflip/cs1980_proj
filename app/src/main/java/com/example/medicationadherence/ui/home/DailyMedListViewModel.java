@@ -12,7 +12,6 @@ import com.example.medicationadherence.ui.MainViewModel;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -95,7 +94,7 @@ public class DailyMedListViewModel extends ViewModel {
 
     public void loadNextMeds(){
         List<List<ScheduleDAO.ScheduleCard>> medList = medications.getValue();
-        if (medList.size() > 2)
+        if (Objects.requireNonNull(medList).size() > 2)
             Objects.requireNonNull(medList).remove(0);
         List<ScheduleDAO.ScheduleCard> medList1 = new ArrayList<>();
         for(ScheduleDAO.ScheduleCard s : cardList){
@@ -115,7 +114,16 @@ public class DailyMedListViewModel extends ViewModel {
     public void loadPrevMeds(){
         List<List<ScheduleDAO.ScheduleCard>> medList = medications.getValue();
         Objects.requireNonNull(medList).remove(2);
-        if (mainModel.getEarliestLog() <= dateList.get(0)) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(mainModel.getEarliestLog());
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_YEAR);
+        c.clear();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_YEAR, day);
+        if (c.getTimeInMillis() <= dateList.get(0)) {
             List<ScheduleDAO.ScheduleCard> medList1 = new ArrayList<>();
             for (ScheduleDAO.ScheduleCard s : cardList) {
                 if (s.days[(day + 5) % 7] && s.startDate <= dateList.get(0) && (s.endDate >= dateList.get(0) || s.endDate == -1))

@@ -16,6 +16,7 @@ import com.example.medicationadherence.R;
 import com.example.medicationadherence.ui.MainViewModel;
 
 import java.util.Calendar;
+import java.util.Objects;
 
 public class HomeFragment extends Fragment {
 
@@ -39,7 +40,7 @@ public class HomeFragment extends Fragment {
                 Navigation.findNavController(view).navigate(action);
             }
         });
-        MainViewModel model = new ViewModelProvider(getActivity()).get(MainViewModel.class);
+        MainViewModel model = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
         mainCal.setMinDate(model.getEarliestLog());
         Button todayButton = root.findViewById(R.id.todayButton);
         todayButton.setOnClickListener(new View.OnClickListener() {

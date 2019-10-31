@@ -153,7 +153,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
             @SuppressWarnings("ConstantConditions")
             @Override
             public void onTimeSet(TimePicker view, final int hourOfDay, final int minute) {
-                View v = inflater.inflate(R.layout.layout_dose_selector, null, false); //TODO: dialog too wide
+                View v = inflater.inflate(R.layout.layout_dose_selector, null, false);
                 increaseDoses = v.findViewById(R.id.doseCountUp);
                 increaseDoses.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -180,8 +180,10 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         if (s != null && !s.equals("") && count != 0) {
-                            double doseVal = Double.parseDouble(s.toString());
-                            decreaseDoses.setEnabled(doseVal - .5 > 0);
+                            try {
+                                double doseVal = Double.parseDouble(s.toString());
+                                decreaseDoses.setEnabled(doseVal - .5 > 0);
+                            } catch (NumberFormatException e){decreaseDoses.setEnabled(false);}
                         }
                     }
 

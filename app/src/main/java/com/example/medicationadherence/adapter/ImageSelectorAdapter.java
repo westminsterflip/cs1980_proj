@@ -44,10 +44,12 @@ public class ImageSelectorAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         final SelectorViewHolder holderm = (SelectorViewHolder) holder;
         if (URLs.get(position) != null){
+            holderm.imageItem.setBackgroundColor(Integer.parseInt("00FFFFFF", 16));
             Glide.with(context).load(URLs.get(position)).thumbnail(0.5f).transition(new DrawableTransitionOptions().crossFade()).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(holderm.imageItem);
         } else {
+            Glide.with(context).clear(holderm.imageItem);
             holderm.imageItem.setBackgroundColor(context.getResources().getColor(R.color.colorAccent, null));
-            holderm.imageItem.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_pill, null));
+            Glide.with(context).load(context.getResources().getDrawable(R.drawable.ic_pill, null)).thumbnail(0.5f).transition(new DrawableTransitionOptions().crossFade()).diskCacheStrategy(DiskCacheStrategy.RESOURCE).into(holderm.imageItem);
         }
         if (selectedItems.get(position)) {
             holderm.check.setVisibility(View.VISIBLE);

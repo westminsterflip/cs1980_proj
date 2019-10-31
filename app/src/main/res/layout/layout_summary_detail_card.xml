@@ -57,7 +57,6 @@
             <!--start of donut-->
 
             <ProgressBar
-                android:id="@+id/detailCardMissedBar"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="0dp"
                 android:layout_height="0dp"

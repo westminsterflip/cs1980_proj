@@ -21,13 +21,14 @@ public class MedicationLog {
 	private Long medicationID;  /* FK Medication.medicationID */
     private long date;
 	private boolean taken;     /* true if taken, false if missed */
-    private long timeLate = -1L; //Can't be null and a primary key
+    private long timeLate; //Can't be null and a primary key
 	
-	public Long getMedicationID() {
+	@NonNull
+    public Long getMedicationID() {
         return this.medicationID;
     }
  
-    public void setMedicationID(Long medicationID) {
+    public void setMedicationID(@NonNull Long medicationID) {
         this.medicationID = medicationID;
     }
 	

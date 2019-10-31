@@ -2,7 +2,6 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mobile_navigation"
     app:startDestination="@id/dailyMedListFragment2">
 
     <fragment
@@ -20,9 +19,7 @@
         android:name="com.example.medicationadherence.ui.home.HomeFragment"
         android:label="@string/menu_calendar"
         tools:layout="@layout/fragment_home">
-        <action
-            android:id="@+id/action_nav_home_to_dailyMedListFragment"
-            app:destination="@id/dailyMedListFragment" />
+        <action app:destination="@id/dailyMedListFragment" />
     </fragment>
 
     <fragment
@@ -35,9 +32,7 @@
         android:name="com.example.medicationadherence.ui.medications.MedicationFragment"
         android:label="Medications"
         tools:layout="@layout/fragment_medication">
-        <action
-            android:id="@+id/action_nav_medications_to_rootWizardFragment"
-            app:destination="@id/rootWizardFragment" />
+        <action app:destination="@id/rootWizardFragment" />
     </fragment>
     <fragment
         android:id="@+id/nav_settings"

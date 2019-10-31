@@ -165,17 +165,29 @@ public class SummaryFragment extends Fragment {
     //negative = back, 0 = scale changed, positive = forward
     private void updateTimeToView(int dir){
         cal.setTimeInMillis(mainModel.getSummaryTimeToView());
-        if(dir > 0){
-            cal.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale()==0) ? 1 : 0));
-            cal.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale()==1) ? 7 : 0));
-            cal.add(Calendar.MONTH, ((mainModel.getSummaryViewScale()==2) ? 1 : 0));
-            if (cal.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()){
+        if (dir > 0) {
+            cal.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale() == 0) ? 1 : 0));
+            cal.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale() == 1) ? 7 : 0));
+            cal.add(Calendar.MONTH, ((mainModel.getSummaryViewScale() == 2) ? 1 : 0));
+            if (cal.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()) {
                 cal.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
             }
-        }else if (dir < 0){
-            cal.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale()==0) ? -1 : 0));
-            cal.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale()==1) ? -7 : 0));
-            cal.add(Calendar.MONTH, ((mainModel.getSummaryViewScale()==2) ? -1 : 0));
+        } else if (dir < 0) {
+            cal.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale() == 0) ? -1 : 0));
+            cal.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale() == 1) ? -7 : 0));
+            cal.add(Calendar.MONTH, ((mainModel.getSummaryViewScale() == 2) ? -1 : 0));
+        } else
+        if (cal.getTimeInMillis() < mainModel.getEarliestLog()) {
+            Calendar c = Calendar.getInstance();
+            c.setTimeInMillis(mainModel.getEarliestLog());
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_YEAR);
+            c.clear();
+            c.set(Calendar.YEAR, year);
+            c.set(Calendar.MONTH, month);
+            c.set(Calendar.DAY_OF_YEAR, day);
+            cal.setTimeInMillis(c.getTimeInMillis());
         }
         Calendar temp = Calendar.getInstance();
         temp.setTimeInMillis(cal.getTimeInMillis());
@@ -224,6 +236,8 @@ public class SummaryFragment extends Fragment {
                 break;
             case 2:
                 label = monthName + " " + year;
+                cal.set(Calendar.DAY_OF_MONTH,1);
+                mainModel.setSummaryTimeToView(cal.getTimeInMillis());
                 break;
         }
         graphLabel.setText(label);

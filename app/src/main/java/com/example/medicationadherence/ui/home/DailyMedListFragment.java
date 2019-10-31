@@ -24,7 +24,6 @@ import com.example.medicationadherence.ui.MainViewModel;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -109,9 +108,6 @@ public class DailyMedListFragment extends Fragment {
                         dailyViewPager.post(new Runnable() {
                             @Override
                             public void run() {
-                                System.out.print("before: ");
-                                for (long l : model.getDateList())
-                                    System.out.print(new Date(l) + ", ");
                                 if(dir < 0){
                                     model.setNextDate(model.getDate());
                                     model.setDate(model.getPrevDate());

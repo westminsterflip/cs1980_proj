@@ -191,7 +191,6 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
                         if (position == dailyModel.getOpenPos() && dailyModel.getTimePickerDialog() != null)
                             bundle = dailyModel.getTimePickerDialog().onSaveInstanceState();
                         if (pos == -1){
-                            final int pos1 = pos;
                             final Calendar out = Calendar.getInstance();
                             out.setTimeInMillis(date);
                             Calendar temp = Calendar.getInstance();
