@@ -150,7 +150,19 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public long getEarliestLog(){
-        return repository.getEarliestLog();
+        long out = repository.getEarliestLog();
+        if (out == 0) {
+            Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_YEAR);
+            c.clear();
+            c.set(Calendar.YEAR, year);
+            c.set(Calendar.MONTH, month);
+            c.set(Calendar.DAY_OF_YEAR, day);
+            return c.getTimeInMillis();
+        }else
+            return out;
     }
 
     public List<MedicationLog> getDailyLogs(long date){

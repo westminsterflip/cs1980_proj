@@ -9,9 +9,11 @@ import android.widget.CalendarView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.medicationadherence.R;
+import com.example.medicationadherence.ui.MainViewModel;
 
 import java.util.Calendar;
 
@@ -37,6 +39,8 @@ public class HomeFragment extends Fragment {
                 Navigation.findNavController(view).navigate(action);
             }
         });
+        MainViewModel model = new ViewModelProvider(getActivity()).get(MainViewModel.class);
+        mainCal.setMinDate(model.getEarliestLog());
         Button todayButton = root.findViewById(R.id.todayButton);
         todayButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -39,6 +39,7 @@ public class DailyMedListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         model = new ViewModelProvider(this).get(DailyMedListViewModel.class);
         mainModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
+        model.setMainModel(mainModel);
         model.getDateList();
         long timeToView = DailyMedListFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getTimeToView();
         if (timeToView == 0){//TODO: removed items showed up on frontpage
@@ -63,7 +64,6 @@ public class DailyMedListFragment extends Fragment {
             model.setPrevDate(cal.getTimeInMillis());
         }
         model.setCardList(mainModel.getRepository().getScheduleCard());
-        model.setMainModel(mainModel);
         final Observer<List<List<ScheduleDAO.ScheduleCard>>> medicationObserver = new Observer<List<List<ScheduleDAO.ScheduleCard>>>() {
             @Override
             public void onChanged(List<List<ScheduleDAO.ScheduleCard>> dailyMedications) {
@@ -80,7 +80,7 @@ public class DailyMedListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_daily_med_list, container, false);
         ImageButton next = root.findViewById(R.id.dailyNextButton);
-        ImageButton prev = root.findViewById(R.id.dailyPrevButton);
+        final ImageButton prev = root.findViewById(R.id.dailyPrevButton);
         dailyViewPager = root.findViewById(R.id.dailyViewPager);
         date = root.findViewById(R.id.dailyDateView);
         updateText();
@@ -99,8 +99,8 @@ public class DailyMedListFragment extends Fragment {
             dailyViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
                 @Override
                 public void onPageSelected(int position) {
-                    if (position != 1) {
-                        final int dir = position - 1;
+                    if (model.getDateList().size() != 2 && position != 1 || position != 0) {
+                        final int dir = position + 2 - model.getDateList().size();
                         final Calendar cal2 = Calendar.getInstance();
                         cal2.setTimeInMillis(model.getDate());
                         cal2.add(Calendar.DAY_OF_YEAR, 2*dir);
@@ -112,24 +112,31 @@ public class DailyMedListFragment extends Fragment {
                                     model.setDate(model.getPrevDate());
                                     model.setPrevDate(cal2.getTimeInMillis());
                                     model.loadPrevMeds();
+
                                 } else if (dir == 1){
                                     model.setPrevDate(model.getDate());
                                     model.setDate(model.getNextDate());
                                     model.setNextDate(cal2.getTimeInMillis());
                                     model.loadNextMeds();
-                                }
+                                } else
+                                    System.out.println("DIR: " + dir);
                                 model.getMedAdapter().notifyDataSetChanged(); //this just works now?
-                                dailyViewPager.setCurrentItem(1);
+                                if (model.getDateList().size() == 2)
+                                    dailyViewPager.setCurrentItem(0);
+                                else
+                                    dailyViewPager.setCurrentItem(1);
                                 updateText();
                             }
                         });
                     }
+                    prev.setEnabled(model.getPrevDate() != -1);
+                    //prev.setVisibility((model.getPrevDate() != -1) ? View.VISIBLE : View.INVISIBLE);
                 }
             });
         } else {
             next.setVisibility(View.INVISIBLE);
             prev.setVisibility(View.INVISIBLE);
-            model.setMedAdapter(new DailyViewPagerAdapter(Collections.singletonList(model.getDateList().get(1)), Collections.singletonList(Objects.requireNonNull(model.getMedications().getValue()).get(1)), getActivity(), mainModel, model));
+            model.setMedAdapter(new DailyViewPagerAdapter(Collections.singletonList(model.getDateList().get(0)), Collections.singletonList(Objects.requireNonNull(model.getMedications().getValue()).get(0)), getActivity(), mainModel, model));
             dailyViewPager.setAdapter(model.getMedAdapter());
             dailyViewPager.setUserInputEnabled(false);
         }

@@ -12,6 +12,7 @@ import com.example.medicationadherence.ui.MainViewModel;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -62,7 +63,7 @@ public class DailyMedListViewModel extends ViewModel {
     }
 
     long getDate() {
-        return dateList.get(1);
+        return dateList.size() == 2 ? dateList.get(0) : dateList.get(1);
     }
 
     void setDate(long date) {
@@ -73,19 +74,29 @@ public class DailyMedListViewModel extends ViewModel {
     }
 
     long getPrevDate() {
-        return dateList.get(0);
+        return dateList.size() == 2 ? -1 : dateList.get(0);
     }
 
     public void setPrevDate(long prevDate) {
-        dateList.set(0,prevDate);
+        System.out.println(new Date(prevDate) + "<" + new Date(mainModel.getEarliestLog()));
+        if (prevDate < mainModel.getEarliestLog())
+            dateList.remove(0);
+        else
+            dateList.set(0,prevDate);
+        for (long l : dateList)
+            System.out.print(new Date(l) + ", ");
+        System.out.println("");
     }
 
     public long getNextDate() {
-        return dateList.get(2);
+        return dateList.get(dateList.size()-1);
     }
 
     public void setNextDate(long nextDate) {
-        dateList.set(2,nextDate);
+        if (dateList.size()== 2)
+            dateList.add(nextDate);
+        else
+            dateList.set(2,nextDate);
     }
 
     public void loadNextMeds(){
@@ -109,18 +120,20 @@ public class DailyMedListViewModel extends ViewModel {
     public void loadPrevMeds(){
         List<List<ScheduleDAO.ScheduleCard>> medList = medications.getValue();
         Objects.requireNonNull(medList).remove(2);
-        List<ScheduleDAO.ScheduleCard> medList1 = new ArrayList<>();
-        for(ScheduleDAO.ScheduleCard s : cardList){
-            if(s.days[(day + 5) % 7]&& s.startDate <= dateList.get(0) && (s.endDate >= dateList.get(0) || s.endDate == -1))
-                medList1.add(s);
-        }
-        medList1.sort(new Comparator<ScheduleDAO.ScheduleCard>() {
-            @Override
-            public int compare(ScheduleDAO.ScheduleCard o1, ScheduleDAO.ScheduleCard o2) {
-                return Long.compare(o1.timeOfDay, o2.timeOfDay);
+        if (mainModel.getEarliestLog() <= dateList.get(0)) {
+            List<ScheduleDAO.ScheduleCard> medList1 = new ArrayList<>();
+            for (ScheduleDAO.ScheduleCard s : cardList) {
+                if (s.days[(day + 5) % 7] && s.startDate <= dateList.get(0) && (s.endDate >= dateList.get(0) || s.endDate == -1))
+                    medList1.add(s);
             }
-        });
-        medList.add(0,medList1);
+            medList1.sort(new Comparator<ScheduleDAO.ScheduleCard>() {
+                @Override
+                public int compare(ScheduleDAO.ScheduleCard o1, ScheduleDAO.ScheduleCard o2) {
+                    return Long.compare(o1.timeOfDay, o2.timeOfDay);
+                }
+            });
+            medList.add(0, medList1);
+        }
         medications.setValue(medList);
     }
 

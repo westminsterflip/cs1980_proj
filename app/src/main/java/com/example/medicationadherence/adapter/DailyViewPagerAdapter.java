@@ -14,6 +14,7 @@ import com.example.medicationadherence.data.room.dao.ScheduleDAO;
 import com.example.medicationadherence.ui.MainViewModel;
 import com.example.medicationadherence.ui.home.DailyMedListViewModel;
 
+import java.util.Date;
 import java.util.List;
 
 public class DailyViewPagerAdapter extends RecyclerView.Adapter {
@@ -42,6 +43,8 @@ public class DailyViewPagerAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         DailyViewPagerHolder holderd = (DailyViewPagerHolder) holder;
         holderd.recyclerView.setLayoutManager(new LinearLayoutManager(holderd.recyclerView.getContext()));
+        for (long l : dateList)
+            System.out.println("dateList: " + new Date(l));
         holderd.recyclerView.setAdapter(new DailyMedicationListAdapter(medLists.get(position), activity, mainModel, mainModel.getDailyLogs(dateList.get(position)), dateList.get(position), dailyModel));
     }
 
