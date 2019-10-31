@@ -43,8 +43,6 @@ public class DailyViewPagerAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         DailyViewPagerHolder holderd = (DailyViewPagerHolder) holder;
         holderd.recyclerView.setLayoutManager(new LinearLayoutManager(holderd.recyclerView.getContext()));
-        for (long l : dateList)
-            System.out.println("dateList: " + new Date(l));
         holderd.recyclerView.setAdapter(new DailyMedicationListAdapter(medLists.get(position), activity, mainModel, mainModel.getDailyLogs(dateList.get(position)), dateList.get(position), dailyModel));
     }
 

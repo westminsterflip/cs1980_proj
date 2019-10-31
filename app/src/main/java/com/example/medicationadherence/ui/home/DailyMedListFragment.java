@@ -24,9 +24,11 @@ import com.example.medicationadherence.ui.MainViewModel;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+//TODO: need service to deactivate medications/mark as missed if day over
 public class DailyMedListFragment extends Fragment {
     private DailyMedListViewModel model;
     private TextView date;
@@ -95,7 +97,7 @@ public class DailyMedListFragment extends Fragment {
             prev.setOnClickListener(changeDay);
             model.setMedAdapter(new DailyViewPagerAdapter(model.getDateList(), model.getMedications().getValue(), getActivity(), mainModel, model));
             dailyViewPager.setAdapter(model.getMedAdapter());
-            dailyViewPager.setCurrentItem(1);
+            dailyViewPager.setCurrentItem(model.getDateList().size()-2);
             dailyViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
                 @Override
                 public void onPageSelected(int position) {
@@ -107,36 +109,39 @@ public class DailyMedListFragment extends Fragment {
                         dailyViewPager.post(new Runnable() {
                             @Override
                             public void run() {
+                                System.out.print("before: ");
+                                for (long l : model.getDateList())
+                                    System.out.print(new Date(l) + ", ");
                                 if(dir < 0){
                                     model.setNextDate(model.getDate());
                                     model.setDate(model.getPrevDate());
                                     model.setPrevDate(cal2.getTimeInMillis());
                                     model.loadPrevMeds();
-
                                 } else if (dir == 1){
                                     model.setPrevDate(model.getDate());
                                     model.setDate(model.getNextDate());
                                     model.setNextDate(cal2.getTimeInMillis());
                                     model.loadNextMeds();
-                                } else
-                                    System.out.println("DIR: " + dir);
+                                }
                                 model.getMedAdapter().notifyDataSetChanged(); //this just works now?
                                 if (model.getDateList().size() == 2)
                                     dailyViewPager.setCurrentItem(0);
                                 else
                                     dailyViewPager.setCurrentItem(1);
                                 updateText();
+                                prev.setEnabled(model.getPrevDate() != -1);
+                                prev.setVisibility((model.getPrevDate() != -1) ? View.VISIBLE : View.INVISIBLE);
                             }
                         });
                     }
-                    prev.setEnabled(model.getPrevDate() != -1);
-                    //prev.setVisibility((model.getPrevDate() != -1) ? View.VISIBLE : View.INVISIBLE);
                 }
             });
+            prev.setEnabled(model.getPrevDate() != -1);
+            prev.setVisibility((model.getPrevDate() != -1) ? View.VISIBLE : View.INVISIBLE);
         } else {
             next.setVisibility(View.INVISIBLE);
             prev.setVisibility(View.INVISIBLE);
-            model.setMedAdapter(new DailyViewPagerAdapter(Collections.singletonList(model.getDateList().get(0)), Collections.singletonList(Objects.requireNonNull(model.getMedications().getValue()).get(0)), getActivity(), mainModel, model));
+            model.setMedAdapter(new DailyViewPagerAdapter(Collections.singletonList(model.getDateList().get(model.getDateList().size()-2)), Collections.singletonList(Objects.requireNonNull(model.getMedications().getValue()).get(model.getDateList().size()-2)), getActivity(), mainModel, model));
             dailyViewPager.setAdapter(model.getMedAdapter());
             dailyViewPager.setUserInputEnabled(false);
         }

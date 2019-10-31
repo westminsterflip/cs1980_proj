@@ -60,6 +60,7 @@ public class DailyMedListViewModel extends ViewModel {
             bigMedList.add(medList);
         }
         medications.setValue(bigMedList);
+        loadPrevMeds();
     }
 
     long getDate() {
@@ -78,14 +79,7 @@ public class DailyMedListViewModel extends ViewModel {
     }
 
     public void setPrevDate(long prevDate) {
-        System.out.println(new Date(prevDate) + "<" + new Date(mainModel.getEarliestLog()));
-        if (prevDate < mainModel.getEarliestLog())
-            dateList.remove(0);
-        else
-            dateList.set(0,prevDate);
-        for (long l : dateList)
-            System.out.print(new Date(l) + ", ");
-        System.out.println("");
+        dateList.set(0,prevDate);
     }
 
     public long getNextDate() {
@@ -101,7 +95,8 @@ public class DailyMedListViewModel extends ViewModel {
 
     public void loadNextMeds(){
         List<List<ScheduleDAO.ScheduleCard>> medList = medications.getValue();
-        Objects.requireNonNull(medList).remove(0);
+        if (medList.size() > 2)
+            Objects.requireNonNull(medList).remove(0);
         List<ScheduleDAO.ScheduleCard> medList1 = new ArrayList<>();
         for(ScheduleDAO.ScheduleCard s : cardList){
             if(s.days[day % 7] && s.startDate <= dateList.get(2) && (s.endDate >= dateList.get(2) || s.endDate == -1))
@@ -133,6 +128,8 @@ public class DailyMedListViewModel extends ViewModel {
                 }
             });
             medList.add(0, medList1);
+        } else {
+            dateList.remove(0);
         }
         medications.setValue(medList);
     }
