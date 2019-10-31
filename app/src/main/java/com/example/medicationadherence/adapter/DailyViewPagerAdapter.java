@@ -58,6 +58,4 @@ public class DailyViewPagerAdapter extends RecyclerView.Adapter {
             recyclerView = view.findViewById(R.id.dailyRecyclerView);
         }
     }
-
-
 }

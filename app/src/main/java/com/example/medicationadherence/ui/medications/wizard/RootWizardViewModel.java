@@ -399,7 +399,6 @@ public class RootWizardViewModel extends ViewModel {
         } else {
             out = TimeUnit.MILLISECONDS.toMinutes(late) + "min";
         }
-        System.out.println("OUT: " + out + " LATE: " + late);
         String[] list = fragment.getResources().getStringArray(R.array.lateTimes);
         for (String s : list) {
             if (s.contains(out)) {
@@ -415,7 +414,6 @@ public class RootWizardViewModel extends ViewModel {
         } else {
             this.late = TimeUnit.MINUTES.toMillis(Integer.parseInt(late.replaceAll("[\\D]", "")));
         }
-        System.out.println("late: " + this.late);
     }
 
     public void removeSchedules(int days){

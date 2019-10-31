@@ -2,9 +2,11 @@ package com.example.medicationadherence.adapter;
 
 import android.app.Activity;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Build;
+import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -35,7 +37,6 @@ import com.example.medicationadherence.ui.home.DailyMedListViewModel;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class DailyMedicationListAdapter extends RecyclerView.Adapter implements Serializable {
@@ -46,6 +47,7 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
     private MainViewModel mainModel;
     private long date;
     private DailyMedListViewModel dailyModel;
+    private Bundle bundle;
 
     public DailyMedicationListAdapter(List<ScheduleDAO.ScheduleCard> medicationList, Activity activity, MainViewModel mainModel, List<MedicationLog> logList, long date, DailyMedListViewModel dailyModel){
         this.medicationList = medicationList;
@@ -124,10 +126,7 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
                 holderm.taken.setChecked(true);
                 Calendar c = Calendar.getInstance();
                 c.setTimeInMillis(medicationLog.getDate());
-                System.out.println("old: " + new Date(c.getTimeInMillis()));
                 c.setTimeInMillis(medicationLog.getDate() + logList.get(pos).getTimeLate());
-                System.out.println("nums: " + medicationLog.getDate() + "+" + medicationLog.getTimeLate() + "=" + (medicationLog.getTimeLate() + medicationLog.getDate()));
-                System.out.println("new: " + new Date(c.getTimeInMillis()));
                 st = "Taken @ ";
                 if(DateFormat.is24HourFormat(activity))
                     st += new SimpleDateFormat("kk:mm", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(c.getTimeInMillis());
@@ -173,6 +172,7 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
                             pos = i;
                     }
                     if (v.getId() == R.id.dailyMedMissed) {
+                        dailyModel.setOpenPos(-1);
                         holderm.taken.setText(("Taken"));
                         if (pos == -1) {
                             Calendar out = Calendar.getInstance();
@@ -188,6 +188,8 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
                                 mainModel.updateMedLog(logList.get(pos).getMedicationID(), logList.get(pos).getDate(), logList.get(pos).getTimeLate(), 0, false);
                         }
                     } else {
+                        if (position == dailyModel.getOpenPos() && dailyModel.getTimePickerDialog() != null)
+                            bundle = dailyModel.getTimePickerDialog().onSaveInstanceState();
                         if (pos == -1){
                             final int pos1 = pos;
                             final Calendar out = Calendar.getInstance();
@@ -217,9 +219,20 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
                                     out1.set(Calendar.MILLISECOND, 0);
                                     out1.set(Calendar.SECOND, 0);
                                     mainModel.insert(new MedicationLog(medicationList.get(position).medicationID, medDate, true, out1.getTimeInMillis()-out.getTimeInMillis()));
+                                    dailyModel.setOpenPos(-1);
                                 }
                             };
-                            dailyModel.setTimePickerDialog(new TimePickerDialog(activity, listener, out.get(Calendar.HOUR_OF_DAY), out.get(Calendar.MINUTE), DateFormat.is24HourFormat(activity)));
+                            dailyModel.setListener(listener);
+                            dailyModel.setTimePickerDialog(new TimePickerDialog(activity, dailyModel.getListener(), out.get(Calendar.HOUR_OF_DAY), out.get(Calendar.MINUTE), DateFormat.is24HourFormat(activity)));
+                            dailyModel.getTimePickerDialog().setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                @Override
+                                public void onCancel(DialogInterface dialog) {
+                                    dailyModel.setOpenPos(-1);
+                                }
+                            });
+                            if (position == dailyModel.getOpenPos() && bundle != null)
+                                dailyModel.getTimePickerDialog().onRestoreInstanceState(bundle);
+                            dailyModel.setOpenPos(position);
                             dailyModel.getTimePickerDialog().show();
                         } else {
                             final int pos1 = pos;
@@ -254,9 +267,20 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
                                     out2.set(Calendar.HOUR_OF_DAY, temp.get(Calendar.HOUR_OF_DAY));
                                     out2.set(Calendar.MINUTE, temp.get(Calendar.MINUTE));
                                     mainModel.updateMedLog(logList.get(pos1).getMedicationID(), logList.get(pos1).getDate(), logList.get(pos1).getTimeLate(), out1.getTimeInMillis() - out2.getTimeInMillis(), true);
+                                    dailyModel.setOpenPos(-1);
                                 }
                             };
-                            dailyModel.setTimePickerDialog(new TimePickerDialog(activity, listener, temp.get(Calendar.HOUR_OF_DAY), temp.get(Calendar.MINUTE), DateFormat.is24HourFormat(activity)));
+                            dailyModel.setListener(listener);
+                            dailyModel.setTimePickerDialog(new TimePickerDialog(activity, dailyModel.getListener(), temp.get(Calendar.HOUR_OF_DAY), temp.get(Calendar.MINUTE), DateFormat.is24HourFormat(activity)));
+                            dailyModel.getTimePickerDialog().setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                @Override
+                                public void onCancel(DialogInterface dialog) {
+                                    dailyModel.setOpenPos(-1);
+                                }
+                            });
+                            if (position == dailyModel.getOpenPos() && bundle != null)
+                                    dailyModel.getTimePickerDialog().onRestoreInstanceState(bundle);
+                            dailyModel.setOpenPos(position);
                             dailyModel.getTimePickerDialog().show();
                         }
                     }
@@ -264,6 +288,9 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
             };
             holderm.missed.setOnClickListener(radioListener);
             holderm.taken.setOnClickListener(radioListener);
+            if (position == dailyModel.getOpenPos()) {
+                holderm.taken.performClick();
+            }
         } else {
             holderm.missed.setEnabled(false);
             holderm.taken.setEnabled(false);

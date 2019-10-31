@@ -295,8 +295,6 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
             model.getThisList().set(0, this);
         if (model.getLate() != null)
             timeChooser.setSelection(Arrays.asList(getResources().getStringArray(R.array.lateTimes)).indexOf(model.getLate()));
-        else
-            System.out.println("NOT THERE");
         super.onResume();
     }
 

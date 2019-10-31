@@ -133,13 +133,6 @@ public class DailyMedListFragment extends Fragment {
             dailyViewPager.setAdapter(model.getMedAdapter());
             dailyViewPager.setUserInputEnabled(false);
         }
-        if (savedInstanceState != null){
-            if (model.getTimePickerDialog() != null){
-                model.getTimePickerDialog().onRestoreInstanceState(savedInstanceState.getBundle("timePickerBundle"));
-                if (savedInstanceState.getBoolean("timePickerVisible", false))
-                    model.getTimePickerDialog().show();
-            }
-        }
         return root;
     }
 
@@ -159,11 +152,11 @@ public class DailyMedListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         if (model.getTimePickerDialog() != null){
-            outState.putBundle("timePickerBundle", model.getTimePickerDialog().onSaveInstanceState());
-            outState.putBoolean("timePickerVIsible", model.getTimePickerDialog().isShowing());
+            if (model.getTimePickerDialog().isShowing()) {
+                model.getTimePickerDialog().setOnCancelListener(null);
+                model.getTimePickerDialog().dismiss();
+            }
         }
-        if (model.getTimePickerDialog().isShowing())
-            model.getTimePickerDialog().dismiss();
         super.onSaveInstanceState(outState);
     }
 }

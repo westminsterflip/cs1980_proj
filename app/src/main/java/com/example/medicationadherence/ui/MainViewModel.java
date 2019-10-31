@@ -13,10 +13,8 @@ import com.example.medicationadherence.data.room.entities.Medication;
 import com.example.medicationadherence.data.room.entities.MedicationLog;
 import com.example.medicationadherence.data.room.entities.Schedule;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class MainViewModel extends AndroidViewModel {
     private long summaryTimeToView = -1;
@@ -29,14 +27,6 @@ public class MainViewModel extends AndroidViewModel {
     public MainViewModel (Application application){
         super(application);
         repository = new Repository(application);
-        List<Medication> medList = getMedList();
-        for (Medication m : medList){
-            System.out.println("med: " + m.getMedicationID()+": "+m.getLateTime() + " " + m.getName());
-        }
-        List<MedicationLog> medLogList = repository.getDailyLogs(repository.getEarliestLog(), Calendar.getInstance().getTimeInMillis()+ TimeUnit.DAYS.toMillis(30));
-        for (MedicationLog m : medLogList){
-            System.out.println("log: "+m.getMedicationID()+": "+m.getTimeLate());
-        }
     }
 
     public List<Medication> getMedList(){return repository.getMedList();}
@@ -177,8 +167,6 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void updateMedLog(Long medicationID, long date, long oldTimeLate, long newTimeLate, boolean taken){
-        System.out.println("vm: " + oldTimeLate + "->" + newTimeLate);
-        System.out.println("update log vm: " + new SimpleDateFormat("kk:mm").format(date + oldTimeLate) + "->" + new SimpleDateFormat("kk:mm").format(date + newTimeLate));
         repository.updateLog(medicationID, date, oldTimeLate, newTimeLate, taken);
     }
 }

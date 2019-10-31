@@ -23,6 +23,8 @@ public class DailyMedListViewModel extends ViewModel {
     private int day;
     private List<ScheduleDAO.ScheduleCard> cardList;
     private TimePickerDialog timePickerDialog;
+    private TimePickerDialog.OnTimeSetListener listener;
+    private int openPos = -1;
 
     DailyViewPagerAdapter getMedAdapter() {
         return medAdapter;
@@ -154,5 +156,21 @@ public class DailyMedListViewModel extends ViewModel {
 
     public void setTimePickerDialog(TimePickerDialog timePickerDialog) {
         this.timePickerDialog = timePickerDialog;
+    }
+
+    public TimePickerDialog.OnTimeSetListener getListener() {
+        return listener;
+    }
+
+    public void setListener(TimePickerDialog.OnTimeSetListener listener) {
+        this.listener = listener;
+    }
+
+    public int getOpenPos() {
+        return openPos;
+    }
+
+    public void setOpenPos(int openPos) {
+        this.openPos = openPos;
     }
 }
