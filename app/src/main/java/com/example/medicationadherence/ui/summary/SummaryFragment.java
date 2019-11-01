@@ -172,11 +172,20 @@ public class SummaryFragment extends Fragment {
             if (cal.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()) {
                 cal.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
             }
+            model.setLast(-1);
         } else if (dir < 0) {
             cal.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale() == 0) ? -1 : 0));
             cal.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale() == 1) ? -7 : 0));
             cal.add(Calendar.MONTH, ((mainModel.getSummaryViewScale() == 2) ? -1 : 0));
-        } else
+            model.setLast(-1);
+        } else {
+            if (mainModel.getSummaryViewScale() != 0 && model.getLast() == -1)
+                model.setLast(cal.getTimeInMillis());
+            else if (mainModel.getSummaryViewScale() == 0 && model.getLast() != -1){
+                cal.setTimeInMillis(model.getLast());
+                model.setLast(-1);
+            }
+        }
         if (cal.getTimeInMillis() < mainModel.getEarliestLog()) {
             Calendar c = Calendar.getInstance();
             c.setTimeInMillis(mainModel.getEarliestLog());
@@ -192,7 +201,8 @@ public class SummaryFragment extends Fragment {
         Calendar temp = Calendar.getInstance();
         temp.setTimeInMillis(cal.getTimeInMillis());
         temp.add(Calendar.MONTH, 1);
-        temp.set(Calendar.DAY_OF_MONTH, 0);
+        temp.set(Calendar.DAY_OF_MONTH, 1);
+        changeScale();
         if (cal.getTimeInMillis() + TimeUnit.DAYS.toMillis(1) > Calendar.getInstance().getTimeInMillis()){
             next.setEnabled(false);
             next.setVisibility(View.INVISIBLE);
@@ -206,12 +216,12 @@ public class SummaryFragment extends Fragment {
             next.setEnabled(true);
             next.setVisibility(View.VISIBLE);
         }
-        mainModel.setSummaryTimeToView(cal.getTimeInMillis());
-        changeScale();
         updateMainGraph();
     }
 
     private void changeScale(){
+        if (mainModel.getSummaryViewScale() == 1)
+            cal.set(Calendar.DAY_OF_WEEK,1);
         int year = cal.get(Calendar.YEAR);
         int day = cal.get(Calendar.DAY_OF_MONTH);
         Locale syslocale = ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0);
@@ -237,10 +247,10 @@ public class SummaryFragment extends Fragment {
             case 2:
                 label = monthName + " " + year;
                 cal.set(Calendar.DAY_OF_MONTH,1);
-                mainModel.setSummaryTimeToView(cal.getTimeInMillis());
                 break;
         }
         graphLabel.setText(label);
+        mainModel.setSummaryTimeToView(cal.getTimeInMillis());
     }
 
     private void updateMainGraph(){

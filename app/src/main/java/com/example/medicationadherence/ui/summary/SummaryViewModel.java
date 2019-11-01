@@ -17,6 +17,7 @@ public class SummaryViewModel extends ViewModel {
     private MainViewModel mainModel;
     private long earliest = 0;
     private double missed = 0;
+    private long last = -1;
 
     public List<DetailSummary> getDetailList() {
         return detailList;
@@ -76,5 +77,13 @@ public class SummaryViewModel extends ViewModel {
 
     public void setMainModel(MainViewModel mainModel) {
         this.mainModel = mainModel;
+    }
+
+    public long getLast() {
+        return last;
+    }
+
+    public void setLast(long last) {
+        this.last = last;
     }
 }

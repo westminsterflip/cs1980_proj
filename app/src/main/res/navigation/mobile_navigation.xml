@@ -19,7 +19,9 @@
         android:name="com.example.medicationadherence.ui.home.HomeFragment"
         android:label="@string/menu_calendar"
         tools:layout="@layout/fragment_home">
-        <action app:destination="@id/dailyMedListFragment" />
+        <action
+            android:id="@+id/action_nav_home_to_dailyMedListFragment"
+            app:destination="@id/dailyMedListFragment" />
     </fragment>
 
     <fragment
@@ -32,7 +34,9 @@
         android:name="com.example.medicationadherence.ui.medications.MedicationFragment"
         android:label="Medications"
         tools:layout="@layout/fragment_medication">
-        <action app:destination="@id/rootWizardFragment" />
+        <action
+            android:id="@+id/action_nav_medications_to_rootWizardFragment"
+            app:destination="@id/rootWizardFragment" />
     </fragment>
     <fragment
         android:id="@+id/nav_settings"
