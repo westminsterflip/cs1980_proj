@@ -34,29 +34,31 @@ public class UpdateLogsWorker extends Worker {
         c.add(Calendar.DAY_OF_YEAR, -1);
         List<MedicationLog> dailyLogs = getDailyLogs(repository, c.getTimeInMillis());
         for(ScheduleDAO.ScheduleCard s : scheduleCards){
-            int pos = -1;
-            for (int i = 0; i < dailyLogs.size(); i++) {
-                MedicationLog m = dailyLogs.get(i);
-                c.setTimeInMillis(m.getDate());
-                int hour = c.get(Calendar.HOUR_OF_DAY);
-                int minute = c.get(Calendar.MINUTE);
-                c.clear();
-                c.set(Calendar.HOUR_OF_DAY, hour);
-                c.set(Calendar.MINUTE, minute);
+            if(s.days[(c.get(Calendar.DAY_OF_WEEK) + 6) % 7] && s.startDate <= c.getTimeInMillis() && (s.endDate >= c.getTimeInMillis()) || s.endDate == -1) {//TODO: also don't know how to handle active here
+                int pos = -1;
+                for (int i = 0; i < dailyLogs.size(); i++) {
+                    MedicationLog m = dailyLogs.get(i);
+                    c.setTimeInMillis(m.getDate());
+                    int hour = c.get(Calendar.HOUR_OF_DAY);
+                    int minute = c.get(Calendar.MINUTE);
+                    c.clear();
+                    c.set(Calendar.HOUR_OF_DAY, hour);
+                    c.set(Calendar.MINUTE, minute);
 
-                Calendar c1 = Calendar.getInstance();
-                c1.setTimeInMillis(s.timeOfDay);
-                hour = c1.get(Calendar.HOUR_OF_DAY);
-                minute = c1.get(Calendar.MINUTE);
-                c1.clear();
-                c1.set(Calendar.HOUR_OF_DAY, hour);
-                c1.set(Calendar.MINUTE, minute);
+                    Calendar c1 = Calendar.getInstance();
+                    c1.setTimeInMillis(s.timeOfDay);
+                    hour = c1.get(Calendar.HOUR_OF_DAY);
+                    minute = c1.get(Calendar.MINUTE);
+                    c1.clear();
+                    c1.set(Calendar.HOUR_OF_DAY, hour);
+                    c1.set(Calendar.MINUTE, minute);
 
-                if (c.getTimeInMillis() == c1.getTimeInMillis())
-                    pos = i;
-            }
-            if(pos == -1){
-                repository.insert(new MedicationLog(s.medicationID, s.timeOfDay, false, 0));
+                    if (c.getTimeInMillis() == c1.getTimeInMillis())
+                        pos = i;
+                }
+                if (pos == -1) {
+                    repository.insert(new MedicationLog(s.medicationID, s.timeOfDay, false, 0));
+                }
             }
         }
         Calendar curr = Calendar.getInstance();

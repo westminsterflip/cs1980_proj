@@ -20,6 +20,7 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
 import com.example.medicationadherence.R;
+import com.example.medicationadherence.background.MedActivationWorker;
 import com.example.medicationadherence.background.UpdateLogsWorker;
 import com.google.android.material.navigation.NavigationView;
 
@@ -68,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
         OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(UpdateLogsWorker.class).setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
                 .setBackoffCriteria(BackoffPolicy.LINEAR, OneTimeWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS).build();
         WorkManager.getInstance(getApplicationContext()).enqueue(workRequest);
+        OneTimeWorkRequest activateWorkRequest = new OneTimeWorkRequest.Builder(MedActivationWorker.class).setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+                .setBackoffCriteria(BackoffPolicy.LINEAR, OneTimeWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS).build();
+        WorkManager.getInstance(getApplicationContext()).enqueue(activateWorkRequest);
     }
 
     @Override

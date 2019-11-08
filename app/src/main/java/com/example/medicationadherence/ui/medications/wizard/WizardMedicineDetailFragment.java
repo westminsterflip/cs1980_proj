@@ -33,6 +33,7 @@ import java.util.Date;
 import java.util.Objects;
 
 //TODO: https://developer.android.com/guide/topics/text/autofill
+//TODO: disallow active before start, active after end
 public class WizardMedicineDetailFragment extends Fragment implements RootWizardFragment.ErrFragment {
     private RootWizardViewModel model;
     private TextInputEditText medName;

@@ -47,7 +47,7 @@ public class DailyMedListViewModel extends ViewModel {
         for(int o = 0; o < 3; o++){
             List<ScheduleDAO.ScheduleCard> medList = new ArrayList<>();
             for(ScheduleDAO.ScheduleCard s : cardList){
-                if(s.days[(day + 5 + o) % 7] && s.startDate <= dateList.get(1) && (s.endDate >= dateList.get(1) || s.endDate == -1) && s.active)
+                if(s.days[(day + 5 + o) % 7] && s.startDate <= dateList.get(o) && (s.endDate >= dateList.get(o) || s.endDate == -1) && (s.active || o != 1)) //TODO: figure out active/inactive showing
                     medList.add(s);
             }
             medList.sort(new Comparator<ScheduleDAO.ScheduleCard>() {

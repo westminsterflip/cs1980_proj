@@ -34,6 +34,10 @@ public class Repository {
         mScheduleDAO = medDB.getScheduleDao();
     }
 
+    public MedicationDAO getmMedicationDAO() {
+        return mMedicationDAO;
+    }
+
     public List<Schedule> getScheduleForMed(Long id){
         try {
             return new GetScheduleFMTask(mScheduleDAO, id).execute().get();
