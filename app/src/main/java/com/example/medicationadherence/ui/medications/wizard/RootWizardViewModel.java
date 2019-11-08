@@ -64,6 +64,7 @@ public class RootWizardViewModel extends ViewModel {
     private int selPos = 0;
     private AlertDialog doseDialog;
     private ScheduleTimeAdapter scheduleTimeAdapter;
+    private boolean activeEnabled = true;
 
     String getMedImage() {
         return medImage;
@@ -451,5 +452,13 @@ public class RootWizardViewModel extends ViewModel {
 
     public long getLateNS(){
         return late;
+    }
+
+    public boolean isActiveEnabled() {
+        return activeEnabled;
+    }
+
+    public void setActiveEnabled(boolean activeEnabled) {
+        this.activeEnabled = activeEnabled;
     }
 }

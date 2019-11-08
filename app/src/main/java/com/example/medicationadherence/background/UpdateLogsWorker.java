@@ -34,7 +34,7 @@ public class UpdateLogsWorker extends Worker {
         c.add(Calendar.DAY_OF_YEAR, -1);
         List<MedicationLog> dailyLogs = getDailyLogs(repository, c.getTimeInMillis());
         for(ScheduleDAO.ScheduleCard s : scheduleCards){
-            if(s.days[(c.get(Calendar.DAY_OF_WEEK) + 6) % 7] && s.startDate <= c.getTimeInMillis() && (s.endDate >= c.getTimeInMillis()) || s.endDate == -1) {//TODO: also don't know how to handle active here
+            if(s.days[(c.get(Calendar.DAY_OF_WEEK) + 6) % 7] && s.startDate <= c.getTimeInMillis() && (s.endDate >= c.getTimeInMillis() || s.endDate == -1) && s.active) {
                 int pos = -1;
                 for (int i = 0; i < dailyLogs.size(); i++) {
                     MedicationLog m = dailyLogs.get(i);

@@ -4,6 +4,7 @@
         <item>"Day"</item>
         <item>"Week"</item>
         <item>"Month"</item>
+        <item>"Overall"</item>
         <!--TODO: year?-->
     </string-array>
 

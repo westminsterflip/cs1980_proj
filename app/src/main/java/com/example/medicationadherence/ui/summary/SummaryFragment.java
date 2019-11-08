@@ -27,6 +27,7 @@ import com.example.medicationadherence.ui.MainViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -97,6 +98,13 @@ public class SummaryFragment extends Fragment {
         timeScaleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(mainModel.getSummaryViewScale() == 3){
+                    System.out.println(new Date(model.getLast()));
+                    mainModel.setSummaryViewScale(0);
+                    updateTimeToView(0);
+                }
+                else
+                    System.out.println(mainModel.getSummaryViewScale());
                 mainModel.setSummaryViewScale(position);
                 updateTimeToView(0);
             }
@@ -148,14 +156,16 @@ public class SummaryFragment extends Fragment {
         todayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar todayCal = Calendar.getInstance();
-                todayCal.set(Calendar.HOUR_OF_DAY,0);
-                todayCal.clear(Calendar.AM_PM);
-                todayCal.clear(Calendar.MINUTE);
-                todayCal.clear(Calendar.SECOND);
-                todayCal.clear(Calendar.MILLISECOND);
-                mainModel.setSummaryTimeToView(todayCal.getTimeInMillis());
-                updateTimeToView(0);
+                if (mainModel.getSummaryViewScale() != 3) {
+                    Calendar todayCal = Calendar.getInstance();
+                    todayCal.set(Calendar.HOUR_OF_DAY, 0);
+                    todayCal.clear(Calendar.AM_PM);
+                    todayCal.clear(Calendar.MINUTE);
+                    todayCal.clear(Calendar.SECOND);
+                    todayCal.clear(Calendar.MILLISECOND);
+                    mainModel.setSummaryTimeToView(todayCal.getTimeInMillis());
+                    updateTimeToView(0);
+                }
             }
         });
 
@@ -248,6 +258,9 @@ public class SummaryFragment extends Fragment {
                 label = monthName + " " + year;
                 cal.set(Calendar.DAY_OF_MONTH,1);
                 break;
+            case 3:
+                label = "Overall";
+                cal.setTimeInMillis(mainModel.getEarliestLog());
         }
         graphLabel.setText(label);
         mainModel.setSummaryTimeToView(cal.getTimeInMillis());
@@ -256,10 +269,12 @@ public class SummaryFragment extends Fragment {
     private void updateMainGraph(){
         long timeToView = mainModel.getSummaryTimeToView();
         Calendar temp = Calendar.getInstance();
-        temp.setTimeInMillis(timeToView);
-        temp.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale()==0) ? 1 : 0));
-        temp.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale()==1) ? 7 : 0));
-        temp.add(Calendar.MONTH, ((mainModel.getSummaryViewScale()==2) ? 1 : 0));
+        if (mainModel.getSummaryViewScale() != 3) {
+            temp.setTimeInMillis(timeToView);
+            temp.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale() == 0) ? 1 : 0));
+            temp.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale() == 1) ? 7 : 0));
+            temp.add(Calendar.MONTH, ((mainModel.getSummaryViewScale() == 2) ? 1 : 0));
+        }
         model.loadList(timeToView, temp.getTimeInMillis());
         detailAdapter.notifyDataSetChanged();
         if (model.getDetailList().size() != 0)
@@ -285,6 +300,12 @@ public class SummaryFragment extends Fragment {
         }else{
             prev.setEnabled(true);
             prev.setVisibility(View.VISIBLE);
+        }
+        if(mainModel.getSummaryViewScale() == 3){
+            next.setEnabled(false);
+            next.setVisibility(View.INVISIBLE);
+            prev.setEnabled(false);
+            prev.setVisibility(View.INVISIBLE);
         }
     }
 }

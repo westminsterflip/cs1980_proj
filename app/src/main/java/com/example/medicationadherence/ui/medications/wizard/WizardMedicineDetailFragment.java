@@ -101,10 +101,13 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
                             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                             ((TextView)root.findViewById(R.id.wizardStartDate)).setText(new SimpleDateFormat("MM/dd/yyyy", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(new Date(cal.getTimeInMillis())));
                             model.setStartDate(cal.getTimeInMillis());
-                            if (cal.getTimeInMillis() > currTime)
+                            if (cal.getTimeInMillis() > currTime) {
                                 active.setChecked(false);
-                            else
+                                active.setEnabled(false);
+                            }else {
                                 active.setChecked(true);
+                                active.setEnabled(true);
+                            }
                         }
                     });
                 } else {
@@ -269,6 +272,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
         if (model.getMedName() != null)
             medName.setText(model.getMedName());
         active.setChecked(model.isActive());
+        active.setEnabled(model.isActiveEnabled());
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY,0);
         cal.clear(Calendar.AM_PM);
@@ -303,6 +307,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
     public void onPause() {
         pause();
         model.setDatePickerDialog(datePickerDialog);
+        model.setActiveEnabled(active.isEnabled());
         super.onPause();
     }
 
