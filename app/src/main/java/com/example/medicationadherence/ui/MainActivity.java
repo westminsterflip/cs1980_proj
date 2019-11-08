@@ -16,7 +16,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 import androidx.work.BackoffPolicy;
-import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
@@ -66,10 +65,8 @@ public class MainActivity extends AppCompatActivity {
         if (first.getTimeInMillis() < curr.getTimeInMillis())
             first.add(Calendar.DAY_OF_YEAR, 1);
         long initialDelay = first.getTimeInMillis() - curr.getTimeInMillis();
-        Data repoData = new Data.Builder().put("repository", model.getRepository()).build();
         OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(UpdateLogsWorker.class).setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
-                .setBackoffCriteria(BackoffPolicy.LINEAR, OneTimeWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS)
-                .setInputData(repoData).build();
+                .setBackoffCriteria(BackoffPolicy.LINEAR, OneTimeWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS).build();
         WorkManager.getInstance(getApplicationContext()).enqueue(workRequest);
     }
 

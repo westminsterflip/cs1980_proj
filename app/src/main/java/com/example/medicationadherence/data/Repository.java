@@ -1,6 +1,6 @@
 package com.example.medicationadherence.data;
 
-import android.app.Application;
+import android.content.Context;
 import android.os.AsyncTask;
 
 import com.example.medicationadherence.data.room.MedicationDatabase;
@@ -25,7 +25,7 @@ public class Repository {
     private MedicationLogDAO mMedicationLogDAO;
     private ScheduleDAO mScheduleDAO;
 
-    public Repository(Application application){
+    public Repository(Context application){
         MedicationDatabase medDB = MedicationDatabase.getDatabase(application);
         mDoctorDAO = medDB.getDoctorsDao();
         mInstructionsDAO = medDB.getInstructionsDao();
