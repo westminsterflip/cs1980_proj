@@ -1,5 +1,6 @@
 package com.example.medicationadherence.ui;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -14,13 +15,22 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
+import androidx.work.BackoffPolicy;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import com.example.medicationadherence.R;
+import com.example.medicationadherence.background.UpdateLogsWorker;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
 
+    @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -47,7 +57,20 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-
+        Calendar curr = Calendar.getInstance();
+        Calendar first = Calendar.getInstance();
+        first.clear();
+        first.set(Calendar.YEAR, curr.get(Calendar.YEAR));
+        first.set(Calendar.MONTH, curr.get(Calendar.MONTH));
+        first.set(Calendar.DAY_OF_YEAR, curr.get(Calendar.DAY_OF_YEAR));
+        if (first.getTimeInMillis() < curr.getTimeInMillis())
+            first.add(Calendar.DAY_OF_YEAR, 1);
+        long initialDelay = first.getTimeInMillis() - curr.getTimeInMillis();
+        Data repoData = new Data.Builder().put("repository", model.getRepository()).build();
+        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(UpdateLogsWorker.class).setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+                .setBackoffCriteria(BackoffPolicy.LINEAR, OneTimeWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS)
+                .setInputData(repoData).build();
+        WorkManager.getInstance(getApplicationContext()).enqueue(workRequest);
     }
 
     @Override
@@ -56,6 +79,4 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
-
-
 }

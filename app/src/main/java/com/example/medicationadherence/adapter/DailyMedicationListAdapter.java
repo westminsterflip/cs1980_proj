@@ -291,7 +291,7 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
                 holderm.taken.performClick();
             }
         } else {
-            holderm.missed.setEnabled(false);
+            holderm.missed.setEnabled(false);//use setClickable to disable w/o greying out
             holderm.taken.setEnabled(false);
         }
     }
