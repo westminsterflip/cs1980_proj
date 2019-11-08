@@ -27,7 +27,6 @@ import com.example.medicationadherence.ui.MainViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -99,12 +98,9 @@ public class SummaryFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(mainModel.getSummaryViewScale() == 3){
-                    System.out.println(new Date(model.getLast()));
                     mainModel.setSummaryViewScale(0);
                     updateTimeToView(0);
                 }
-                else
-                    System.out.println(mainModel.getSummaryViewScale());
                 mainModel.setSummaryViewScale(position);
                 updateTimeToView(0);
             }

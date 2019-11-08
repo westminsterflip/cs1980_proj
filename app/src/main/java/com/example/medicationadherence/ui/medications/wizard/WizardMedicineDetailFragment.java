@@ -228,7 +228,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!s.toString().equals("")) {
                     model.setMedName(s.toString());
-                    exitable = !Objects.requireNonNull(perPillDosage.getText()).toString().equals("");
+                    exitable = !Objects.requireNonNull(perPillDosage.getText()).toString().equals("")&&Integer.parseInt(perPillDosage.getText().toString())!=0;
                 } else {
                     exitable = false;
                 }
@@ -250,7 +250,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals("")) {
+                if(!s.toString().equals("") && Integer.parseInt(s.toString())!=0) {
                     model.setMedDosage(s.toString() + dosageUnitSelector.getSelectedItem());
                     exitable = !Objects.requireNonNull(medName.getText()).toString().equals("");
                 } else {
@@ -334,7 +334,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
             medNameRequired.setVisibility(View.VISIBLE);
         else
             medNameRequired.setVisibility(View.INVISIBLE);
-        if(Objects.requireNonNull(perPillDosage.getText()).toString().equals(""))
+        if(Objects.requireNonNull(perPillDosage.getText()).toString().equals("") || Integer.parseInt(perPillDosage.getText().toString()) == 0)
             dosageRequired.setVisibility(View.VISIBLE);
         else
             dosageRequired.setVisibility(View.INVISIBLE);
@@ -350,7 +350,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
         if(!Objects.requireNonNull(onHand.getText()).toString().equals(""))
             model.setOnHand(Integer.parseInt(onHand.getText().toString()));
         if(!Objects.requireNonNull(cost.getText()).toString().equals(""))
-            model.setCost(Double.parseDouble(cost.getText().toString()));
+            model.setCost(Integer.parseInt(cost.getText().toString()));
         model.setAsNeeded(asNeeded.isChecked());
         model.setLate((String)timeChooser.getSelectedItem());
     }

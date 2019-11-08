@@ -143,7 +143,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
-            android:text="*dosage per pill required"
+            android:text="*invalid pill dosage"
             android:textColor="@android:color/holo_red_light"
             android:visibility="invisible"
             app:layout_constraintStart_toStartOf="@+id/textInputLayout5"

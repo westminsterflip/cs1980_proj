@@ -47,7 +47,7 @@ public class DailyMedListViewModel extends ViewModel {
         for(int o = 0; o < 3; o++){
             List<ScheduleDAO.ScheduleCard> medList = new ArrayList<>();
             for(ScheduleDAO.ScheduleCard s : cardList){
-                if(s.days[(day + 5 + o) % 7] && s.startDate <= dateList.get(o) && (s.endDate >= dateList.get(o) || s.endDate == -1) && s.active)
+                if(s.days[(day + 5 + o) % 7] && s.startDate <= dateList.get(o) && (s.endDate >= dateList.get(o) || s.endDate == -1) && s.active)//TODO: active handling not great still
                     medList.add(s);
             }
             medList.sort(new Comparator<ScheduleDAO.ScheduleCard>() {
@@ -58,8 +58,20 @@ public class DailyMedListViewModel extends ViewModel {
             });
             bigMedList.add(medList);
         }
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(mainModel.getEarliestLog());
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_YEAR);
+        c.clear();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_YEAR, day);
+        if (c.getTimeInMillis() > dateList.get(0)) {
+            dateList.remove(0);
+            bigMedList.remove(0);
+        }
         medications.setValue(bigMedList);
-        loadPrevMeds();
     }
 
     long getDate() {
