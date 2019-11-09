@@ -3,6 +3,7 @@ package com.example.medicationadherence.ui.home.schedule;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,6 +22,7 @@ import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.os.ConfigurationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,6 +37,7 @@ import com.example.medicationadherence.ui.MainViewModel;
 import com.example.medicationadherence.ui.medications.wizard.RootWizardFragment;
 import com.example.medicationadherence.ui.medications.wizard.RootWizardViewModel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
@@ -59,6 +62,9 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
     private ImageButton increaseDoses;
     private ImageButton decreaseDoses;
     private TextView doseCountSize;
+    private AlertDialog dup;
+    private ArrayList<Schedule> duplicates = new ArrayList<>();
+    private AlertDialog hasDup;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -183,8 +189,13 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
                             try {
                                 double doseVal = Double.parseDouble(s.toString());
                                 decreaseDoses.setEnabled(doseVal - .5 > 0);
-                            } catch (NumberFormatException e){decreaseDoses.setEnabled(false);}
-                        }
+                                doseCountDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(doseVal != 0);
+                            } catch (NumberFormatException e){
+                                decreaseDoses.setEnabled(false);
+                                doseCountDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                            }
+                        } else
+                            doseCountDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
                     }
 
                     @Override
@@ -219,11 +230,16 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
                         c.set(Calendar.MINUTE, minute);
                         if ( fromWizard)
                             wizardModel.setScheduleTime(c.getTimeInMillis());
-                        wizardModel.getSchedules().add(new Schedule(null, Double.parseDouble(doseCount.getText().toString()), c.getTimeInMillis(), fill));
-                        wizardModel.getDoseEntries(fill);
-                        wizardModel.getScheduleTimeAdapter().notifyDataSetChanged();
-                        if(fromWizard && (sun.isChecked() || mon.isChecked() || tues.isChecked() || wed.isChecked() || thurs.isChecked() || fri.isChecked() || sat.isChecked()) && wizardModel.getDoseEntries(fill).size() != 0)
-                            exitable = true;
+                        Schedule newS = new Schedule(null, Double.parseDouble(doseCount.getText().toString()), c.getTimeInMillis(), fill);
+                        if (wizardModel.getSchedules().contains(newS)){
+                            dup = new AlertDialog.Builder(getContext()).setTitle("Error:").setMessage("Time and dosage already scheduled").setNegativeButton("OK", null).show();
+                        } else {
+                            wizardModel.getSchedules().add(newS);
+                            wizardModel.getDoseEntries(fill);
+                            wizardModel.getScheduleTimeAdapter().notifyDataSetChanged();
+                            if (fromWizard && (sun.isChecked() || mon.isChecked() || tues.isChecked() || wed.isChecked() || thurs.isChecked() || fri.isChecked() || sat.isChecked()) && wizardModel.getDoseEntries(fill).size() != 0)
+                                exitable = true;
+                        }
                     }
                 }).setNegativeButton("BACK", new DialogInterface.OnClickListener() {
                     @Override
@@ -232,6 +248,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
                     }
                 }).create();
                 doseCountDialog.show();
+                doseCountDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
             }
         };
         addTime.setOnClickListener(new View.OnClickListener() {
@@ -261,6 +278,9 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
                 doseCountDialog = wizardModel.getDoseDialog();
                 doseCountDialog.show();
             }
+            if (savedInstanceState.getBoolean("dupVisible", false)){
+                dup = new AlertDialog.Builder(getContext()).setTitle("Error:").setMessage("Time and dosage already scheduled").setNegativeButton("OK", null).show();
+            }
         }
         return root;
     }
@@ -269,6 +289,25 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
     public void showErrors() {
         timeErr.setVisibility(wizardModel.getDoseEntries(checks).size() == 0 ? View.VISIBLE : View.INVISIBLE);
         dayErr.setVisibility((sun.isChecked() || mon.isChecked() || tues.isChecked() || wed.isChecked() || thurs.isChecked() || fri.isChecked() || sat.isChecked()) ? View.INVISIBLE : View.VISIBLE);
+        CharSequence entries[] = new CharSequence[duplicates.size()];
+        for (int i = 0; i < duplicates.size(); i ++){
+            Schedule s = duplicates.get(i);
+            String st = s.getNumDoses() + " @ ";
+            if(DateFormat.is24HourFormat(getContext()))
+                st += new SimpleDateFormat("kk:mm", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(s.getTime());
+            else
+                st += new SimpleDateFormat("hh:mm aa", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(s.getTime());
+            entries[i] = st;
+        }
+        if(duplicates.size() != 0)
+            hasDup = new AlertDialog.Builder(getContext()).setTitle("Error: duplicate entries").setItems(entries, null).setNegativeButton("Remove Duplicates", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    wizardModel.getSchedules().removeAll(duplicates);
+                    wizardModel.getDoseEntries(fill);
+                    wizardModel.getScheduleTimeAdapter().notifyDataSetChanged();
+                }
+            }).show();
     }
 
     @Override
@@ -299,7 +338,18 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
 
     @Override
     public boolean isExitable() {
-        return exitable;
+        duplicates.clear();
+        for (Schedule s : wizardModel.getSchedules()){
+            if (Converters.fromBoolArray(s.getWeekdays()) != Converters.fromBoolArray(fill)){
+                Schedule s1;
+                if (wizardModel.getSchedules().contains(s1 = new Schedule(s.getMedicationID(), s.getNumDoses(), s.getTime(), fill))){
+                    duplicates.add(s1);
+                }
+            }
+        }
+        if (duplicates.size() == 0)
+            return exitable;
+        return false;
     }
 
     @Override
@@ -313,11 +363,16 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
                 outState.putBoolean("doseDialogVisible", doseCountDialog.isShowing());
                 wizardModel.setDoseDialog(doseCountDialog);
             }
+            if (dup != null){
+                outState.putBoolean("dupVisible", dup.isShowing());
+            }
         }
         if (timePickerDialog != null)
             timePickerDialog.dismiss();
         if (doseCountDialog != null)
             doseCountDialog.dismiss();
+        if (dup != null)
+            dup.dismiss();
         super.onSaveInstanceState(outState);
     }
 }

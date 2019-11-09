@@ -293,6 +293,8 @@ public class RootWizardViewModel extends ViewModel {
     public ArrayList<String> getDoseEntries(boolean[] days){
         if(doseEntries == null)
             doseEntries = new ArrayList<>();
+        else
+            doseEntries.clear();
         for(Schedule s : schedules){
             if (Converters.fromBoolArray(s.getWeekdays()) == Converters.fromBoolArray(days)){
                 String st = s.getNumDoses() + " @ ";

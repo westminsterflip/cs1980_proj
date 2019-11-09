@@ -15,10 +15,10 @@ import androidx.room.ForeignKey;
 
 import com.example.medicationadherence.data.Converters;
 
-import static androidx.room.ForeignKey.SET_NULL;
+import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(primaryKeys = {"medicationID", "time", "weekdays"}, foreignKeys =
-@ForeignKey(entity = Medication.class, parentColumns = "medicationID", childColumns = "medicationID", onDelete = SET_NULL))
+@ForeignKey(entity = Medication.class, parentColumns = "medicationID", childColumns = "medicationID", onDelete = CASCADE))
 public class Schedule {
     @NonNull
 	private Long medicationID;       /* FK Medication.medicationID */
@@ -73,6 +73,7 @@ public class Schedule {
 	    if (!(obj instanceof Schedule))
 	        return false;
         Schedule s = (Schedule) obj;
+        if (s.medicationID == null && this.medicationID != null || this.medicationID == null && s.medicationID != null) return false;
 	    return (s.medicationID == null && this.medicationID == null || s.medicationID.equals(this.medicationID)) && s.numDoses == this.numDoses && s.time == this.time && Converters.fromBoolArray(s.weekdays) == Converters.fromBoolArray(this.weekdays);
     }
 }

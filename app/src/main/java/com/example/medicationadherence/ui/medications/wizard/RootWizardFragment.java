@@ -235,6 +235,7 @@ public class RootWizardFragment extends Fragment {
                         }
                     } else if(currentLoc == R.id.editScheduleCardFragment2){
                         model.getThisList().get(model.getDestinations().getValue().indexOf(R.id.editScheduleCardFragment2)).pause();
+                        model.setScheduleTimeAdapter(null);
                         innerNavController.navigateUp();
                     } else if (currentLoc == R.id.editScheduleFragment2){
                         scheduled = true;

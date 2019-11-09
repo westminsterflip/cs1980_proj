@@ -181,22 +181,26 @@ public class WizardDoctorDetailFragment extends Fragment implements RootWizardFr
             update.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int pos = -1;
-                    for(int i = 0; i < doctorList.size(); i++){
-                        if (doctorList.get(i).getDoctorID().equals(doctorList.get(doctorChooser.getSelectedItemPosition()).getDoctorID())){
-                            pos = i;
-                            break;
+                    if (!exitable){
+                        showErrors();
+                    } else {
+                        int pos = -1;
+                        for (int i = 0; i < doctorList.size(); i++) {
+                            if (doctorList.get(i).getDoctorID().equals(doctorList.get(doctorChooser.getSelectedItemPosition()).getDoctorID())) {
+                                pos = i;
+                                break;
+                            }
                         }
+                        if (pos != -1)
+                            mainModel.updateDoctor(doctorList.get(pos).getDoctorID(), Objects.requireNonNull(doctorName.getText()).toString(), Objects.requireNonNull(practiceName.getText()).toString(), Objects.requireNonNull(practiceAddress.getText()).toString(), Objects.requireNonNull(phone.getText()).toString());
+                        adapter.clear();
+                        doctorList.get(pos).setName(doctorName.getText().toString());
+                        doctorList.get(pos).setPracticeName(practiceName.getText().toString());
+                        doctorList.get(pos).setAddress(practiceAddress.getText().toString());
+                        doctorList.get(pos).setPhone(phone.getText().toString());
+                        adapter.addAll(getNames(doctorList));
+                        adapter.notifyDataSetChanged();
                     }
-                    if(pos!=-1)
-                        mainModel.updateDoctor(doctorList.get(pos).getDoctorID(), Objects.requireNonNull(doctorName.getText()).toString(), Objects.requireNonNull(practiceName.getText()).toString(), Objects.requireNonNull(practiceAddress.getText()).toString(), Objects.requireNonNull(phone.getText()).toString());
-                    adapter.clear();
-                    doctorList.get(pos).setName(doctorName.getText().toString());
-                    doctorList.get(pos).setPracticeName(practiceName.getText().toString());
-                    doctorList.get(pos).setAddress(practiceAddress.getText().toString());
-                    doctorList.get(pos).setPhone(phone.getText().toString());
-                    adapter.addAll(getNames(doctorList));
-                    adapter.notifyDataSetChanged();
                 }
             });
             remove.setVisibility(View.VISIBLE);
