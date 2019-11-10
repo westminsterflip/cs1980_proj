@@ -136,6 +136,8 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
             } else {
                 holderm.missed.setChecked(true);
             }
+        } else {
+            //TODO: make log if day is before today
         }
 
         Calendar temp = Calendar.getInstance();
