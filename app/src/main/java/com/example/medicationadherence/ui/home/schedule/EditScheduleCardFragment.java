@@ -31,9 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.adapter.ScheduleTimeAdapter;
 import com.example.medicationadherence.data.Converters;
-import com.example.medicationadherence.data.room.entities.Medication;
 import com.example.medicationadherence.data.room.entities.Schedule;
-import com.example.medicationadherence.ui.MainViewModel;
 import com.example.medicationadherence.ui.medications.wizard.RootWizardFragment;
 import com.example.medicationadherence.ui.medications.wizard.RootWizardViewModel;
 
@@ -45,7 +43,6 @@ import java.util.Objects;
 public class EditScheduleCardFragment extends Fragment implements RootWizardFragment.ErrFragment {
     private boolean fromWizard;
     private RootWizardViewModel wizardModel;
-    private Long medID;
     private TextView timeErr;
     private TextView dayErr;
     private Switch daily;
@@ -53,11 +50,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
     private boolean exitable = false;
     private boolean[] checks;
     private TimePickerDialog timePickerDialog;
-    private boolean cancel = false;
     private AlertDialog doseCountDialog;
-    private boolean[] fill = {false,false,false,false,false,false,false,true};
-    private MainViewModel mainModel;
-    private int numDoses;
     private EditText doseCount;
     private ImageButton increaseDoses;
     private ImageButton decreaseDoses;
@@ -77,8 +70,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
             else if(!wizardModel.getThisList().get(4).equals(this))
                 wizardModel.getThisList().set(4,this);
         }
-        cancel = Converters.fromBoolArray(checks) == 0;
-        mainModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
+        wizardModel.getScheduleFD(checks);
     }
 
     @Override
@@ -143,17 +135,12 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
         fri.setOnCheckedChangeListener(dayListener);
         sat.setOnCheckedChangeListener(dayListener);
 
-        for (Schedule s : wizardModel.getSchedules()){
-            if (Converters.fromBoolArray(s.getWeekdays()) == Converters.fromBoolArray(checks))
-                s.setWeekdays(fill);
-        }
-
         times.setLayoutManager(new LinearLayoutManager(getContext()));
         if (wizardModel.getScheduleTimeAdapter() == null)
-            wizardModel.setScheduleTimeAdapter(new ScheduleTimeAdapter(wizardModel, wizardModel.getDoseEntries(fill), fill));
+            wizardModel.setScheduleTimeAdapter(new ScheduleTimeAdapter(wizardModel, wizardModel.getDoseEntries(), checks));
         times.setAdapter(wizardModel.getScheduleTimeAdapter());
 
-        if(Converters.fromBoolArray(checks) != 0 && wizardModel.getDoseEntries(fill).size() != 0)
+        if(Converters.fromBoolArray(checks) != 0 && wizardModel.getDoseEntries().size() != 0)
             exitable = true;
         final TimePickerDialog.OnTimeSetListener listener = new TimePickerDialog.OnTimeSetListener() {
             @SuppressWarnings("ConstantConditions")
@@ -230,14 +217,19 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
                         c.set(Calendar.MINUTE, minute);
                         if ( fromWizard)
                             wizardModel.setScheduleTime(c.getTimeInMillis());
-                        Schedule newS = new Schedule(null, Double.parseDouble(doseCount.getText().toString()), c.getTimeInMillis(), fill);
-                        if (wizardModel.getSchedules().contains(newS)){
+                        Schedule newS = new Schedule(null, Double.parseDouble(doseCount.getText().toString()), c.getTimeInMillis(), checks);
+                        if (wizardModel.getScheduleFD(checks).contains(newS)){//Doesn't catch if days overlap but aren't same ex: same time/dose but one daily one on monday
                             dup = new AlertDialog.Builder(getContext()).setTitle("Error:").setMessage("Time and dosage already scheduled").setNegativeButton("OK", null).show();
                         } else {
-                            wizardModel.getSchedules().add(newS);
-                            wizardModel.getDoseEntries(fill);
+                            wizardModel.getScheduleFD(checks).add(newS);
+                            String st = newS.getNumDoses() + " @ ";
+                            if(DateFormat.is24HourFormat(getContext()))
+                                st += new SimpleDateFormat("kk:mm", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(newS.getTime());
+                            else
+                                st += new SimpleDateFormat("hh:mm aa", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(newS.getTime());
+                            wizardModel.getDoseEntries().add(st);
                             wizardModel.getScheduleTimeAdapter().notifyDataSetChanged();
-                            if (fromWizard && (sun.isChecked() || mon.isChecked() || tues.isChecked() || wed.isChecked() || thurs.isChecked() || fri.isChecked() || sat.isChecked()) && wizardModel.getDoseEntries(fill).size() != 0)
+                            if (fromWizard && (sun.isChecked() || mon.isChecked() || tues.isChecked() || wed.isChecked() || thurs.isChecked() || fri.isChecked() || sat.isChecked()) && wizardModel.getDoseEntries().size() != 0)
                                 exitable = true;
                         }
                     }
@@ -266,8 +258,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
             ((RootWizardFragment) Objects.requireNonNull(Objects.requireNonNull(getParentFragment()).getParentFragment())).setAdd();
             ((RootWizardFragment) Objects.requireNonNull(getParentFragment().getParentFragment())).setHasLast(false);
         } else {
-            Medication medication = mainModel.getMedWithID(medID);
-            medName.setText(medication.getName());
+            int i = 1/0; //I don't think this ever happens, so crash if it does
         }
         if (savedInstanceState != null){
             if (savedInstanceState.getBoolean("timePickerVisible", false)){
@@ -282,12 +273,11 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
                 dup = new AlertDialog.Builder(getContext()).setTitle("Error:").setMessage("Time and dosage already scheduled").setNegativeButton("OK", null).show();
             }
             if (savedInstanceState.getBoolean("hasDupVisible", false)){
-                for (Schedule s : wizardModel.getSchedules()){
-                    if (Converters.fromBoolArray(s.getWeekdays()) != Converters.fromBoolArray(fill)){
-                        Schedule s1;
-                        if (wizardModel.getSchedules().contains(s1 = new Schedule(s.getMedicationID(), s.getNumDoses(), s.getTime(), fill))){
-                            duplicates.add(s1);
-                        }
+                boolean[] days = {sun.isChecked(), mon.isChecked(), tues.isChecked(), wed.isChecked(), thurs.isChecked(), fri.isChecked(), sat.isChecked()};
+                for (Schedule s : wizardModel.getScheduleFD(checks)){
+                    Schedule s1;
+                    if (wizardModel.getSchedules().contains(s1 = new Schedule(s.getMedicationID(), s.getNumDoses(), s.getTime(), days))){
+                        duplicates.add(s);
                     }
                 }
                 CharSequence[] entries = new CharSequence[duplicates.size()];
@@ -303,8 +293,8 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
                 hasDup = new AlertDialog.Builder(getContext()).setTitle("Error: duplicate entries").setItems(entries, null).setNegativeButton("Remove Duplicates", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        wizardModel.getSchedules().removeAll(duplicates);
-                        wizardModel.getDoseEntries(fill);
+                        wizardModel.getScheduleFD(checks).removeAll(duplicates);
+                        wizardModel.loadDoseEntries(true);
                         wizardModel.getScheduleTimeAdapter().notifyDataSetChanged();
                     }
                 }).show();
@@ -315,7 +305,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
 
     @Override
     public void showErrors() {
-        timeErr.setVisibility(wizardModel.getDoseEntries(checks).size() == 0 ? View.VISIBLE : View.INVISIBLE);
+        timeErr.setVisibility(wizardModel.getDoseEntries().size() == 0 ? View.VISIBLE : View.INVISIBLE);
         dayErr.setVisibility((sun.isChecked() || mon.isChecked() || tues.isChecked() || wed.isChecked() || thurs.isChecked() || fri.isChecked() || sat.isChecked()) ? View.INVISIBLE : View.VISIBLE);
         CharSequence[] entries = new CharSequence[duplicates.size()];
         for (int i = 0; i < duplicates.size(); i ++){
@@ -331,8 +321,8 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
             hasDup = new AlertDialog.Builder(getContext()).setTitle("Error: duplicate entries").setItems(entries, null).setNegativeButton("Remove Duplicates", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    wizardModel.getSchedules().removeAll(duplicates);
-                    wizardModel.getDoseEntries(fill);
+                    wizardModel.getScheduleFD(checks).removeAll(duplicates);
+                    wizardModel.loadDoseEntries(true);
                     wizardModel.getScheduleTimeAdapter().notifyDataSetChanged();
                 }
             }).show();
@@ -341,38 +331,30 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
     @Override
     public void pause() {
         boolean[] days = {sun.isChecked(), mon.isChecked(), tues.isChecked(), wed.isChecked(), thurs.isChecked(), fri.isChecked(), sat.isChecked()};
-        for (Schedule s : wizardModel.getSchedules()){
-            if(Converters.fromBoolArray(s.getWeekdays()) == Converters.fromBoolArray(fill)){
-                s.setWeekdays(days);
+        for (Schedule s : wizardModel.getScheduleFD(checks)){
+            s.setWeekdays(days);
+            if (!wizardModel.getSchedules().contains(s)){
+                wizardModel.getSchedules().add(s);
+            } else {
+                try {
+                    throw new Exception("THIS SHOULDN'T HAPPEN");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
-        wizardModel.setDoseNull();
-    }
-
-    public void cancel(){
-        ArrayList<Schedule> remove = new ArrayList<>();
-        for (Schedule s : wizardModel.getSchedules()){
-            if(Converters.fromBoolArray(s.getWeekdays()) == Converters.fromBoolArray(fill)){
-                if (cancel)
-                    remove.add(s);
-                else
-                    s.setWeekdays(checks);
-            }
-        }
-        if (cancel)
-            wizardModel.getSchedules().removeAll(remove);
+        wizardModel.getSchedules().removeAll(wizardModel.getRemoved());
         wizardModel.setDoseNull();
     }
 
     @Override
     public boolean isExitable() {
         duplicates.clear();
-        for (Schedule s : wizardModel.getSchedules()){
-            if (Converters.fromBoolArray(s.getWeekdays()) != Converters.fromBoolArray(fill)){
-                Schedule s1;
-                if (wizardModel.getSchedules().contains(s1 = new Schedule(s.getMedicationID(), s.getNumDoses(), s.getTime(), fill))){
-                    duplicates.add(s1);
-                }
+        boolean[] days = {sun.isChecked(), mon.isChecked(), tues.isChecked(), wed.isChecked(), thurs.isChecked(), fri.isChecked(), sat.isChecked()};
+        for (Schedule s : wizardModel.getScheduleFD(checks)){
+            Schedule s1;
+            if (Converters.fromBoolArray(checks) != Converters.fromBoolArray(days) && wizardModel.getSchedules().contains(s1 = new Schedule(s.getMedicationID(), s.getNumDoses(), s.getTime(), days))){
+                duplicates.add(s);
             }
         }
         if (duplicates.size() == 0)

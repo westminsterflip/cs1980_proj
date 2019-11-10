@@ -44,10 +44,13 @@ public class DailyMedListViewModel extends ViewModel {
 
     public void loadMeds(){
         List<List<ScheduleDAO.ScheduleCard>> bigMedList = new ArrayList<>();
+        Calendar c1 = Calendar.getInstance();
+        long sta = c1.getTimeInMillis();
+        c1.add(Calendar.DAY_OF_YEAR, -1);
         for(int o = 0; o < 3; o++){
             List<ScheduleDAO.ScheduleCard> medList = new ArrayList<>();
             for(ScheduleDAO.ScheduleCard s : cardList){
-                if(s.days[(day + 5 + o) % 7] && s.startDate <= dateList.get(o) && (s.endDate >= dateList.get(o) || s.endDate == -1) && s.active)//TODO: active handling not great still
+                if(s.days[(day + 5 + o) % 7] && s.startDate <= dateList.get(o) && (s.endDate >= dateList.get(o) || s.endDate == -1) && (s.active || s.startDate > sta || s.endDate < c1.getTimeInMillis()))//TODO: active handling not great still
                     medList.add(s);
             }
             medList.sort(new Comparator<ScheduleDAO.ScheduleCard>() {
@@ -109,8 +112,11 @@ public class DailyMedListViewModel extends ViewModel {
         if (Objects.requireNonNull(medList).size() > 2)
             Objects.requireNonNull(medList).remove(0);
         List<ScheduleDAO.ScheduleCard> medList1 = new ArrayList<>();
+        Calendar c = Calendar.getInstance();
+        long sta = c.getTimeInMillis();
+        c.add(Calendar.DAY_OF_YEAR, -1);
         for(ScheduleDAO.ScheduleCard s : cardList){
-            if(s.days[day % 7] && s.startDate <= dateList.get(2) && (s.endDate >= dateList.get(2) || s.endDate == -1) && s.active)
+            if(s.days[day % 7] && s.startDate <= dateList.get(2) && (s.endDate >= dateList.get(2) || s.endDate == -1) && (s.active || s.startDate > sta || s.endDate < c.getTimeInMillis()))
                 medList1.add(s);
         }
         medList1.sort(new Comparator<ScheduleDAO.ScheduleCard>() {
@@ -135,10 +141,13 @@ public class DailyMedListViewModel extends ViewModel {
         c.set(Calendar.YEAR, year);
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_YEAR, day);
+        Calendar c1 = Calendar.getInstance();
+        long sta = c1.getTimeInMillis();
+        c1.add(Calendar.DAY_OF_YEAR, -1);
         if (c.getTimeInMillis() <= dateList.get(0)) {
             List<ScheduleDAO.ScheduleCard> medList1 = new ArrayList<>();
             for (ScheduleDAO.ScheduleCard s : cardList) {
-                if (s.days[(day + 5) % 7] && s.startDate <= dateList.get(0) && (s.endDate >= dateList.get(0) || s.endDate == -1) && s.active)
+                if (s.days[(day + 5) % 7] && s.startDate <= dateList.get(0) && (s.endDate >= dateList.get(0) || s.endDate == -1) && (s.active || s.startDate > sta || s.endDate < c1.getTimeInMillis()))
                     medList1.add(s);
             }
             medList1.sort(new Comparator<ScheduleDAO.ScheduleCard>() {

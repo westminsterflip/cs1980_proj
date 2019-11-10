@@ -65,6 +65,8 @@ public class RootWizardViewModel extends ViewModel {
     private AlertDialog doseDialog;
     private ScheduleTimeAdapter scheduleTimeAdapter;
     private boolean activeEnabled = true;
+    private ArrayList<Schedule> scheduleFD;
+    private ArrayList<Schedule> ucScheduleFD;
 
     String getMedImage() {
         return medImage;
@@ -268,6 +270,24 @@ public class RootWizardViewModel extends ViewModel {
         return schedules;
     }
 
+    public ArrayList<Schedule> getScheduleFD(boolean[] days) {
+        if (schedules == null)
+            getSchedules();
+        if (scheduleFD == null){
+            scheduleFD = new ArrayList<>();
+            for (Schedule s : schedules){
+                if(Converters.fromBoolArray(s.getWeekdays()) == Converters.fromBoolArray(days)) {
+                    scheduleFD.add(s);
+                }
+            }
+        }
+        return scheduleFD;
+    }
+
+    public void setScheduleFDNull() {
+        this.scheduleFD = null;
+    }
+
     private void loadScheduleLists(){
         if (scheduleDays == null) scheduleDays = new ArrayList<>();
         scheduleDays.clear();
@@ -290,27 +310,30 @@ public class RootWizardViewModel extends ViewModel {
         this.navController = navController;
     }
 
-    public ArrayList<String> getDoseEntries(boolean[] days){
-        if(doseEntries == null)
+    public ArrayList<String> getDoseEntries(){
+        if(doseEntries == null){
             doseEntries = new ArrayList<>();
-        else
-            doseEntries.clear();
-        for(Schedule s : schedules){
-            if (Converters.fromBoolArray(s.getWeekdays()) == Converters.fromBoolArray(days)){
-                String st = s.getNumDoses() + " @ ";
-                if(DateFormat.is24HourFormat(context))
-                    st += new SimpleDateFormat("kk:mm", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(s.getTime());
-                else
-                    st += new SimpleDateFormat("hh:mm aa", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(s.getTime());
-                if (doseEntries.indexOf(st) == -1)
-                    doseEntries.add(st);
-            }
+            loadDoseEntries(false);
         }
         return doseEntries;
     }
 
+    public void loadDoseEntries(boolean clear){
+        if (clear)
+            doseEntries.clear();
+        for(Schedule s : scheduleFD){
+            String st = s.getNumDoses() + " @ ";
+            if(DateFormat.is24HourFormat(context))
+                st += new SimpleDateFormat("kk:mm", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(s.getTime());
+            else
+                st += new SimpleDateFormat("hh:mm aa", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(s.getTime());
+            if (doseEntries.indexOf(st) == -1)
+                doseEntries.add(st);
+        }
+    }
+
     public void removeTime(boolean[] days, String dose){
-        for (int i = schedules.size()-1 ; i >= 0; i--){
+        for (int i = scheduleFD.size()-1 ; i >= 0; i--){
             String doseText = dose.split(" ")[0];
             Calendar c = Calendar.getInstance();
             c.clear();
@@ -323,8 +346,8 @@ public class RootWizardViewModel extends ViewModel {
                 c.set(Calendar.MINUTE, Integer.valueOf(dose.split(" ")[2].split(":")[1]));
             }
             long time = c.getTimeInMillis();
-            if (schedules.get(i).getWeekdays() == days && schedules.get(i).getTime() == time)
-                removed.add(schedules.remove(i));
+            if (scheduleFD.get(i).getTime() == time)
+                removed.add(scheduleFD.remove(i));
             doseEntries.remove(dose);
         }
     }
@@ -375,7 +398,7 @@ public class RootWizardViewModel extends ViewModel {
         this.mainViewModel = mainViewModel;
     }
 
-    ArrayList<Schedule> getRemoved() {
+    public ArrayList<Schedule> getRemoved() {
         return removed;
     }
 
