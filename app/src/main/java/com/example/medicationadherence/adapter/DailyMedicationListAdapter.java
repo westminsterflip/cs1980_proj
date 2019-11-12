@@ -136,18 +136,21 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
             } else {
                 holderm.missed.setChecked(true);
             }
-        } else {
-            //TODO: make log if day is before today
         }
-
         Calendar temp = Calendar.getInstance();
+        long hr = temp.get(Calendar.HOUR_OF_DAY);
+        long min = temp.get(Calendar.MINUTE);
         temp.clear(Calendar.MILLISECOND);
         temp.clear(Calendar.SECOND);
         temp.clear(Calendar.MINUTE);
         temp.clear(Calendar.HOUR_OF_DAY);
         temp.clear(Calendar.HOUR);
         temp.clear(Calendar.AM_PM);
-        if(date == temp.getTimeInMillis()) {
+        long lateTime = mainModel.getMedWithID(medicationList.get(position).medicationID).getLateTime();
+        Calendar medTime = Calendar.getInstance();
+        medTime.setTimeInMillis(medicationList.get(position).timeOfDay-lateTime);
+        System.out.println("t1: " + hr + ":" + min + " t2: " + medTime.get(Calendar.HOUR_OF_DAY) + ":" + medTime.get(Calendar.MINUTE));
+        if(date == temp.getTimeInMillis() && hr*60+min >= medTime.get(Calendar.HOUR_OF_DAY)*60 + medTime.get(Calendar.MINUTE)) {
             View.OnClickListener radioListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -335,12 +335,6 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
             s.setWeekdays(days);
             if (!wizardModel.getSchedules().contains(s)){
                 wizardModel.getSchedules().add(s);
-            } else {
-                try {
-                    throw new Exception("THIS SHOULDN'T HAPPEN");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
         }
         wizardModel.getSchedules().removeAll(wizardModel.getRemoved());

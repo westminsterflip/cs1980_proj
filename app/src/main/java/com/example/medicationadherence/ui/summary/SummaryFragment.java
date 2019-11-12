@@ -270,6 +270,13 @@ public class SummaryFragment extends Fragment {
             temp.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale() == 0) ? 1 : 0));
             temp.add(Calendar.DAY_OF_YEAR, ((mainModel.getSummaryViewScale() == 1) ? 7 : 0));
             temp.add(Calendar.MONTH, ((mainModel.getSummaryViewScale() == 2) ? 1 : 0));
+        } else {
+            int day = temp.get(Calendar.DAY_OF_YEAR) + 1;
+            int year = temp.get(Calendar.YEAR);
+            temp.clear();
+            temp.set(Calendar.YEAR, year);
+            temp.set(Calendar.DAY_OF_YEAR, day);
+            temp.add(Calendar.MILLISECOND, -1);
         }
         model.loadList(timeToView, temp.getTimeInMillis());
         detailAdapter.notifyDataSetChanged();
