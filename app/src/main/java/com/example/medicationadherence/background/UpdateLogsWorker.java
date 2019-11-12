@@ -5,7 +5,6 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.work.BackoffPolicy;
-import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.Worker;
@@ -30,15 +29,16 @@ public class UpdateLogsWorker extends Worker {
     public Result doWork() {
         Repository repository = new Repository(getApplicationContext());
         List<ScheduleDAO.ScheduleCard> scheduleCards = getScheduleCard(repository);
+        Calendar c2 = Calendar.getInstance();
+        int year = c2.get(Calendar.YEAR);
+        int month = c2.get(Calendar.MONTH);
+        int day = c2.get(Calendar.DAY_OF_YEAR);
+        c2.clear();
+        c2.set(Calendar.YEAR, year);
+        c2.set(Calendar.MONTH, month);
+        c2.set(Calendar.DAY_OF_YEAR, day-1);
+        List<MedicationLog> dailyLogs = getDailyLogs(repository, c2.getTimeInMillis());
         Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_YEAR);
-        c.clear();
-        c.set(Calendar.YEAR, year);
-        c.set(Calendar.MONTH, month);
-        c.set(Calendar.DAY_OF_YEAR, day-1);
-        List<MedicationLog> dailyLogs = getDailyLogs(repository, c.getTimeInMillis());
         for(ScheduleDAO.ScheduleCard s : scheduleCards){
             if(s.days[(c.get(Calendar.DAY_OF_WEEK) + 6) % 7] && s.startDate <= c.getTimeInMillis() && (s.endDate >= c.getTimeInMillis() || s.endDate == -1) && s.active) {
                 int pos = -1;
@@ -63,7 +63,11 @@ public class UpdateLogsWorker extends Worker {
                         pos = i;
                 }
                 if (pos == -1) {
-                    repository.insert(new MedicationLog(s.medicationID, s.timeOfDay, false, 0));
+                    Calendar temp = Calendar.getInstance();
+                    temp.setTimeInMillis(s.timeOfDay);
+                    c2.set(Calendar.HOUR_OF_DAY, temp.get(Calendar.HOUR_OF_DAY));
+                    c2.set(Calendar.MINUTE, temp.get(Calendar.MINUTE));
+                    repository.insert(new MedicationLog(s.medicationID, c2.getTimeInMillis(), false, 0));
                 }
             }
         }
@@ -76,10 +80,8 @@ public class UpdateLogsWorker extends Worker {
         if (first.getTimeInMillis() < curr.getTimeInMillis())
             first.add(Calendar.DAY_OF_YEAR, 1);
         long initialDelay = first.getTimeInMillis() - curr.getTimeInMillis();
-        Data repoData = new Data.Builder().put("repository", repository).build();
         OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(UpdateLogsWorker.class).setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
-                .setBackoffCriteria(BackoffPolicy.LINEAR, OneTimeWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS)
-                .setInputData(repoData).build();
+                .setBackoffCriteria(BackoffPolicy.LINEAR, OneTimeWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS).build();
         WorkManager.getInstance(getApplicationContext()).enqueue(workRequest);
         return Result.success();
     }
