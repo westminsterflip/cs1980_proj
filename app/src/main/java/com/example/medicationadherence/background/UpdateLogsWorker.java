@@ -31,7 +31,13 @@ public class UpdateLogsWorker extends Worker {
         Repository repository = new Repository(getApplicationContext());
         List<ScheduleDAO.ScheduleCard> scheduleCards = getScheduleCard(repository);
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_YEAR, -1);
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_YEAR);
+        c.clear();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_YEAR, day-1);
         List<MedicationLog> dailyLogs = getDailyLogs(repository, c.getTimeInMillis());
         for(ScheduleDAO.ScheduleCard s : scheduleCards){
             if(s.days[(c.get(Calendar.DAY_OF_WEEK) + 6) % 7] && s.startDate <= c.getTimeInMillis() && (s.endDate >= c.getTimeInMillis() || s.endDate == -1) && s.active) {

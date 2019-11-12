@@ -50,7 +50,7 @@ public class DailyMedListViewModel extends ViewModel {
         for(int o = 0; o < 3; o++){
             List<ScheduleDAO.ScheduleCard> medList = new ArrayList<>();
             for(ScheduleDAO.ScheduleCard s : cardList){
-                if(s.days[(day + 5 + o) % 7] && s.startDate <= dateList.get(o) && (s.endDate >= dateList.get(o) || s.endDate == -1) && (s.active || s.startDate > sta || s.endDate < c1.getTimeInMillis()))//TODO: active handling not great still
+                if(s.days[(day + 5 + o) % 7] && s.startDate <= dateList.get(o) && (s.endDate >= dateList.get(o) || s.endDate == -1) && (s.active || s.startDate > sta || (s.endDate < c1.getTimeInMillis() && s.endDate != -1)))//TODO: active handling not great still
                     medList.add(s);
             }
             medList.sort(new Comparator<ScheduleDAO.ScheduleCard>() {
@@ -116,7 +116,7 @@ public class DailyMedListViewModel extends ViewModel {
         long sta = c.getTimeInMillis();
         c.add(Calendar.DAY_OF_YEAR, -1);
         for(ScheduleDAO.ScheduleCard s : cardList){
-            if(s.days[day % 7] && s.startDate <= dateList.get(2) && (s.endDate >= dateList.get(2) || s.endDate == -1) && (s.active || s.startDate > sta || s.endDate < c.getTimeInMillis()))
+            if(s.days[day % 7] && s.startDate <= dateList.get(2) && (s.endDate >= dateList.get(2) || s.endDate == -1) && (s.active || s.startDate > sta || (s.endDate < c.getTimeInMillis() && s.endDate != -1)))
                 medList1.add(s);
         }
         medList1.sort(new Comparator<ScheduleDAO.ScheduleCard>() {
@@ -147,7 +147,7 @@ public class DailyMedListViewModel extends ViewModel {
         if (c.getTimeInMillis() <= dateList.get(0)) {
             List<ScheduleDAO.ScheduleCard> medList1 = new ArrayList<>();
             for (ScheduleDAO.ScheduleCard s : cardList) {
-                if (s.days[(day + 5) % 7] && s.startDate <= dateList.get(0) && (s.endDate >= dateList.get(0) || s.endDate == -1) && (s.active || s.startDate > sta || s.endDate < c1.getTimeInMillis()))
+                if (s.days[(day + 5) % 7] && s.startDate <= dateList.get(0) && (s.endDate >= dateList.get(0) || s.endDate == -1) && (s.active || s.startDate > sta || (s.endDate < c1.getTimeInMillis() && s.endDate != -1)))
                     medList1.add(s);
             }
             medList1.sort(new Comparator<ScheduleDAO.ScheduleCard>() {
