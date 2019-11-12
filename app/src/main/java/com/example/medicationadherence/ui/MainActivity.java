@@ -25,6 +25,7 @@ import com.example.medicationadherence.background.UpdateLogsWorker;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.Calendar;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
@@ -66,12 +67,25 @@ public class MainActivity extends AppCompatActivity {
         if (first.getTimeInMillis() < curr.getTimeInMillis())
             first.add(Calendar.DAY_OF_YEAR, 1);
         long initialDelay = first.getTimeInMillis() - curr.getTimeInMillis();
-        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(UpdateLogsWorker.class).setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
-                .setBackoffCriteria(BackoffPolicy.LINEAR, OneTimeWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS).build();
-        WorkManager.getInstance(getApplicationContext()).enqueue(workRequest);
-        OneTimeWorkRequest activateWorkRequest = new OneTimeWorkRequest.Builder(MedActivationWorker.class).setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
-                .setBackoffCriteria(BackoffPolicy.LINEAR, OneTimeWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS).build();
-        WorkManager.getInstance(getApplicationContext()).enqueue(activateWorkRequest);
+        try {
+            WorkManager workManager = WorkManager.getInstance(getApplicationContext());
+            OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(UpdateLogsWorker.class).setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+                    .setBackoffCriteria(BackoffPolicy.LINEAR, OneTimeWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS).addTag("update").build();
+            if (workManager.getWorkInfosByTag("update").get() != null && workManager.getWorkInfosByTag("update").get().size() > 1) {
+                workManager.cancelAllWorkByTag("update");
+            }
+            if (workManager.getWorkInfosByTag("update").get() == null || workManager.getWorkInfosByTag("update").get().size() == 0) {
+                workManager.enqueue(workRequest);
+            }
+            OneTimeWorkRequest activateWorkRequest = new OneTimeWorkRequest.Builder(MedActivationWorker.class).setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+                    .setBackoffCriteria(BackoffPolicy.LINEAR, OneTimeWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS).addTag("activation").build();
+            if (workManager.getWorkInfosByTag("activation").get() != null && workManager.getWorkInfosByTag("activation").get().size() > 1) {
+                workManager.cancelAllWorkByTag("activation");
+            }
+            if (workManager.getWorkInfosByTag("activation").get() == null || workManager.getWorkInfosByTag("activation").get().size() == 0) {
+                workManager.enqueue(activateWorkRequest);
+            }
+        } catch (InterruptedException | ExecutionException e){e.printStackTrace();}
     }
 
     @Override

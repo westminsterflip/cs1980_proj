@@ -16,6 +16,7 @@ import com.example.medicationadherence.data.room.entities.MedicationLog;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class UpdateLogsWorker extends Worker {
@@ -80,9 +81,17 @@ public class UpdateLogsWorker extends Worker {
         if (first.getTimeInMillis() < curr.getTimeInMillis())
             first.add(Calendar.DAY_OF_YEAR, 1);
         long initialDelay = first.getTimeInMillis() - curr.getTimeInMillis();
-        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(UpdateLogsWorker.class).setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
-                .setBackoffCriteria(BackoffPolicy.LINEAR, OneTimeWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS).build();
-        WorkManager.getInstance(getApplicationContext()).enqueue(workRequest);
+        try {
+            WorkManager workManager = WorkManager.getInstance(getApplicationContext());
+            OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(UpdateLogsWorker.class).setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+                    .setBackoffCriteria(BackoffPolicy.LINEAR, OneTimeWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS).addTag("update").build();
+            if (workManager.getWorkInfosByTag("update").get() != null && workManager.getWorkInfosByTag("update").get().size() > 1) {
+                workManager.cancelAllWorkByTag("update");
+            }
+            if (workManager.getWorkInfosByTag("update").get() == null || workManager.getWorkInfosByTag("update").get().size() == 0) {
+                workManager.enqueue(workRequest);
+            }
+        } catch (InterruptedException | ExecutionException e){e.printStackTrace();}
         return Result.success();
     }
 

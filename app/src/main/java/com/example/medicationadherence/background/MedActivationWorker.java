@@ -15,6 +15,7 @@ import com.example.medicationadherence.data.room.entities.Medication;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class MedActivationWorker extends Worker {
@@ -38,8 +39,8 @@ public class MedActivationWorker extends Worker {
         c.set(Calendar.DAY_OF_YEAR, day);
         for(Medication m : medList){
             m.setStatus(m.getStartDate() >= c.getTimeInMillis() && (m.getEndDate() <= c.getTimeInMillis() || m.getEndDate() == -1));//use < for non-inclusive, but change in DailyMedListViewModel too
+            repository.getmMedicationDAO().update(m);
         }
-        repository.getmMedicationDAO().update((Medication[]) medList.toArray());
         Calendar curr = Calendar.getInstance();
         Calendar first = Calendar.getInstance();
         first.clear();
@@ -49,9 +50,17 @@ public class MedActivationWorker extends Worker {
         if (first.getTimeInMillis() < curr.getTimeInMillis())
             first.add(Calendar.DAY_OF_YEAR, 1);
         long initialDelay = first.getTimeInMillis() - curr.getTimeInMillis();
-        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(MedActivationWorker.class).setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
-                .setBackoffCriteria(BackoffPolicy.LINEAR, OneTimeWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS).build();
-        WorkManager.getInstance(getApplicationContext()).enqueue(workRequest);
+        try {
+            WorkManager workManager = WorkManager.getInstance(getApplicationContext());
+            OneTimeWorkRequest activateWorkRequest = new OneTimeWorkRequest.Builder(MedActivationWorker.class).setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+                    .setBackoffCriteria(BackoffPolicy.LINEAR, OneTimeWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS).addTag("activation").build();
+            if (workManager.getWorkInfosByTag("activation").get() != null && workManager.getWorkInfosByTag("activation").get().size() > 1) {
+                workManager.cancelAllWorkByTag("activation");
+            }
+            if (workManager.getWorkInfosByTag("activation").get() == null || workManager.getWorkInfosByTag("activation").get().size() == 0) {
+                workManager.enqueue(activateWorkRequest);
+            }
+        } catch (InterruptedException | ExecutionException e){e.printStackTrace();}
         return Result.success();
     }
 }
