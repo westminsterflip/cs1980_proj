@@ -54,7 +54,7 @@ public class RootWizardViewModel extends ViewModel {
     private ArrayList<Integer> scheduleDays;
     private NavController navController;
     private ArrayList<String> doseEntries;
-    public Context context;
+    private Context context;
     private long sMedID = -1;
     private MainViewModel mainViewModel;
     private ArrayList<Schedule> removed = new ArrayList<>();
@@ -66,7 +66,6 @@ public class RootWizardViewModel extends ViewModel {
     private ScheduleTimeAdapter scheduleTimeAdapter;
     private boolean activeEnabled = true;
     private ArrayList<Schedule> scheduleFD;
-    private ArrayList<Schedule> ucScheduleFD;
 
     String getMedImage() {
         return medImage;
@@ -177,11 +176,11 @@ public class RootWizardViewModel extends ViewModel {
         return this.model = model;
     }
 
-    public String getMedDosage() {
+    String getMedDosage() {
         return medDosage;
     }
 
-    public ArrayList<RootWizardFragment.ErrFragment> getThisList() {
+    ArrayList<RootWizardFragment.ErrFragment> getThisList() {
         return thisList;
     }
 
@@ -252,16 +251,16 @@ public class RootWizardViewModel extends ViewModel {
         this.scheduleAfter = scheduleAfter;
     }
 
-    public long getScheduleTime() {
+    long getScheduleTime() {
         return scheduleTime;
     }
 
-    public void setScheduleTime(long scheduleTime) {
+    void setScheduleTime(long scheduleTime) {
         this.scheduleTime = scheduleTime;
     }
 
     @SuppressWarnings("unchecked")
-    public ArrayList<Schedule> getSchedules() {
+    ArrayList<Schedule> getSchedules() {
         if(schedules == null)
             if(sMedID == -1)
                 schedules = new ArrayList<>();
@@ -270,7 +269,7 @@ public class RootWizardViewModel extends ViewModel {
         return schedules;
     }
 
-    public ArrayList<Schedule> getScheduleFD(boolean[] days) {
+    ArrayList<Schedule> getScheduleFD(boolean[] days) {
         if (schedules == null)
             getSchedules();
         if (scheduleFD == null){
@@ -284,7 +283,7 @@ public class RootWizardViewModel extends ViewModel {
         return scheduleFD;
     }
 
-    public void setScheduleFDNull() {
+    void setScheduleFDNull() {
         this.scheduleFD = null;
     }
 
@@ -297,7 +296,7 @@ public class RootWizardViewModel extends ViewModel {
         }
     }
 
-    public ArrayList<Integer> getScheduleDays() {
+    ArrayList<Integer> getScheduleDays() {
         loadScheduleLists();
         return scheduleDays;
     }
@@ -310,7 +309,7 @@ public class RootWizardViewModel extends ViewModel {
         this.navController = navController;
     }
 
-    public ArrayList<String> getDoseEntries(){
+    ArrayList<String> getDoseEntries(){
         if(doseEntries == null){
             doseEntries = new ArrayList<>();
             loadDoseEntries(false);
@@ -318,7 +317,7 @@ public class RootWizardViewModel extends ViewModel {
         return doseEntries;
     }
 
-    public void loadDoseEntries(boolean clear){
+    void loadDoseEntries(boolean clear){
         if (clear)
             doseEntries.clear();
         for(Schedule s : scheduleFD){
@@ -332,9 +331,8 @@ public class RootWizardViewModel extends ViewModel {
         }
     }
 
-    public void removeTime(boolean[] days, String dose){
+    public void removeTime(String dose){
         for (int i = scheduleFD.size()-1 ; i >= 0; i--){
-            String doseText = dose.split(" ")[0];
             Calendar c = Calendar.getInstance();
             c.clear();
             if(dose.split(" ").length == 4){
@@ -352,7 +350,7 @@ public class RootWizardViewModel extends ViewModel {
         }
     }
 
-    public void setDoseNull(){
+    void setDoseNull(){
         doseEntries = null;
     }
 
@@ -363,19 +361,6 @@ public class RootWizardViewModel extends ViewModel {
     void setsMedID(long sMedID) {
         this.sMedID = sMedID;
     }
-
-//    public void setMedication(String medImage, String medName, boolean active, Long doctorID, String medDosage, long startDate, long endDate, int containerVol, double cost, long late){
-//        this.medName = medName;
-//        this.active = active;
-//        this.doctorID = doctorID;
-//        this.medDosage = medDosage;
-//        this.startDate = startDate;
-//        this.endDate = endDate;
-//        this.containerVol = containerVol;
-//        this.cost = cost;
-//        this.medImage = medImage;
-//        this.late = late;
-//    }
 
     public void setMedication(Medication m){
         medName = m.getName();
@@ -390,15 +375,11 @@ public class RootWizardViewModel extends ViewModel {
         medImage = m.getMedImageURL();
     }
 
-    public MainViewModel getMainViewModel() {
-        return mainViewModel;
-    }
-
     void setMainViewModel(MainViewModel mainViewModel) {
         this.mainViewModel = mainViewModel;
     }
 
-    public ArrayList<Schedule> getRemoved() {
+    ArrayList<Schedule> getRemoved() {
         return removed;
     }
 
@@ -459,31 +440,35 @@ public class RootWizardViewModel extends ViewModel {
         this.selPos = selPos;
     }
 
-    public AlertDialog getDoseDialog() {
+    AlertDialog getDoseDialog() {
         return doseDialog;
     }
 
-    public void setDoseDialog(AlertDialog doseDialog) {
+    void setDoseDialog(AlertDialog doseDialog) {
         this.doseDialog = doseDialog;
     }
 
-    public ScheduleTimeAdapter getScheduleTimeAdapter() {
+    ScheduleTimeAdapter getScheduleTimeAdapter() {
         return scheduleTimeAdapter;
     }
 
-    public void setScheduleTimeAdapter(ScheduleTimeAdapter scheduleTimeAdapter) {
+    void setScheduleTimeAdapter(ScheduleTimeAdapter scheduleTimeAdapter) {
         this.scheduleTimeAdapter = scheduleTimeAdapter;
     }
 
-    public long getLateNS(){
+    long getLateNS(){
         return late;
     }
 
-    public boolean isActiveEnabled() {
+    boolean isActiveEnabled() {
         return activeEnabled;
     }
 
-    public void setActiveEnabled(boolean activeEnabled) {
+    void setActiveEnabled(boolean activeEnabled) {
         this.activeEnabled = activeEnabled;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 }

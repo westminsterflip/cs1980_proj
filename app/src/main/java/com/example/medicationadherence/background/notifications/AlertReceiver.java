@@ -1,4 +1,4 @@
-package com.example.medicationadherence.ui.home.schedule;
+package com.example.medicationadherence.background.notifications;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

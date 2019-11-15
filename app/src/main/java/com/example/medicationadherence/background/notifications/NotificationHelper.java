@@ -1,7 +1,6 @@
-package com.example.medicationadherence.ui.home.schedule;
+package com.example.medicationadherence.background.notifications;
 
 import android.annotation.TargetApi;
-import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -10,7 +9,6 @@ import android.content.ContextWrapper;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.example.medicationadherence.R;
 

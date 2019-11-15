@@ -18,6 +18,8 @@
     <string name="data_dialog_warning">"Warning: this will delete all stored data, do you wish to continue?"</string>
     <string name="doctor_update">A doctor with that name already exists.  Do you wish to update the existing entry?</string>
 
+    <string name="summary_no_data">No data</string>
+
     <string name="NotificationTitle">"MedTracker"</string>
     <string name="NotificationText">"It's time to take your meds!"</string>
 </resources>

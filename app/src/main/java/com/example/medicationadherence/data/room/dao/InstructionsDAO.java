@@ -16,8 +16,6 @@ import androidx.room.Update;
 
 import com.example.medicationadherence.data.room.entities.Instructions;
 
-import java.util.List;
-
 @Dao
 public interface InstructionsDAO {
     @Insert
@@ -28,9 +26,6 @@ public interface InstructionsDAO {
 
     @Delete
     void delete(Instructions... instruction);
-
-	@Query("SELECT * FROM INSTRUCTIONS")
-    List<Instructions> getAllInstructions();
 
     @Query("DELETE FROM INSTRUCTIONS")
     void clearTable();

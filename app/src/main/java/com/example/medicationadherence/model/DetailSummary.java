@@ -16,23 +16,11 @@ public class DetailSummary {
         return medName;
     }
 
-    public void setMedName(String medName) {
-        this.medName = medName;
-    }
-
     public double getPercTaken() {
         return percTaken;
     }
 
-    public void setPercTaken(double percTaken) {
-        this.percTaken = percTaken;
-    }
-
     public double getPercLate() {
         return percLate;
-    }
-
-    public void setPercLate(double percLate) {
-        this.percLate = percLate;
     }
 }

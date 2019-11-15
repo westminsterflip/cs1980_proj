@@ -27,9 +27,6 @@ public interface MedicationLogDAO {
     @Delete
     void delete(MedicationLog... medicationLog);
 
-	@Query("SELECT * FROM MEDICATIONLOG")
-    List<MedicationLog> getAllMedicationLogs();
-
     @Query("DELETE FROM MEDICATIONLOG")
     void clearTable();
 

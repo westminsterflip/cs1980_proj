@@ -294,7 +294,7 @@ public class SummaryFragment extends Fragment {
         } else {
             takenBar.setProgress(100, true);
             summaryTaken.setText("");
-            summaryLate.setText("No data");
+            summaryLate.setText(R.string.summary_no_data);
             summaryMissed.setText("");
         }
         if (model.getEarliest() >= mainModel.getSummaryTimeToView() && model.getEarliest() < temp.getTimeInMillis() || model.getEarliest() == 0){

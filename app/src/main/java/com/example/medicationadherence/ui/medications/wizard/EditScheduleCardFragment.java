@@ -1,4 +1,4 @@
-package com.example.medicationadherence.ui.home.schedule;
+package com.example.medicationadherence.ui.medications.wizard;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -36,10 +36,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.adapter.ScheduleTimeAdapter;
+import com.example.medicationadherence.background.notifications.AlertReceiver;
+import com.example.medicationadherence.background.notifications.NotificationHelper;
 import com.example.medicationadherence.data.Converters;
 import com.example.medicationadherence.data.room.entities.Schedule;
-import com.example.medicationadherence.ui.medications.wizard.RootWizardFragment;
-import com.example.medicationadherence.ui.medications.wizard.RootWizardViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -84,7 +84,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_edit_schedule_card, container, false);
         Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle("Schedule");
 
@@ -147,7 +147,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
 
         times.setLayoutManager(new LinearLayoutManager(getContext()));
         if (wizardModel.getScheduleTimeAdapter() == null)
-            wizardModel.setScheduleTimeAdapter(new ScheduleTimeAdapter(wizardModel, wizardModel.getDoseEntries(), checks));
+            wizardModel.setScheduleTimeAdapter(new ScheduleTimeAdapter(wizardModel, wizardModel.getDoseEntries()));
         times.setAdapter(wizardModel.getScheduleTimeAdapter());
 
         if(Converters.fromBoolArray(checks) != 0 && wizardModel.getDoseEntries().size() != 0)
@@ -156,7 +156,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
             @SuppressWarnings("ConstantConditions")
             @Override
             public void onTimeSet(TimePicker view, final int hourOfDay, final int minute) {
-                View v = inflater.inflate(R.layout.layout_dose_selector, null, false);
+                View v = inflater.inflate(R.layout.layout_dose_selector, container, false);
                 increaseDoses = v.findViewById(R.id.doseCountUp);
                 increaseDoses.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -267,8 +267,6 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
             medName.setVisibility(View.INVISIBLE);
             ((RootWizardFragment) Objects.requireNonNull(Objects.requireNonNull(getParentFragment()).getParentFragment())).setAdd();
             ((RootWizardFragment) Objects.requireNonNull(getParentFragment().getParentFragment())).setHasLast(false);
-        } else {
-            int i = 1/0; //I don't think this ever happens, so crash if it does
         }
         if (savedInstanceState != null){
             if (savedInstanceState.getBoolean("timePickerVisible", false)){
@@ -285,8 +283,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
             if (savedInstanceState.getBoolean("hasDupVisible", false)){
                 boolean[] days = {sun.isChecked(), mon.isChecked(), tues.isChecked(), wed.isChecked(), thurs.isChecked(), fri.isChecked(), sat.isChecked()};
                 for (Schedule s : wizardModel.getScheduleFD(checks)){
-                    Schedule s1;
-                    if (wizardModel.getSchedules().contains(s1 = new Schedule(s.getMedicationID(), s.getNumDoses(), s.getTime(), days))){
+                    if (wizardModel.getSchedules().contains(new Schedule(s.getMedicationID(), s.getNumDoses(), s.getTime(), days))){
                         duplicates.add(s);
                     }
                 }
@@ -356,8 +353,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
         duplicates.clear();
         boolean[] days = {sun.isChecked(), mon.isChecked(), tues.isChecked(), wed.isChecked(), thurs.isChecked(), fri.isChecked(), sat.isChecked()};
         for (Schedule s : wizardModel.getScheduleFD(checks)){
-            Schedule s1;
-            if (Converters.fromBoolArray(checks) != Converters.fromBoolArray(days) && wizardModel.getSchedules().contains(s1 = new Schedule(s.getMedicationID(), s.getNumDoses(), s.getTime(), days))){
+            if (Converters.fromBoolArray(checks) != Converters.fromBoolArray(days) && wizardModel.getSchedules().contains(new Schedule(s.getMedicationID(), s.getNumDoses(), s.getTime(), days))){
                 duplicates.add(s);
             }
         }

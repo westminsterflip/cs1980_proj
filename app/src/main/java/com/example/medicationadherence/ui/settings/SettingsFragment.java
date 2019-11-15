@@ -59,24 +59,23 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 return true;
             }
         });
+        Preference deleteData = findPreference("deleteData");
+        assert deleteData != null;
+        deleteData.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                new AlertDialog.Builder(Objects.requireNonNull(getContext())).setTitle("Delete Database")
+                        .setMessage(R.string.data_dialog_warning)
+                        .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mainModel.deleteAll();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .show();
+                return false;
+            }
+        });
     }
-
-    @Override
-    public void onDisplayPreferenceDialog(Preference preference) {
-        if (preference instanceof DataDialogPreference){
-            new AlertDialog.Builder(Objects.requireNonNull(getContext())).setTitle("Delete Database")
-                .setMessage(R.string.data_dialog_warning)
-                .setPositiveButton("yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mainModel.deleteAll();
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, null)
-                .show();
-        } else
-            super.onDisplayPreferenceDialog(preference);
-    }
-
-
 }

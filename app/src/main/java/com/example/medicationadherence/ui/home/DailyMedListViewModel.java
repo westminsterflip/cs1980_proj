@@ -42,7 +42,7 @@ public class DailyMedListViewModel extends ViewModel {
         return medications;
     }
 
-    public void loadMeds(){
+    private void loadMeds(){
         List<List<ScheduleDAO.ScheduleCard>> bigMedList = new ArrayList<>();
         Calendar c1 = Calendar.getInstance();
         long sta = c1.getTimeInMillis();
@@ -92,22 +92,22 @@ public class DailyMedListViewModel extends ViewModel {
         return dateList.size() == 2 ? -1 : dateList.get(0);
     }
 
-    public void setPrevDate(long prevDate) {
+    void setPrevDate(long prevDate) {
         dateList.set(0,prevDate);
     }
 
-    public long getNextDate() {
+    long getNextDate() {
         return dateList.get(dateList.size()-1);
     }
 
-    public void setNextDate(long nextDate) {
+    void setNextDate(long nextDate) {
         if (dateList.size()== 2)
             dateList.add(nextDate);
         else
             dateList.set(2,nextDate);
     }
 
-    public void loadNextMeds(){
+    void loadNextMeds(){
         List<List<ScheduleDAO.ScheduleCard>> medList = medications.getValue();
         if (Objects.requireNonNull(medList).size() > 2)
             Objects.requireNonNull(medList).remove(0);
@@ -129,7 +129,7 @@ public class DailyMedListViewModel extends ViewModel {
         medications.setValue(medList);
     }
 
-    public void loadPrevMeds(){
+    void loadPrevMeds(){
         List<List<ScheduleDAO.ScheduleCard>> medList = medications.getValue();
         Objects.requireNonNull(medList).remove(2);
         Calendar c = Calendar.getInstance();
@@ -163,7 +163,7 @@ public class DailyMedListViewModel extends ViewModel {
         medications.setValue(medList);
     }
 
-    public List<Long> getDateList() {
+    List<Long> getDateList() {
         if(dateList == null) {
             dateList = new ArrayList<>();
             dateList.add(-1L);
@@ -171,10 +171,6 @@ public class DailyMedListViewModel extends ViewModel {
             dateList.add(-1L);
         }
         return dateList;
-    }
-
-    public void setDateList(List<Long> dateList) {
-        this.dateList = dateList;
     }
 
     public MainViewModel getMainModel() {
@@ -185,7 +181,7 @@ public class DailyMedListViewModel extends ViewModel {
         this.mainModel = mainModel;
     }
 
-    public void setCardList(List<ScheduleDAO.ScheduleCard> cardList) {
+    void setCardList(List<ScheduleDAO.ScheduleCard> cardList) {
         this.cardList = cardList;
     }
 

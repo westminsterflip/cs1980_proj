@@ -240,7 +240,7 @@ public class Repository {
         private long date;
         private long nextDay;
 
-        public GetDailyLogTask(MedicationLogDAO medicationLogDAO, long date, long nextDay) {
+        GetDailyLogTask(MedicationLogDAO medicationLogDAO, long date, long nextDay) {
             this.medicationLogDAO = medicationLogDAO;
             this.date = date;
             this.nextDay = nextDay;
@@ -260,7 +260,7 @@ public class Repository {
         private long newTimeLate;
         private boolean taken;
 
-        public UpdateLogTask(MedicationLogDAO medicationLogDAO, Long medicationID, long date, long oldTimeLate, long newTimeLate, boolean taken) {
+        UpdateLogTask(MedicationLogDAO medicationLogDAO, Long medicationID, long date, long oldTimeLate, long newTimeLate, boolean taken) {
             this.medicationLogDAO = medicationLogDAO;
             this.medicationID = medicationID;
             this.date = date;
@@ -322,25 +322,15 @@ public class Repository {
 
     private static class RemoveAsyncTask extends AsyncTask<Object, Void, Void> {
         private DoctorDAO doctorDAO;
-        private InstructionsDAO instructionsDAO;
         private MedicationDAO medicationDAO;
-        private MedicationLogDAO medicationLogDAO;
         private ScheduleDAO scheduleDAO;
 
         RemoveAsyncTask(DoctorDAO doctorDAO) {
             this.doctorDAO = doctorDAO;
         }
 
-        RemoveAsyncTask(InstructionsDAO instructionsDAO) {
-            this.instructionsDAO = instructionsDAO;
-        }
-
         RemoveAsyncTask(MedicationDAO medicationDAO) {
             this.medicationDAO = medicationDAO;
-        }
-
-        RemoveAsyncTask(MedicationLogDAO medicationLogDAO) {
-            this.medicationLogDAO = medicationLogDAO;
         }
 
         RemoveAsyncTask(ScheduleDAO scheduleDAO) {
@@ -351,12 +341,8 @@ public class Repository {
         protected Void doInBackground(Object... objects) {
             if(doctorDAO != null){
                 doctorDAO.delete((Doctor) objects[0]);
-            } else if (instructionsDAO != null){
-                instructionsDAO.delete((Instructions) objects[0]);
             } else if (medicationDAO != null){
                 medicationDAO.delete((Medication) objects[0]);
-            } else if (medicationLogDAO != null){
-                medicationLogDAO.delete((MedicationLog) objects[0]);
             } else if (scheduleDAO != null){
                 scheduleDAO.delete((Schedule) objects[0]);
             }

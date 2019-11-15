@@ -78,7 +78,7 @@ public class RootWizardFragment extends Fragment {
         model.getDestinations().observe(this, destObserver);
         destinations = model.getDestinations().getValue();
         mainModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
-        model.context = getContext();
+        model.setContext(getContext());
         model.setsMedID(RootWizardFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getMedicationID());
         if (model.getModel() == null)
             medModel = model.setModel(new ViewModelProvider((MedicationFragment) Objects.requireNonNull(RootWizardFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getMedFragmentInst()).get(0)).get(MedicationViewModel.class));
@@ -285,17 +285,17 @@ public class RootWizardFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    public void setHasNext(boolean hasNext){
+    void setHasNext(boolean hasNext){
         nextFinish.setText(hasNext ? "Next" : "Finish");
         nextArrow.setVisibility(hasNext ? View.VISIBLE : View.INVISIBLE);
     }
 
-    public void setHasLast(boolean hasLast){
+    void setHasLast(boolean hasLast){
         cancelBack.setText(hasLast ? "Back" : "Cancel");
         backArrow.setVisibility(hasLast ? View.VISIBLE : View.INVISIBLE);
     }
 
-    public void setAdd(){
+    void setAdd(){
         nextFinish.setText(("Add"));
         nextArrow.setVisibility(View.INVISIBLE);
     }

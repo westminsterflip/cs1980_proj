@@ -17,12 +17,10 @@ import java.util.ArrayList;
 public class ScheduleTimeAdapter extends RecyclerView.Adapter {
     private RootWizardViewModel model;
     private ArrayList<String> doses;
-    private boolean[] days;
 
-    public ScheduleTimeAdapter(RootWizardViewModel model, ArrayList<String> doses, boolean[] days) {
+    public ScheduleTimeAdapter(RootWizardViewModel model, ArrayList<String> doses) {
         this.model = model;
         this.doses = doses;
-        this.days = days;
     }
 
     @NonNull
@@ -39,7 +37,7 @@ public class ScheduleTimeAdapter extends RecyclerView.Adapter {
         timeHolder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                model.removeTime(days, doses.get(position));
+                model.removeTime(doses.get(position));
                 notifyDataSetChanged();
             }
         });
@@ -54,7 +52,7 @@ public class ScheduleTimeAdapter extends RecyclerView.Adapter {
         private TextView dose;
         private ImageButton remove;
 
-        public TimeHolder(@NonNull View view) {
+        TimeHolder(@NonNull View view) {
             super(view);
             this.dose = view.findViewById(R.id.timeCardDoses);
             this.remove = view.findViewById(R.id.timeCardRemove);

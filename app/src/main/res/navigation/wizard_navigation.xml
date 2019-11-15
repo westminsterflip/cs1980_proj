@@ -23,7 +23,7 @@
     </fragment>
     <fragment
         android:id="@+id/editScheduleCardFragment2"
-        android:name="com.example.medicationadherence.ui.home.schedule.EditScheduleCardFragment"
+        android:name="com.example.medicationadherence.ui.medications.wizard.EditScheduleCardFragment"
         android:label="fragment_edit_schedule_card"
         tools:layout="@layout/fragment_edit_schedule_card" >
         <action
@@ -35,7 +35,7 @@
     </fragment>
     <fragment
         android:id="@+id/editScheduleFragment2"
-        android:name="com.example.medicationadherence.ui.home.schedule.EditScheduleFragment"
+        android:name="com.example.medicationadherence.ui.medications.wizard.EditScheduleFragment"
         android:label="fragment_edit_schedule"
         tools:layout="@layout/fragment_edit_schedule" >
         <action

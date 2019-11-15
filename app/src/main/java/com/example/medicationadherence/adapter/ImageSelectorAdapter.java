@@ -66,7 +66,7 @@ public class ImageSelectorAdapter extends RecyclerView.Adapter {
         private ImageView imageItem;
         private ImageView check;
 
-        public SelectorViewHolder(View itemView) {
+        SelectorViewHolder(View itemView) {
             super(itemView);
             imageItem = itemView.findViewById(R.id.imageItem);
             check = itemView.findViewById(R.id.imageCheck);

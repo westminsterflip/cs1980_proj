@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         }
         super.onCreate(savedInstanceState);
-        MainViewModel model = new ViewModelProvider(this).get(MainViewModel.class);
+        new ViewModelProvider(this).get(MainViewModel.class);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_USER);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);

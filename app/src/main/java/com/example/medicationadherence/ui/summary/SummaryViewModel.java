@@ -19,15 +19,11 @@ public class SummaryViewModel extends ViewModel {
     private double missed = 0;
     private long last = -1;
 
-    public List<DetailSummary> getDetailList() {
+    List<DetailSummary> getDetailList() {
         return detailList;
     }
 
-    public void setDetailList(List<DetailSummary> detailList) {
-        this.detailList = detailList;
-    }
-
-    public void loadList(long startDate, long endDate){
+    void loadList(long startDate, long endDate){
         if (detailList == null)
             detailList = new ArrayList<>();
         else
@@ -57,7 +53,7 @@ public class SummaryViewModel extends ViewModel {
         }
     }
 
-    public long getEarliest() {
+    long getEarliest() {
         if (earliest == 0)
             earliest = mainModel.getEarliestLog();
         return earliest;
@@ -67,11 +63,11 @@ public class SummaryViewModel extends ViewModel {
         return taken;
     }
 
-    public double getLate() {
+    double getLate() {
         return late;
     }
 
-    public double getMissed() {
+    double getMissed() {
         return missed;
     }
 
@@ -79,11 +75,11 @@ public class SummaryViewModel extends ViewModel {
         this.mainModel = mainModel;
     }
 
-    public long getLast() {
+    long getLast() {
         return last;
     }
 
-    public void setLast(long last) {
+    void setLast(long last) {
         this.last = last;
     }
 }

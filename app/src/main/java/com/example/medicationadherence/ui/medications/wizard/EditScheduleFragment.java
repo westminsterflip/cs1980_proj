@@ -1,4 +1,4 @@
-package com.example.medicationadherence.ui.home.schedule;
+package com.example.medicationadherence.ui.medications.wizard;
 
 import android.graphics.Canvas;
 import android.graphics.drawable.ColorDrawable;
@@ -20,16 +20,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.adapter.StartEndDaysScheduleAdapter;
-import com.example.medicationadherence.ui.medications.wizard.RootWizardFragment;
-import com.example.medicationadherence.ui.medications.wizard.RootWizardViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Objects;
 
 public class EditScheduleFragment extends Fragment implements RootWizardFragment.ErrFragment {
-    RootWizardViewModel wizardModel;
-    RecyclerView recyclerView;
-    FloatingActionButton fab;
+    private RootWizardViewModel wizardModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,8 +42,8 @@ public class EditScheduleFragment extends Fragment implements RootWizardFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_edit_schedule, container, false);
-        recyclerView = root.findViewById(R.id.scheduleEditorRecyclerView);
-        fab = root.findViewById(R.id.scheduleAddButton);
+        RecyclerView recyclerView = root.findViewById(R.id.scheduleEditorRecyclerView);
+        FloatingActionButton fab = root.findViewById(R.id.scheduleAddButton);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +84,7 @@ public class EditScheduleFragment extends Fragment implements RootWizardFragment
         private Drawable trashIcon;
         private ColorDrawable background;
 
-        public SwipeDeleteCallback(StartEndDaysScheduleAdapter daysScheduleAdapter) {
+        SwipeDeleteCallback(StartEndDaysScheduleAdapter daysScheduleAdapter) {
             super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
             this.daysScheduleAdapter = daysScheduleAdapter;
             trashIcon = getResources().getDrawable(R.drawable.ic_delete_24px, null);

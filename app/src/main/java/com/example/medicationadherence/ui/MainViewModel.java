@@ -106,8 +106,6 @@ public class MainViewModel extends AndroidViewModel {
 
     public Doctor getDoctorWithID(Long doctorID){return repository.getDocWithID(doctorID);}
 
-    public String getInstWithID(Long medicationID){return repository.getInstWithID(medicationID);}
-
     public Medication getMedWithID(Long medicationID){return repository.getMedWithID(medicationID);}
 
     public void updateMedication(Long id, String medImageURL, String name, boolean status, Long doctorID, String dosage, long startDate, long endDate, int containerVolume, double cost, long lateTime){

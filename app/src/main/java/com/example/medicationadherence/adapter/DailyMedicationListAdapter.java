@@ -49,7 +49,7 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
     private DailyMedListViewModel dailyModel;
     private Bundle bundle;
 
-    public DailyMedicationListAdapter(List<ScheduleDAO.ScheduleCard> medicationList, Activity activity, MainViewModel mainModel, List<MedicationLog> logList, long date, DailyMedListViewModel dailyModel){
+    DailyMedicationListAdapter(List<ScheduleDAO.ScheduleCard> medicationList, Activity activity, MainViewModel mainModel, List<MedicationLog> logList, long date, DailyMedListViewModel dailyModel){
         this.medicationList = medicationList;
         this.activity = activity;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
@@ -223,6 +223,7 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
                                     out1.set(Calendar.SECOND, 0);
                                     mainModel.insert(new MedicationLog(medicationList.get(position).medicationID, medDate, true, out1.getTimeInMillis()-out.getTimeInMillis()));
                                     dailyModel.setOpenPos(-1);
+                                    bundle = dailyModel.getTimePickerDialog().onSaveInstanceState();
                                 }
                             };
                             dailyModel.setListener(listener);
@@ -233,8 +234,9 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
                                     dailyModel.setOpenPos(-1);
                                 }
                             });
-                            if (position == dailyModel.getOpenPos() && bundle != null)
+                            if (bundle != null){
                                 dailyModel.getTimePickerDialog().onRestoreInstanceState(bundle);
+                            }
                             dailyModel.setOpenPos(position);
                             dailyModel.getTimePickerDialog().show();
                         } else {
@@ -271,6 +273,7 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
                                     out2.set(Calendar.MINUTE, temp.get(Calendar.MINUTE));
                                     mainModel.updateMedLog(logList.get(pos1).getMedicationID(), logList.get(pos1).getDate(), logList.get(pos1).getTimeLate(), out1.getTimeInMillis() - out2.getTimeInMillis(), true);
                                     dailyModel.setOpenPos(-1);
+                                    bundle = dailyModel.getTimePickerDialog().onSaveInstanceState();
                                 }
                             };
                             dailyModel.setListener(listener);
@@ -281,7 +284,7 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
                                     dailyModel.setOpenPos(-1);
                                 }
                             });
-                            if (position == dailyModel.getOpenPos() && bundle != null)
+                            if (bundle != null)
                                     dailyModel.getTimePickerDialog().onRestoreInstanceState(bundle);
                             dailyModel.setOpenPos(position);
                             dailyModel.getTimePickerDialog().show();

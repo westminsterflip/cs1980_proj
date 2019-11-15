@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".ui.home.schedule.AlertReceiver"/>
+        <receiver android:name=".background.notifications.AlertReceiver"/>
     </application>
 
 </manifest>

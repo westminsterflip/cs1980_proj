@@ -195,7 +195,7 @@ public class MedicationFragment extends Fragment implements Serializable {
         private Drawable trashIcon;
         private ColorDrawable background;
 
-        public SwipeDeleteCallback(MedicationListAdapter medicationListAdapter) {
+        SwipeDeleteCallback(MedicationListAdapter medicationListAdapter) {
             super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
             this.medicationListAdapter = medicationListAdapter;
             trashIcon = getResources().getDrawable(R.drawable.ic_delete_24px, null);

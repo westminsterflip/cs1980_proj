@@ -12,15 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.data.Converters;
-import com.example.medicationadherence.ui.home.schedule.EditScheduleFragmentDirections;
+import com.example.medicationadherence.ui.medications.wizard.EditScheduleFragmentDirections;
 import com.example.medicationadherence.ui.medications.wizard.RootWizardViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
 public class StartEndDaysScheduleAdapter extends RecyclerView.Adapter {
-    ArrayList<Integer> days;
-    RootWizardViewModel model;
+    private ArrayList<Integer> days;
+    private RootWizardViewModel model;
     private ArrayList<Integer> justDeleted = new ArrayList<>();
     private ArrayList<Integer> justDelPos = new ArrayList<>();
     private Activity activity;
@@ -118,7 +118,7 @@ public class StartEndDaysScheduleAdapter extends RecyclerView.Adapter {
         final CheckBox sat;
         final CardView card;
 
-        public SEDSHolder(@NonNull View view) {
+        SEDSHolder(@NonNull View view) {
             super(view);
             sun = view.findViewById(R.id.scheduleCardSunday);
             mon = view.findViewById(R.id.scheduleCardMonday);
