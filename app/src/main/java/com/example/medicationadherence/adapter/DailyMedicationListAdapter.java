@@ -37,7 +37,6 @@ import com.example.medicationadherence.ui.home.DailyMedListViewModel;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class DailyMedicationListAdapter extends RecyclerView.Adapter implements Serializable {
@@ -118,7 +117,6 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
             c.clear();
             c.set(Calendar.HOUR_OF_DAY, hour);
             c.set(Calendar.MINUTE, minute);
-            System.out.println(new Date(medicationList.get(position).timeOfDay));
             if (c.getTimeInMillis() == medicationList.get(position).timeOfDay)
                 pos = i;
         }
@@ -151,7 +149,6 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
         long lateTime = mainModel.getMedWithID(medicationList.get(position).medicationID).getLateTime();
         Calendar medTime = Calendar.getInstance();
         medTime.setTimeInMillis(medicationList.get(position).timeOfDay-lateTime);
-        System.out.println("t1: " + hr + ":" + min + " t2: " + medTime.get(Calendar.HOUR_OF_DAY) + ":" + medTime.get(Calendar.MINUTE));
         if(date == temp.getTimeInMillis() && hr*60+min >= medTime.get(Calendar.HOUR_OF_DAY)*60 + medTime.get(Calendar.MINUTE)) {
             View.OnClickListener radioListener = new View.OnClickListener() {
                 @Override

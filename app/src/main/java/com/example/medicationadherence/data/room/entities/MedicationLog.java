@@ -14,7 +14,7 @@ import androidx.room.ForeignKey;
 
 import static androidx.room.ForeignKey.CASCADE;
 
-@Entity(primaryKeys = {"medicationID", "date", "taken", "timeLate"}, foreignKeys =
+@Entity(primaryKeys = {"medicationID", "date"}, foreignKeys =
 @ForeignKey(entity = Medication.class, parentColumns = "medicationID", childColumns = "medicationID", onDelete = CASCADE))
 public class MedicationLog {
     @NonNull
