@@ -2,7 +2,6 @@ package com.example.medicationadherence.ui.home.schedule;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -81,7 +80,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
         }
         wizardModel.getScheduleFD(checks);
 
-        notificationManager = NotificationManagerCompat.from(this);
+        notificationManager = NotificationManagerCompat.from(getContext());
     }
 
     @Override
@@ -396,7 +395,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
         super.onSaveInstanceState(outState);
     }
 
-    @Override
+    //@Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute){
         Calendar c = Calendar.getInstance();
         c.set(Calendar.HOUR_OF_DAY, hourOfDay);
@@ -407,15 +406,15 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
     }
 
     private void startAlarm(Calendar c){
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, AlertReceiver);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
-
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent());
+        AlarmManager alarmManager = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getContext(), AlertReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 1, intent, 0);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
     }
 
     public void sendOnChannel1(String title, String message) {
-        NotificationCompat.Builder nb = new NotificationHelper.getChannel1Notification(title, message);
-        NotificationHelper.getManager.notify(1, nb.build);
+        NotificationHelper nh = new NotificationHelper(getContext());
+        NotificationCompat.Builder nb = nh.getChannel1Notification(title, message);
+        nh.getManager().notify(1, nb.build());
     }
 }

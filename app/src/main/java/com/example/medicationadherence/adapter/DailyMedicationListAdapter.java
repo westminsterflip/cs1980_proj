@@ -37,6 +37,7 @@ import com.example.medicationadherence.ui.home.DailyMedListViewModel;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class DailyMedicationListAdapter extends RecyclerView.Adapter implements Serializable {
@@ -117,6 +118,7 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
             c.clear();
             c.set(Calendar.HOUR_OF_DAY, hour);
             c.set(Calendar.MINUTE, minute);
+            System.out.println(new Date(medicationList.get(position).timeOfDay));
             if (c.getTimeInMillis() == medicationList.get(position).timeOfDay)
                 pos = i;
         }
