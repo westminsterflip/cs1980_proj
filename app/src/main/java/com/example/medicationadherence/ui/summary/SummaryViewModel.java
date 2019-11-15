@@ -9,7 +9,7 @@ import com.example.medicationadherence.ui.MainViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SummaryViewModel extends ViewModel {
+class SummaryViewModel extends ViewModel {
     private List<DetailSummary> detailList;
     private double taken = 0;
     private double late = 0;

@@ -173,10 +173,6 @@ public class DailyMedListViewModel extends ViewModel {
         return dateList;
     }
 
-    public MainViewModel getMainModel() {
-        return mainModel;
-    }
-
     public void setMainModel(MainViewModel mainModel) {
         this.mainModel = mainModel;
     }

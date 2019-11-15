@@ -134,15 +134,6 @@ public class Repository {
         return null;
     }
 
-    public String getInstWithID(Long medicationID){
-        try {
-            return (String)new GetWIDTask(mInstructionsDAO).execute(medicationID).get();
-        } catch (ExecutionException | InterruptedException e){
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public Medication getMedWithID(Long medicationID){
         try {
             return (Medication)new GetWIDTask(mMedicationDAO).execute(medicationID).get();
@@ -352,17 +343,10 @@ public class Repository {
 
     private static class GetWIDTask extends AsyncTask<Object, Void, Object> {
         private DoctorDAO doctorDAO;
-        private InstructionsDAO instructionsDAO;
         private MedicationDAO medicationDAO;
-        //private MedicationLogDAO medicationLogDAO;
-        //private ScheduleDAO scheduleDAO;
 
         GetWIDTask(DoctorDAO doctorDAO) {
             this.doctorDAO = doctorDAO;
-        }
-
-        GetWIDTask(InstructionsDAO instructionsDAO) {
-            this.instructionsDAO = instructionsDAO;
         }
 
         GetWIDTask(MedicationDAO medicationDAO){
@@ -374,8 +358,6 @@ public class Repository {
             Object lng = objects[0];
             if (doctorDAO != null) {
                 return doctorDAO.getWithID((Long) lng);
-            } else if (instructionsDAO != null) {
-                return instructionsDAO.getInstWithID((Long) lng);
             } else if (medicationDAO != null) {
                 return medicationDAO.getMedWithID((Long) lng);
             }
