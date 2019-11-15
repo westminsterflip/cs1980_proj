@@ -1,8 +1,13 @@
 package com.example.medicationadherence.ui.home.schedule;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.Editable;
@@ -22,6 +27,8 @@ import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.os.ConfigurationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -58,6 +65,8 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
     private AlertDialog dup;
     private ArrayList<Schedule> duplicates = new ArrayList<>();
     private AlertDialog hasDup;
+    private NotificationManagerCompat notificationManager;
+    public static final String CHANNEL_1_ID = "channel1";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +80,8 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
                 wizardModel.getThisList().set(4,this);
         }
         wizardModel.getScheduleFD(checks);
+
+        notificationManager = NotificationManagerCompat.from(this);
     }
 
     @Override
@@ -383,5 +394,28 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
         if (hasDup != null)
             hasDup.dismiss();
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute){
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        c.set(Calendar.MINUTE, minute);
+        c.set(Calendar.SECOND, 0);
+
+        startAlarm(c);
+    }
+
+    private void startAlarm(Calendar c){
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlertReceiver);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent());
+    }
+
+    public void sendOnChannel1(String title, String message) {
+        NotificationCompat.Builder nb = new NotificationHelper.getChannel1Notification(title, message);
+        NotificationHelper.getManager.notify(1, nb.build);
     }
 }
