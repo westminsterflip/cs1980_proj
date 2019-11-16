@@ -29,28 +29,24 @@
                     android:id="@+id/detailCardMedicineName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Medicine Name"
                     android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/detailCardTaken"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="TextView"
                     android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/detailCardLate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="TextView"
                     android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/detailCardMissed"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="TextView"
                     android:textSize="12sp" />
             </LinearLayout>
 

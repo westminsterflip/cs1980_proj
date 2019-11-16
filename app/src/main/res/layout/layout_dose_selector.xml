@@ -13,7 +13,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/doseCountText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/doseCountText"
-        app:srcCompat="@drawable/ic_minus" />
+        app:srcCompat="@drawable/ic_minus"
+        android:contentDescription="@string/decrease_dose_count" />
 
     <EditText
         android:id="@+id/doseCountText"
@@ -27,14 +28,14 @@
         app:layout_constraintEnd_toStartOf="@+id/doseCountSize"
         app:layout_constraintStart_toEndOf="@+id/doseCountDown"
         app:layout_constraintTop_toTopOf="parent"
-        android:importantForAutofill="no" />
+        android:importantForAutofill="no"
+        android:hint="@string/number_of_doses"/>
 
     <TextView
         android:id="@+id/doseCountSize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="5dp"
-        android:text="TextView"
         app:layout_constraintBottom_toBottomOf="@+id/doseCountText"
         app:layout_constraintEnd_toStartOf="@+id/doseCountUp"
         app:layout_constraintTop_toTopOf="@+id/doseCountText" />
@@ -50,5 +51,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/doseCountText"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/ic_add_24px" />
+        app:srcCompat="@drawable/ic_add_24px"
+        android:contentDescription="@string/increase_dose_count" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,7 +24,7 @@
                 android:id="@+id/wizardMedName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Medication name"
+                android:hint="@string/medication_name"
                 android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -33,7 +33,7 @@
             android:id="@+id/wizardMedNameRequired"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="*medication name required"
+            android:text="@string/medication_name_error"
             android:textColor="@android:color/holo_red_light"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="@+id/textInputLayout"
@@ -48,7 +48,7 @@
             android:layout_marginTop="5dp"
             android:layout_weight="1"
             android:checked="true"
-            android:text="Active"
+            android:text="@string/active"
             android:textAppearance="@style/Theme.AppCompat.DayNight"
             android:textColor="?attr/colorControlNormal"
             android:textSize="18sp"
@@ -60,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="Set start date"
+            android:text="@string/set_start_date"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="@+id/textInputLayout"
             app:layout_constraintTop_toBottomOf="@+id/wizardActive" />
@@ -71,7 +71,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginBottom="1dp"
-            android:text="00/00/0000"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/wizardSetStartDate"
             app:layout_constraintStart_toEndOf="@+id/wizardSetStartDate"
@@ -81,7 +80,7 @@
             android:id="@+id/wizardSetEndDate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Set end date"
+            android:text="@string/set_end_date"
             app:layout_constraintEnd_toEndOf="@+id/wizardSetStartDate"
             app:layout_constraintStart_toStartOf="@+id/textInputLayout"
             app:layout_constraintTop_toBottomOf="@+id/wizardSetStartDate" />
@@ -103,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginBottom="1dp"
-            android:text="invalid end date"
+            android:text="@string/end_date_error"
             android:textColor="@android:color/holo_red_light"
             android:textSize="18sp"
             android:visibility="invisible"
@@ -123,7 +122,7 @@
                 android:id="@+id/wizardPerPillDosage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Dosage per pill"
+                android:hint="@string/dosage_per_pill"
                 android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -143,7 +142,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
-            android:text="*invalid pill dosage"
+            android:text="@string/pill_dosage_error"
             android:textColor="@android:color/holo_red_light"
             android:visibility="invisible"
             app:layout_constraintStart_toStartOf="@+id/textInputLayout5"
@@ -162,7 +161,7 @@
                 android:id="@+id/wizardOnHand"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="# of pills at start"
+                android:hint="@string/start_pill_num"
                 android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -179,7 +178,7 @@
                 android:id="@+id/wizardCost"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Container cost"
+                android:hint="@string/container_cost"
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -187,7 +186,7 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Acceptable delay: "
+            android:text="@string/acceptable_delay"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="@+id/wizardActive"
             app:layout_constraintTop_toBottomOf="@+id/wizardPillDoseRequired" />
@@ -204,7 +203,7 @@
             android:id="@+id/wizardAsNeeded"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="As needed"
+            android:text="@string/as_needed"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="@+id/textInputLayout"
             app:layout_constraintTop_toBottomOf="@+id/textInputCost" />
@@ -220,7 +219,7 @@
                 android:id="@+id/wizardInstructions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Instructions" />
+                android:hint="@string/instructions" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

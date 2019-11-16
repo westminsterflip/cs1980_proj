@@ -15,7 +15,8 @@
         android:src="@drawable/ic_chevron_left"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/summary_previous" />
 
     <Spinner
         android:id="@+id/summaryUnitSelect"
@@ -36,7 +37,8 @@
         android:src="@drawable/ic_chevron_right"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/summary_next" />
 
     <!-- Doughnut chart starts here -->
 
@@ -120,7 +122,6 @@
                     android:id="@+id/summaryMissed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="summaryMissed"
                     android:textSize="20sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -130,7 +131,6 @@
                     android:id="@+id/summaryLate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="summaryLate"
                     android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -141,7 +141,6 @@
                     android:id="@+id/summaryTaken"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="summaryTaken"
                     android:textSize="20sp"
                     app:layout_constraintBottom_toTopOf="@+id/summaryLate"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -155,7 +154,8 @@
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_expand_more_24px"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/summaryTakenBar" />
+                    app:layout_constraintEnd_toEndOf="@+id/summaryTakenBar"
+                    android:contentDescription="@string/summary_expand" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -172,7 +172,7 @@
         android:id="@+id/summaryTodayButton"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:text="Today"
+        android:text="@string/today"
         app:layout_constraintBottom_toBottomOf="@+id/summaryUnitSelect"
         app:layout_constraintEnd_toStartOf="@+id/summaryNext"
         app:layout_constraintStart_toEndOf="@+id/summaryUnitSelect"

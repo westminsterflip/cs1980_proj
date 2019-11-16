@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
-            android:text="Prescribing Doctor Info:"
+            android:text="@string/prescribing_doctor_info"
             android:textColor="?attr/colorControlNormal"
             android:textSize="21sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +48,7 @@
                 android:id="@+id/wizardDoctorName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Doctor name"
+                android:hint="@string/doctor_name"
                 android:inputType="textPersonName" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -56,7 +56,7 @@
             android:id="@+id/wizardDocNameRequired"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="*doctor name required"
+            android:text="@string/doctor_name_error"
             android:textColor="@android:color/holo_red_light"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@+id/textInputDoctorName"
@@ -76,7 +76,7 @@
                 android:id="@+id/wizardPracticeName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Practice name"
+                android:hint="@string/practice_name"
                 android:inputType="textAutoComplete" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -93,7 +93,7 @@
                 android:id="@+id/wizardPracticeAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Practice address"
+                android:hint="@string/practice_address"
                 android:inputType="textAutoComplete|textPostalAddress" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -110,7 +110,7 @@
                 android:id="@+id/wizardPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Phone #"
+                android:hint="@string/phone_num"
                 android:inputType="phone" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -118,7 +118,7 @@
             android:id="@+id/wizardScheduleAfter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Schedule after creation"
+            android:text="@string/schedule_after"
             app:layout_constraintStart_toStartOf="@+id/wizardDoctorChooser"
             app:layout_constraintTop_toBottomOf="@+id/textInputPhone" />
 
@@ -129,7 +129,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
-            android:text="Update"
+            android:text="@string/update"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -142,7 +142,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
-            android:text="Remove"
+            android:text="@string/remove"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

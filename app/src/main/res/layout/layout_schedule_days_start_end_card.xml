@@ -33,7 +33,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:clickable="false"
-                    android:text="Su" />
+                    android:text="@string/sunday_abbv" />
 
                 <CheckBox
                     android:id="@+id/scheduleCardMonday"
@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:clickable="false"
-                    android:text="M" />
+                    android:text="@string/monday_abbv" />
 
                 <CheckBox
                     android:id="@+id/scheduleCardTuesday"
@@ -49,7 +49,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:clickable="false"
-                    android:text="T" />
+                    android:text="@string/tuesday_abbv" />
 
                 <CheckBox
                     android:id="@+id/scheduleCardWednesday"
@@ -57,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:clickable="false"
-                    android:text="W" />
+                    android:text="@string/wednesday_abbv" />
 
                 <CheckBox
                     android:id="@+id/scheduleCardThursday"
@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:clickable="false"
-                    android:text="Th" />
+                    android:text="@string/thursday_abbv" />
 
                 <CheckBox
                     android:id="@+id/scheduleCardFriday"
@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:clickable="false"
-                    android:text="F" />
+                    android:text="@string/friday_abbv" />
 
                 <CheckBox
                     android:id="@+id/scheduleCardSaturday"
@@ -81,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:clickable="false"
-                    android:text="S" />
+                    android:text="@string/saturday_abbv" />
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

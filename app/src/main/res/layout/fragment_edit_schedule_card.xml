@@ -13,7 +13,6 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="5dp"
-        android:text="TextView"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginTop="10dp"
-        android:text="Daily"
+        android:text="@string/daily_switch"
         app:layout_constraintStart_toStartOf="@+id/scheduleMedName"
         app:layout_constraintTop_toBottomOf="@+id/scheduleMedName" />
 
@@ -33,7 +32,7 @@
         android:id="@+id/timeCardDayErr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="*at least one day req."
+        android:text="@string/schedule_days_error"
         android:textColor="@android:color/holo_red_light"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/scheduleDaily"
@@ -55,49 +54,49 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Su" />
+            android:text="@string/sunday_abbv" />
 
         <CheckBox
             android:id="@+id/scheduleMonday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="M" />
+            android:text="@string/monday_abbv" />
 
         <CheckBox
             android:id="@+id/scheduleTuesday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="T" />
+            android:text="@string/tuesday_abbv" />
 
         <CheckBox
             android:id="@+id/scheduleWednesday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="W" />
+            android:text="@string/wednesday_abbv" />
 
         <CheckBox
             android:id="@+id/scheduleThursday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Th" />
+            android:text="@string/thursday_abbv" />
 
         <CheckBox
             android:id="@+id/scheduleFriday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="F" />
+            android:text="@string/friday_abbv" />
 
         <CheckBox
             android:id="@+id/scheduleSaturday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="S" />
+            android:text="@string/saturday_abbv" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -115,7 +114,7 @@
         android:layout_width="137dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
-        android:text="Add time"
+        android:text="@string/add_time_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/scheduleTimes" />
 
@@ -124,7 +123,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="*at least one time req."
+        android:text="@string/schedule_time_error"
         android:textColor="@android:color/holo_red_light"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@+id/scheduleTimes"

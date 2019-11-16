@@ -63,8 +63,8 @@ public class ImageSelectorAdapter extends RecyclerView.Adapter {
     }
 
     private class SelectorViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        private ImageView imageItem;
-        private ImageView check;
+        private final ImageView imageItem;
+        private final ImageView check;
 
         SelectorViewHolder(View itemView) {
             super(itemView);

@@ -27,7 +27,8 @@
                 android:tint="#FFFFFF"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_pill" />
+                app:srcCompat="@drawable/ic_pill"
+                android:contentDescription="@string/image_of_medication" />
 
             <TextView
                 android:id="@+id/textViewMedName"
@@ -35,7 +36,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
-                android:text="Ibuprofen"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/medImage"
@@ -47,7 +47,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:gravity="start"
-                android:text="Doctor MD"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textViewMedName"
                 app:layout_constraintTop_toBottomOf="@+id/textViewMedName" />
@@ -58,7 +57,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:gravity="start"
-                android:text="12 pills"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textViewMedName"
                 app:layout_constraintTop_toBottomOf="@+id/textViewDoctorName" />
@@ -69,7 +67,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:gravity="start"
-                android:text="Active: yes"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textViewMedName"
                 app:layout_constraintTop_toBottomOf="@+id/textViewMedDosage" />
@@ -79,7 +76,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="10/10/19"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textViewActive"
                 app:layout_constraintTop_toBottomOf="@+id/textViewActive" />
@@ -88,7 +84,6 @@
                 android:id="@+id/textViewEndDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" - 9/9/19"
                 app:layout_constraintStart_toEndOf="@+id/textViewStartDate"
                 app:layout_constraintTop_toBottomOf="@+id/textViewActive" />
 

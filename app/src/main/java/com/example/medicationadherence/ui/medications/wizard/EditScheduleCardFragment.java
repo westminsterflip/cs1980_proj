@@ -65,7 +65,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
     private ArrayList<Schedule> duplicates = new ArrayList<>();
     private AlertDialog hasDup;
     private NotificationManagerCompat notificationManager;
-    public static final String CHANNEL_1_ID = "channel1";
+    public static String CHANNEL_1_ID = "channel1";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

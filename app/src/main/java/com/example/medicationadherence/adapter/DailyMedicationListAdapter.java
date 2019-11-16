@@ -75,6 +75,7 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
             Glide.with(activity).load(medicationList.get(position).medImageURL).thumbnail(0.5f).transition(new DrawableTransitionOptions().crossFade()).diskCacheStrategy(DiskCacheStrategy.ALL).into(holderm.medImage);
             holderm.medImage.setBackgroundColor(Integer.parseInt("00FFFFFF", 16));
             holderm.medImage.setImageTintList(null);
+            holderm.medImage.setContentDescription(medicationList.get(position).medName + " image");
         }
         if (!larger)
             holderm.medImage.getLayoutParams().width = 80 * activity.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT;

@@ -16,7 +16,8 @@
         android:scaleType="centerCrop"
         app:layout_constraintDimensionRatio="1"
         tools:layout_editor_absoluteX="1dp"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:contentDescription="@string/pill_image" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/imageCheck"

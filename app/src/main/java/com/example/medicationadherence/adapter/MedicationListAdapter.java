@@ -68,6 +68,7 @@ public class MedicationListAdapter extends RecyclerView.Adapter {
             Glide.with(holderm.medImage.getContext()).load(medicationList.get(position).getMedImageURL()).thumbnail(0.5f).transition(new DrawableTransitionOptions().crossFade()).diskCacheStrategy(DiskCacheStrategy.ALL).into(holderm.medImage);
             holderm.medImage.setBackgroundColor(Integer.parseInt("00FFFFFF", 16));
             holderm.medImage.setImageTintList(null);
+            holderm.medImage.setContentDescription(medicationList.get(position).getName() + " image");
         }
         if (!larger)
             holderm.medImage.getLayoutParams().width = 80 * activity.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT;

@@ -31,14 +31,8 @@ public class DisableableScrollView extends NestedScrollView {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        performClick();//TODO: figure this out
         if(ev.getAction() > 0 && ev.getAction() < 4 && !scrollEnabled)
             return false;
         return super.onTouchEvent(ev);
-    }
-
-    @Override
-    public boolean performClick() {
-        return super.performClick();
     }
 }

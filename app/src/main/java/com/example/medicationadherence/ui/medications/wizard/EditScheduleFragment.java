@@ -80,9 +80,9 @@ public class EditScheduleFragment extends Fragment implements RootWizardFragment
     }
 
     private class SwipeDeleteCallback extends ItemTouchHelper.SimpleCallback{
-        private StartEndDaysScheduleAdapter daysScheduleAdapter;
-        private Drawable trashIcon;
-        private ColorDrawable background;
+        private final StartEndDaysScheduleAdapter daysScheduleAdapter;
+        private final Drawable trashIcon;
+        private final ColorDrawable background;
 
         SwipeDeleteCallback(StartEndDaysScheduleAdapter daysScheduleAdapter) {
             super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
