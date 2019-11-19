@@ -41,7 +41,7 @@ public class UpdateLogsWorker extends Worker {
         List<MedicationLog> dailyLogs = getDailyLogs(repository, c2.getTimeInMillis());
         Calendar c = Calendar.getInstance();
         for(ScheduleDAO.ScheduleCard s : scheduleCards){
-            if(s.days[(c.get(Calendar.DAY_OF_WEEK) + 6) % 7] && s.startDate <= c.getTimeInMillis() && (s.endDate >= c.getTimeInMillis() || s.endDate == -1) && s.active) {
+            if(s.days[(c2.get(Calendar.DAY_OF_WEEK) + 6) % 7] && s.startDate <= c2.getTimeInMillis() && (s.endDate >= c2.getTimeInMillis() || s.endDate == -1) && (s.active || s.endDate == c2.getTimeInMillis())) {
                 int pos = -1;
                 for (int i = 0; i < dailyLogs.size(); i++) {
                     MedicationLog m = dailyLogs.get(i);
@@ -71,6 +71,8 @@ public class UpdateLogsWorker extends Worker {
                     repository.insert(new MedicationLog(s.medicationID, c2.getTimeInMillis(), false, 0));
                 }
             }
+            c2.set(Calendar.HOUR_OF_DAY, 0);
+            c2.set(Calendar.MINUTE, 0);
         }
         Calendar curr = Calendar.getInstance();
         Calendar first = Calendar.getInstance();

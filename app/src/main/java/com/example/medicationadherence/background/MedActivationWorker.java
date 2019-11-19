@@ -38,7 +38,7 @@ public class MedActivationWorker extends Worker {
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_YEAR, day);
         for(Medication m : medList){
-            m.setStatus(m.getStartDate() >= c.getTimeInMillis() && (m.getEndDate() <= c.getTimeInMillis() || m.getEndDate() == -1));//use < for non-inclusive, but change in DailyMedListViewModel too
+            m.setStatus(m.getStartDate() <= c.getTimeInMillis() && (m.getEndDate() >= c.getTimeInMillis() || m.getEndDate() == -1));//use < for non-inclusive, but change in DailyMedListViewModel too
             repository.getmMedicationDAO().update(m);
         }
         Calendar curr = Calendar.getInstance();
