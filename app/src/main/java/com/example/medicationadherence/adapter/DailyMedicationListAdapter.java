@@ -118,7 +118,7 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
             c.clear();
             c.set(Calendar.HOUR_OF_DAY, hour);
             c.set(Calendar.MINUTE, minute);
-            if (c.getTimeInMillis() == medicationList.get(position).timeOfDay)
+            if (medicationList.get(position).medicationID.equals(m.getMedicationID()) && c.getTimeInMillis() == medicationList.get(position).timeOfDay)
                 pos = i;
         }
         if (pos != -1){
@@ -173,7 +173,7 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
                         c1.set(Calendar.HOUR_OF_DAY, hour);
                         c1.set(Calendar.MINUTE, minute);
 
-                        if (c.getTimeInMillis() == c1.getTimeInMillis())
+                        if (medicationList.get(position).medicationID.equals(m.getMedicationID()) && c.getTimeInMillis() == c1.getTimeInMillis())
                             pos = i;
                     }
                     if (v.getId() == R.id.dailyMedMissed) {
