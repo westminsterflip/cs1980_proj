@@ -291,6 +291,7 @@ public class DailyMedicationListAdapter extends RecyclerView.Adapter implements 
                             dailyModel.getTimePickerDialog().show();
                         }
                     }
+                    logList = mainModel.getDailyLogs(date);//could modify list instead of completely reloading
                 }
             };
             holderm.missed.setOnClickListener(radioListener);
