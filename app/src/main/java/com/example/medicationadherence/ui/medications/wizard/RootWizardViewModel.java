@@ -66,6 +66,7 @@ public class RootWizardViewModel extends ViewModel {
     private ScheduleTimeAdapter scheduleTimeAdapter;
     private boolean activeEnabled = true;
     private ArrayList<Schedule> scheduleFD;
+    private int rxcui = -1;
 
     String getMedImage() {
         return medImage;
@@ -470,5 +471,17 @@ public class RootWizardViewModel extends ViewModel {
 
     public void setContext(Context context) {
         this.context = context;
+    }
+
+    public MainViewModel getMainViewModel() {
+        return mainViewModel;
+    }
+
+    public int getRxcui() {
+        return rxcui;
+    }
+
+    public void setRxcui(int rxcui) {
+        this.rxcui = rxcui;
     }
 }

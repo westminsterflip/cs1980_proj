@@ -3,6 +3,7 @@ package com.example.medicationadherence.ui;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,8 +23,14 @@ import androidx.work.WorkManager;
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.background.MedActivationWorker;
 import com.example.medicationadherence.background.UpdateLogsWorker;
+import com.example.medicationadherence.data.Repository;
+import com.example.medicationadherence.data.room.entities.MedData;
 import com.google.android.material.navigation.NavigationView;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Calendar;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -44,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         }
         super.onCreate(savedInstanceState);
-        new ViewModelProvider(this).get(MainViewModel.class);
+        MainViewModel model = new ViewModelProvider(this).get(MainViewModel.class);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_USER);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -86,6 +93,10 @@ public class MainActivity extends AppCompatActivity {
                 workManager.enqueue(activateWorkRequest);
             }
         } catch (InterruptedException | ExecutionException e){e.printStackTrace();}
+        if (model.getRepository().getMedDataSize() < 1){
+            InputStream inputStream = getResources().openRawResource(R.raw.rxterm_trimmed);
+            new FillMedDataDB(model.getRepository(), inputStream).execute();
+        }
     }
 
     @Override
@@ -93,5 +104,34 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    private static class FillMedDataDB extends AsyncTask<Void, Void, Void>{
+        private Repository repository;
+        private InputStream inputStream;
+
+        FillMedDataDB(Repository repository, InputStream inputStream) {
+            this.repository = repository;
+            this.inputStream = inputStream;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            try {
+                while ((line = reader.readLine()) != null) {
+                    String sepLine[] = line.split("\\|");
+                    if (!sepLine[1].equals("")){
+                        repository.insert(new MedData(Integer.parseInt(sepLine[0]), Integer.parseInt(sepLine[1]), sepLine[2], sepLine[3]));
+                    } else {
+                        repository.insert(new MedData(Integer.parseInt(sepLine[0]), sepLine[2], sepLine[3]));
+                    }
+                }
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 }

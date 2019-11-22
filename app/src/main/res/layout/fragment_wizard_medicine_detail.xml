@@ -20,7 +20,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <AutoCompleteTextView
                 android:id="@+id/wizardMedName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -118,12 +118,13 @@
             app:layout_constraintStart_toStartOf="@+id/textInputLayout"
             app:layout_constraintTop_toBottomOf="@+id/wizardSetEndDate">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <AutoCompleteTextView
                 android:id="@+id/wizardPerPillDosage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/dosage_per_pill"
-                android:inputType="number" />
+                android:inputType="number"
+                android:importantForAutofill="yes"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 

@@ -1,6 +1,7 @@
 package com.example.medicationadherence.ui.medications.wizard;
 
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
@@ -8,8 +9,12 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -27,21 +32,23 @@ import com.example.medicationadherence.R;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 //TODO: https://developer.android.com/guide/topics/text/autofill
 //TODO: disallow active before start, active after end
 public class WizardMedicineDetailFragment extends Fragment implements RootWizardFragment.ErrFragment {
     private RootWizardViewModel model;
-    private TextInputEditText medName;
+    private AutoCompleteTextView medName;
     private TextView medNameRequired;
     private Switch active;
     private TextView startDate;
     private TextView endDate;
-    private TextInputEditText perPillDosage;
+    private AutoCompleteTextView perPillDosage;
     private Spinner dosageUnitSelector;
     private TextView dosageRequired;
     private TextInputEditText onHand;
@@ -53,6 +60,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
     private TextView endBefore;
     private boolean exitable = false;
     private Spinner timeChooser;
+    private ArrayList<String> doseUnits;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,6 +69,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
         datePickerDialog = model.getDatePickerDialog();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.fragment_wizard_medicine_detail, container, false);
@@ -146,6 +155,29 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
                 }
                 datePickerDialog.onRestoreInstanceState(savedInstanceState.getBundle("datePickerBundle"));
                 datePickerDialog.show();
+            }
+            if (savedInstanceState.getStringArrayList("doseUnits") != null){
+                ArrayList<String> doses = savedInstanceState.getStringArrayList("doseUnits");
+                ArrayList<String> units = new ArrayList<>();
+                ArrayList<String> numbers = new ArrayList<>();
+                for ( String t : doses){
+                    String text[] = t.split(" ", 2);
+                    try{
+                        Integer.parseInt(text[0].replaceAll(",", ""));
+                        if (!units.contains(text[1]))
+                            units.add(text[1]);
+                        numbers.add(t);
+                    } catch (NumberFormatException | NullPointerException e) {
+                        units.add(t);
+                    }
+                }
+                if (units.size() != 0) {
+                    String[] temp = new String[units.size()];
+                    dosageUnitSelector.setAdapter(new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, units.toArray(temp)));
+                    if (units.size() == 1){
+                        dosageUnitSelector.setEnabled(false);
+                    }
+                }
             }
         }
 
@@ -247,13 +279,61 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
 
             }
         });
+        List<String> names = model.getMainViewModel().getRepository().getNames();
+        String[] arr = new String[names.size()];
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), R.layout.textview, names.toArray(arr));
+        medName.setAdapter(arrayAdapter);
+        medName.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String s = parent.getItemAtPosition(position).toString();
+                List<String> doses = model.getMainViewModel().getRepository().getDosages(s);
+                doseUnits = (ArrayList<String>) doses;
+                ArrayList<String> units = new ArrayList<>();
+                ArrayList<String> numbers = new ArrayList<>();
+                for ( String t : doses){
+                    String text[] = t.split(" ", 2);
+                    try{
+                        Integer.parseInt(text[0].replaceAll(",", ""));
+                        if (!units.contains(text[1]))
+                            units.add(text[1]);
+                        numbers.add(text[0].replaceAll(",",""));
+                    } catch (NumberFormatException | NullPointerException e) {
+                        units.add(t);
+                    }
+                }
+                if (units.size() != 0) {
+                    String[] temp = new String[units.size()];
+                    dosageUnitSelector.setAdapter(new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, units.toArray(temp)));
+                    if (units.size() == 1){
+                        dosageUnitSelector.setEnabled(false);
+                    }
+                }
+                if (numbers.size() == 1){
+                    perPillDosage.setText(numbers.get(0).split(" ", 2 )[0]);
+                }
+                if (numbers.size() > 0){
+                    String[] temp = new String[numbers.size()];
+                    perPillDosage.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, numbers.toArray(temp)));
+                }
+                for (String t : numbers){
+                    System.out.println(t);
+                }
+            }
+        });
+        perPillDosage.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                perPillDosage.showDropDown();
+                return false;
+            }
+        });
         String unit;
         if(model.getMedDosage() != null && !dosageUnitSelector.getSelectedItem().equals(unit = model.getMedDosage().replaceAll("[\\d.]", "")))
             dosageUnitSelector.setSelection(Arrays.asList(getResources().getStringArray(R.array.medDosageUnits)).indexOf(unit));
         perPillDosage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -330,6 +410,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
                 outState.putBundle("datePickerBundle", datePickerDialog.onSaveInstanceState());
             }
             outState.putBoolean("datePickerStart", start);
+            outState.putStringArrayList("doseUnits", doseUnits);
         }
         if(datePickerDialog != null)
             datePickerDialog.dismiss();

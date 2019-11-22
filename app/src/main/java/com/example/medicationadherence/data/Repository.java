@@ -6,11 +6,13 @@ import android.os.AsyncTask;
 import com.example.medicationadherence.data.room.MedicationDatabase;
 import com.example.medicationadherence.data.room.dao.DoctorDAO;
 import com.example.medicationadherence.data.room.dao.InstructionsDAO;
+import com.example.medicationadherence.data.room.dao.MedDataDAO;
 import com.example.medicationadherence.data.room.dao.MedicationDAO;
 import com.example.medicationadherence.data.room.dao.MedicationLogDAO;
 import com.example.medicationadherence.data.room.dao.ScheduleDAO;
 import com.example.medicationadherence.data.room.entities.Doctor;
 import com.example.medicationadherence.data.room.entities.Instructions;
+import com.example.medicationadherence.data.room.entities.MedData;
 import com.example.medicationadherence.data.room.entities.Medication;
 import com.example.medicationadherence.data.room.entities.MedicationLog;
 import com.example.medicationadherence.data.room.entities.Schedule;
@@ -24,6 +26,7 @@ public class Repository {
     private MedicationDAO mMedicationDAO;
     private MedicationLogDAO mMedicationLogDAO;
     private ScheduleDAO mScheduleDAO;
+    private MedDataDAO medDataDAO;
 
     public Repository(Context application){
         MedicationDatabase medDB = MedicationDatabase.getDatabase(application);
@@ -32,6 +35,7 @@ public class Repository {
         mMedicationDAO = medDB.getMedicationDao();
         mMedicationLogDAO = medDB.getMedicationLogDao();
         mScheduleDAO = medDB.getScheduleDao();
+        medDataDAO = medDB.getMedDataDAO();
     }
 
     public MedicationDAO getmMedicationDAO() {
@@ -102,6 +106,10 @@ public class Repository {
 
     public void insert(Schedule schedule){
         new InsertAsyncTask(mScheduleDAO).execute(schedule);
+    }
+
+    public void insert(MedData medData){
+        new InsertAsyncTask(medDataDAO).execute(medData);
     }
 
     public void deleteAll(){
@@ -213,6 +221,96 @@ public class Repository {
         new UpdateLogTask(mMedicationLogDAO, medicationID, date, oldTimeLate, newTimeLate, taken).execute();
     }
 
+    public List<MedData> getAllMedData(){
+        try {
+            return new GetAllMedData(medDataDAO).execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<String> getDosages(String name){
+        try {
+            return new GetDosages(medDataDAO, name).execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<String> getNames(){
+        try {
+            return new GetMedNames(medDataDAO).execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public int getMedDataSize(){
+        try {
+            return new GetMedDataSize(medDataDAO).execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    private static class GetAllMedData extends AsyncTask<Void, Void, List<MedData>>{
+        private MedDataDAO medDataDAO;
+
+        GetAllMedData(MedDataDAO medDataDAO) {
+            this.medDataDAO = medDataDAO;
+        }
+
+        @Override
+        protected List<MedData> doInBackground(Void... voids) {
+            return medDataDAO.getAllMedData();
+        }
+    }
+
+    private static class GetDosages extends AsyncTask<String, Void, List<String>>{
+        private MedDataDAO medDataDAO;
+        private String name;
+
+        GetDosages(MedDataDAO medDataDAO, String name) {
+            this.medDataDAO = medDataDAO;
+            this.name = name;
+        }
+
+        @Override
+        protected List<String> doInBackground(String... strings) {
+            return medDataDAO.getDosages(name);
+        }
+    }
+
+    private static class GetMedNames extends AsyncTask<Void, Void, List<String>>{
+        private MedDataDAO medDataDAO;
+
+        public GetMedNames(MedDataDAO medDataDAO) {
+            this.medDataDAO = medDataDAO;
+        }
+
+        @Override
+        protected List<String> doInBackground(Void... voids) {
+            return medDataDAO.getNames();
+        }
+    }
+
+    private static class GetMedDataSize extends AsyncTask<Void, Void, Integer>{
+        private MedDataDAO medDataDAO;
+
+        public GetMedDataSize(MedDataDAO medDataDAO) {
+            this.medDataDAO = medDataDAO;
+        }
+
+        @Override
+        protected Integer doInBackground(Void... voids) {
+            return medDataDAO.getSize();
+        }
+    }
+
     private static class GWNAsyncTask extends AsyncTask<String, Void, List<Doctor>>{
         private DoctorDAO doctorDAO;
 
@@ -273,6 +371,7 @@ public class Repository {
         private MedicationDAO medicationDAO;
         private MedicationLogDAO medicationLogDAO;
         private ScheduleDAO scheduleDAO;
+        private MedDataDAO medDataDAO;
 
         InsertAsyncTask(InstructionsDAO instructionsDAO) {
             this.instructionsDAO = instructionsDAO;
@@ -294,6 +393,10 @@ public class Repository {
             this.scheduleDAO = scheduleDAO;
         }
 
+        public InsertAsyncTask(MedDataDAO medDataDAO) {
+            this.medDataDAO = medDataDAO;
+        }
+
         @Override
         protected Long doInBackground(Object... objects) {
             if(doctorDAO != null){
@@ -306,6 +409,8 @@ public class Repository {
                 medicationLogDAO.insert((MedicationLog) objects[0]);
             } else if (scheduleDAO != null){
                 scheduleDAO.insert((Schedule) objects[0]);
+            } else if (medDataDAO != null){
+                medDataDAO.insert((MedData) objects[0]);
             }
             return (long) -1;
         }
