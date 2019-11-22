@@ -25,6 +25,7 @@ import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
 import com.bumptech.glide.util.FixedPreloadSizeProvider;
 import com.example.medicationadherence.R;
 import com.example.medicationadherence.adapter.ImageSelectorAdapter;
+import com.example.medicationadherence.data.room.entities.MedData;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -143,8 +144,70 @@ public class WizardImageSelector extends Fragment implements RootWizardFragment.
                     out.add(model.getMedImage());
                     model.setSelPos(1);
                 }
-                URL medAPI = new URL("https://rximage.nlm.nih.gov/api/rximage/1/rxbase?name=" + model.getMedName() + "&rPage=" + page + "&resolution=1024");
-                HttpsURLConnection apiConn = (HttpsURLConnection) medAPI.openConnection();
+                URL medAPI;
+                HttpsURLConnection apiConn;
+                if (page == 1) {
+                    ArrayList<Integer> idList = new ArrayList<>();
+                    for (MedData i : model.getDataList()) {
+                        if (i.getDosage().equals(model.getMedDosage()) && i.getName().equals(model.getMedName())) {
+                            idList.add(i.getId());
+                            if (i.getAltId() != -1)
+                                idList.add(i.getAltId());
+                        }
+                    }
+                    for (int id : idList) {
+                        medAPI = new URL("https://rximage.nlm.nih.gov/api/rximage/1/rxbase?rxcui=" + id + "&resolution=1024");
+                        apiConn = (HttpsURLConnection) medAPI.openConnection();
+                        if (apiConn.getResponseCode() == 200) {
+                            InputStream response = apiConn.getInputStream();
+                            InputStreamReader responseReader = new InputStreamReader(response, StandardCharsets.UTF_8);
+                            JsonReader jsonReader = new JsonReader(responseReader);
+                            JsonToken token = jsonReader.peek();
+                            while (token != JsonToken.END_DOCUMENT) {
+                                switch (token) {
+                                    case BEGIN_OBJECT:
+                                        jsonReader.beginObject();
+                                        break;
+                                    case BEGIN_ARRAY:
+                                        jsonReader.beginArray();
+                                        break;
+                                    case BOOLEAN:
+                                        jsonReader.nextBoolean();
+                                        break;
+                                    case END_ARRAY:
+                                        jsonReader.endArray();
+                                        break;
+                                    case END_OBJECT:
+                                        jsonReader.endObject();
+                                        break;
+                                    case NAME:
+                                        if (jsonReader.nextName().equals("imageUrl")) {
+                                            String url = jsonReader.nextString();
+                                            if (!out.contains(url))
+                                                out.add(url);
+                                        }
+                                        break;
+                                    case NULL:
+                                        jsonReader.nextNull();
+                                        break;
+                                    case NUMBER:
+                                        jsonReader.nextDouble();
+                                        break;
+                                    case STRING:
+                                        jsonReader.nextString();
+                                        break;
+                                    default:
+                                        //unknown symbol
+                                }
+                                token = jsonReader.peek();
+                            }
+                            jsonReader.close();
+                            apiConn.disconnect();
+                        }
+                    }
+                }
+                medAPI = new URL("https://rximage.nlm.nih.gov/api/rximage/1/rxbase?name=" + model.getMedName().replaceAll("\\s*\\([^\\)]*\\)\\s*","") + "&rPage=" + page + "&resolution=1024");
+                apiConn = (HttpsURLConnection) medAPI.openConnection();
                 if (apiConn.getResponseCode() == 200) {
                     InputStream response = apiConn.getInputStream();
                     InputStreamReader responseReader = new InputStreamReader(response, StandardCharsets.UTF_8);

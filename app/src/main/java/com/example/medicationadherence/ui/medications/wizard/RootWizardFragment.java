@@ -97,6 +97,7 @@ public class RootWizardFragment extends Fragment {
         }
         model.setMainViewModel(mainModel);
         model.setFragment(this);
+        model.getDataList();
     }
 
     @Nullable

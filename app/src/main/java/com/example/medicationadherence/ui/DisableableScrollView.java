@@ -1,5 +1,6 @@
 package com.example.medicationadherence.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -29,6 +30,7 @@ public class DisableableScrollView extends NestedScrollView {
         this.scrollEnabled = scrollEnabled;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         if(ev.getAction() > 0 && ev.getAction() < 4 && !scrollEnabled)

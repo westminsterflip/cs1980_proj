@@ -257,6 +257,32 @@ public class Repository {
         return -1;
     }
 
+    public List<MedDataDAO.IntTuple> getIDsFor(String name, String dosage){
+        try {
+            return new GetRXCUIs(medDataDAO, name, dosage).execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static class GetRXCUIs extends AsyncTask<Void, Void, List<MedDataDAO.IntTuple>>{
+        private MedDataDAO medDataDAO;
+        private String name;
+        private String dosage;
+
+        GetRXCUIs(MedDataDAO medDataDAO, String name, String dosage) {
+            this.medDataDAO = medDataDAO;
+            this.name = name;
+            this.dosage = dosage;
+        }
+
+        @Override
+        protected List<MedDataDAO.IntTuple> doInBackground(Void... voids) {
+            return medDataDAO.getIDsFor(name, dosage);
+        }
+    }
+
     private static class GetAllMedData extends AsyncTask<Void, Void, List<MedData>>{
         private MedDataDAO medDataDAO;
 

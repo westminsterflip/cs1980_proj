@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
             String line;
             try {
                 while ((line = reader.readLine()) != null) {
-                    String sepLine[] = line.split("\\|");
+                    String[] sepLine = line.split("\\|");
                     if (!sepLine[1].equals("")){
                         repository.insert(new MedData(Integer.parseInt(sepLine[0]), Integer.parseInt(sepLine[1]), sepLine[2], sepLine[3]));
                     } else {

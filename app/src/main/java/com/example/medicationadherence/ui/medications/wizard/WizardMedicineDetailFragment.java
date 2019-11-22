@@ -160,13 +160,14 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
                 ArrayList<String> doses = savedInstanceState.getStringArrayList("doseUnits");
                 ArrayList<String> units = new ArrayList<>();
                 ArrayList<String> numbers = new ArrayList<>();
+                doseUnits = doses;
                 for ( String t : doses){
-                    String text[] = t.split(" ", 2);
+                    String[] text = t.split(" ", 2);
                     try{
-                        Integer.parseInt(text[0].replaceAll(",", ""));
+                        Double.parseDouble(text[0].replaceAll(",", ""));
                         if (!units.contains(text[1]))
                             units.add(text[1]);
-                        numbers.add(t);
+                        numbers.add(text[0].replaceAll(",",""));
                     } catch (NumberFormatException | NullPointerException e) {
                         units.add(t);
                     }
@@ -178,7 +179,48 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
                         dosageUnitSelector.setEnabled(false);
                     }
                 }
+                if (numbers.size() == 1){
+                    perPillDosage.setText(numbers.get(0).split(" ", 2 )[0]);
+                }
+                if (numbers.size() > 0){
+                    String[] temp = new String[numbers.size()];
+                    perPillDosage.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, numbers.toArray(temp)));
+                }
             }
+        } else if (model.getMedicineFragmentBundle() != null){
+            Bundle bundle = model.getMedicineFragmentBundle();
+            if (bundle.getStringArrayList("doseUnits") != null){
+                ArrayList<String> doses = bundle.getStringArrayList("doseUnits");
+                ArrayList<String> units = new ArrayList<>();
+                ArrayList<String> numbers = new ArrayList<>();
+                doseUnits = doses;
+                for ( String t : doses){
+                    String[] text = t.split(" ", 2);
+                    try{
+                        Double.parseDouble(text[0].replaceAll(",", ""));
+                        if (!units.contains(text[1]))
+                            units.add(text[1]);
+                        numbers.add(text[0].replaceAll(",",""));
+                    } catch (NumberFormatException | NullPointerException e) {
+                        units.add(t);
+                    }
+                }
+                if (units.size() != 0) {
+                    String[] temp = new String[units.size()];
+                    dosageUnitSelector.setAdapter(new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, units.toArray(temp)));
+                    if (units.size() == 1){
+                        dosageUnitSelector.setEnabled(false);
+                    }
+                }
+                if (numbers.size() == 1){
+                    perPillDosage.setText(numbers.get(0).split(" ", 2 )[0]);
+                }
+                if (numbers.size() > 0){
+                    String[] temp = new String[numbers.size()];
+                    perPillDosage.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, numbers.toArray(temp)));
+                }
+            }
+            model.setMedicineFragmentBundle(null);
         }
 
         setStart.setOnClickListener(new View.OnClickListener() {
@@ -268,7 +310,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!s.toString().equals("")) {
                     model.setMedName(s.toString());
-                    exitable = !Objects.requireNonNull(perPillDosage.getText()).toString().equals("")&&Integer.parseInt(perPillDosage.getText().toString())!=0;
+                    exitable = !Objects.requireNonNull(perPillDosage.getText()).toString().equals("")&&Double.parseDouble(perPillDosage.getText().toString())!=0;
                 } else {
                     exitable = false;
                 }
@@ -292,9 +334,9 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
                 ArrayList<String> units = new ArrayList<>();
                 ArrayList<String> numbers = new ArrayList<>();
                 for ( String t : doses){
-                    String text[] = t.split(" ", 2);
+                    String[] text = t.split(" ", 2);
                     try{
-                        Integer.parseInt(text[0].replaceAll(",", ""));
+                        Double.parseDouble(text[0].replaceAll(",", ""));
                         if (!units.contains(text[1]))
                             units.add(text[1]);
                         numbers.add(text[0].replaceAll(",",""));
@@ -316,9 +358,6 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
                     String[] temp = new String[numbers.size()];
                     perPillDosage.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, numbers.toArray(temp)));
                 }
-                for (String t : numbers){
-                    System.out.println(t);
-                }
             }
         });
         perPillDosage.setOnTouchListener(new View.OnTouchListener() {
@@ -329,7 +368,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
             }
         });
         String unit;
-        if(model.getMedDosage() != null && !dosageUnitSelector.getSelectedItem().equals(unit = model.getMedDosage().replaceAll("[\\d.]", "")))
+        if(model.getMedDosage() != null && !dosageUnitSelector.getSelectedItem().equals(unit = model.getMedDosage().replaceAll("[\\d.]", "").replaceAll(" " ,"")))
             dosageUnitSelector.setSelection(Arrays.asList(getResources().getStringArray(R.array.medDosageUnits)).indexOf(unit));
         perPillDosage.addTextChangedListener(new TextWatcher() {
             @Override
@@ -338,8 +377,8 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals("") && Integer.parseInt(s.toString())!=0) {
-                    model.setMedDosage(s.toString() + dosageUnitSelector.getSelectedItem());
+                if(!s.toString().equals("") && Double.parseDouble(s.toString())!=0) {
+                    model.setMedDosage(s.toString() + " " + dosageUnitSelector.getSelectedItem());
                     exitable = !Objects.requireNonNull(medName.getText()).toString().equals("");
                 } else {
                     exitable = false;
@@ -374,7 +413,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
         if(model.getEndDate() != -1)
             endDate.setText(new SimpleDateFormat("MM/dd/yyyy", ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0)).format(new Date(model.getEndDate())));
         if(model.getMedDosage() != null)
-            perPillDosage.setText(model.getMedDosage().replaceAll("[^\\d.]",""));
+            perPillDosage.setText(model.getMedDosage().split(" ",2)[0].replaceAll("[^\\d.]",""));
         if(model.getOnHand() != -1)
             onHand.setText(model.getOnHand());
         if (model.getCost() != -1)
@@ -423,7 +462,7 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
             medNameRequired.setVisibility(View.VISIBLE);
         else
             medNameRequired.setVisibility(View.INVISIBLE);
-        if(Objects.requireNonNull(perPillDosage.getText()).toString().equals("") || Integer.parseInt(perPillDosage.getText().toString()) == 0)
+        if(Objects.requireNonNull(perPillDosage.getText()).toString().equals("") || Double.parseDouble(perPillDosage.getText().toString()) == 0)
             dosageRequired.setVisibility(View.VISIBLE);
         else
             dosageRequired.setVisibility(View.INVISIBLE);
@@ -432,16 +471,19 @@ public class WizardMedicineDetailFragment extends Fragment implements RootWizard
     @Override
     public void pause() {
         model.setMedName(Objects.requireNonNull(medName.getText()).toString());
-        model.setMedDosage(Objects.requireNonNull(perPillDosage.getText()).toString().replaceFirst("^0+(?!$)", "")+dosageUnitSelector.getSelectedItem().toString());
+        model.setMedDosage(Objects.requireNonNull(perPillDosage.getText()).toString().replaceFirst("^0+(?!$)", "")+" "+dosageUnitSelector.getSelectedItem().toString());
         if(!Objects.requireNonNull(instructions.getText()).toString().equals(""))
             model.setInstructions(instructions.getText().toString());
         model.setActive(active.isChecked());
         if(!Objects.requireNonNull(onHand.getText()).toString().equals(""))
             model.setOnHand(Integer.parseInt(onHand.getText().toString()));
         if(!Objects.requireNonNull(cost.getText()).toString().equals(""))
-            model.setCost(Integer.parseInt(cost.getText().toString()));
+            model.setCost(Double.parseDouble(cost.getText().toString()));
         model.setAsNeeded(asNeeded.isChecked());
         model.setLate((String)timeChooser.getSelectedItem());
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList("doseUnits", doseUnits);
+        model.setMedicineFragmentBundle(bundle);
     }
 
     @Override

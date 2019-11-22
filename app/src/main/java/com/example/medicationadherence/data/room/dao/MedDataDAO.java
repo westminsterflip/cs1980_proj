@@ -24,4 +24,20 @@ public interface MedDataDAO {
 
     @Query("SELECT count(*) from meddata")
     int getSize();
+
+//    @Query("select distinct id from (select id from meddata where name = :name and dosage = :dosage union all select altId as id from meddata where name = :name and dosage = :dosage)")
+//    List<Integer> getIDsFor(String name, String dosage);
+
+    @Query("select distinct id, altId from meddata where name = :name and dosage = :dosage")
+    List<IntTuple> getIDsFor(String name, String dosage);
+
+    class IntTuple{
+        public int id;
+        public int altId;
+
+        public IntTuple(int id, int altId) {
+            this.id = id;
+            this.altId = altId;
+        }
+    }
 }

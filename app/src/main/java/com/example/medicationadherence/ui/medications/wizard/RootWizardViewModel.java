@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Bundle;
 import android.text.format.DateFormat;
 
 import androidx.core.os.ConfigurationCompat;
@@ -15,6 +16,7 @@ import com.example.medicationadherence.R;
 import com.example.medicationadherence.adapter.ScheduleTimeAdapter;
 import com.example.medicationadherence.data.Converters;
 import com.example.medicationadherence.data.room.entities.Doctor;
+import com.example.medicationadherence.data.room.entities.MedData;
 import com.example.medicationadherence.data.room.entities.Medication;
 import com.example.medicationadherence.data.room.entities.Schedule;
 import com.example.medicationadherence.ui.MainViewModel;
@@ -24,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class RootWizardViewModel extends ViewModel {
@@ -66,7 +69,8 @@ public class RootWizardViewModel extends ViewModel {
     private ScheduleTimeAdapter scheduleTimeAdapter;
     private boolean activeEnabled = true;
     private ArrayList<Schedule> scheduleFD;
-    private int rxcui = -1;
+    private List<MedData> dataList;
+    private Bundle medicineFragmentBundle;
 
     String getMedImage() {
         return medImage;
@@ -477,11 +481,17 @@ public class RootWizardViewModel extends ViewModel {
         return mainViewModel;
     }
 
-    public int getRxcui() {
-        return rxcui;
+    public List<MedData> getDataList() {
+        if (dataList == null)
+            dataList = mainViewModel.getRepository().getAllMedData();//using getIDsFor is cleaner but when called in WizardImageSelector it blocks indefinitely
+        return dataList;
     }
 
-    public void setRxcui(int rxcui) {
-        this.rxcui = rxcui;
+    public Bundle getMedicineFragmentBundle() {
+        return medicineFragmentBundle;
+    }
+
+    public void setMedicineFragmentBundle(Bundle medicineFragmentBundle) {
+        this.medicineFragmentBundle = medicineFragmentBundle;
     }
 }
