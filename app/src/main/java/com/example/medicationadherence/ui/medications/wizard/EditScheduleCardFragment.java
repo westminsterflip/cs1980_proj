@@ -231,6 +231,7 @@ public class EditScheduleCardFragment extends Fragment implements RootWizardFrag
                         if (wizardModel.getScheduleFD(checks).contains(newS)){//Doesn't catch if days overlap but aren't same ex: same time/dose but one daily one on monday
                             dup = new AlertDialog.Builder(getContext()).setTitle("Error:").setMessage("Time and dosage already scheduled").setNegativeButton("OK", null).show();
                         } else {
+                            wizardModel.getRemoved().remove(newS);
                             wizardModel.getScheduleFD(checks).add(newS);
                             String st = newS.getNumDoses() + " @ ";
                             if(DateFormat.is24HourFormat(getContext()))

@@ -71,6 +71,8 @@ public class RootWizardViewModel extends ViewModel {
     private ArrayList<Schedule> scheduleFD;
     private List<MedData> dataList;
     private Bundle medicineFragmentBundle;
+    private boolean updateDoctor = false;
+    private boolean insertDoctor = false;
 
     String getMedImage() {
         return medImage;
@@ -493,5 +495,25 @@ public class RootWizardViewModel extends ViewModel {
 
     public void setMedicineFragmentBundle(Bundle medicineFragmentBundle) {
         this.medicineFragmentBundle = medicineFragmentBundle;
+    }
+
+    public boolean shouldUpdateDoctor() {
+        return updateDoctor;
+    }
+
+    public void setUpdateDoctor(boolean updateDoctor) {
+        this.updateDoctor = updateDoctor;
+        if (updateDoctor)
+            insertDoctor = false;
+    }
+
+    public boolean shouldInsertDoctor() {
+        return insertDoctor;
+    }
+
+    public void setInsertDoctor(boolean insertDoctor) {
+        this.insertDoctor = insertDoctor;
+        if (insertDoctor)
+            updateDoctor = false;
     }
 }

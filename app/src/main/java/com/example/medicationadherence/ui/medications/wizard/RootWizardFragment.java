@@ -157,7 +157,7 @@ public class RootWizardFragment extends Fragment {
                         if(model.getDoctorName()!= null && !model.getDoctorName().equals("")){
                             if(model.getSpinnerSelection() == 1) {//add new doctor if doesn't exist
                                 if(mainModel.getDocWithName(model.getDoctorName())==null || mainModel.getDocWithName(model.getDoctorName()).size()==0){
-                                    model.setDoctorID(mainModel.insert(model.getDoctor()));
+                                    model.setInsertDoctor(true);
                                     if(currentLoc == destinations.get(destinations.size()-1)){
                                         model.getThisList().get(model.getThisList().size()-1).pause();
                                         addMedGoUp(v);
@@ -180,7 +180,7 @@ public class RootWizardFragment extends Fragment {
                                             .setNegativeButton("no", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
-                                                    model.setDoctorID(mainModel.insert(model.getDoctor()));
+                                                    model.setInsertDoctor(true);
                                                     if(currentLoc == destinations.get(destinations.size()-1)){
                                                         model.getThisList().get(model.getThisList().size()-1).pause();
                                                         addMedGoUp(v);
@@ -205,7 +205,7 @@ public class RootWizardFragment extends Fragment {
                                     }
                                 }
                                 if(pos!=-1) {
-                                    mainModel.updateDoctor(mainModel.getRepository().getDoctors().get(model.getSpinnerSelection() - 2).getDoctorID(), model.getDoctorName(), model.getPracticeName(), model.getPracticeAddress(), model.getPhone());
+                                    model.setUpdateDoctor(true);
                                     if(currentLoc == destinations.get(destinations.size()-1)){
                                         model.getThisList().get(model.getThisList().size()-1).pause();
                                         addMedGoUp(v);
@@ -322,6 +322,11 @@ public class RootWizardFragment extends Fragment {
     }
 
     private void addMedGoUp(View v){
+        if (model.shouldInsertDoctor()){
+            model.setDoctorID(mainModel.insert(model.getDoctor()));
+        } else if (model.shouldUpdateDoctor()){
+            mainModel.updateDoctor(mainModel.getRepository().getDoctors().get(model.getSpinnerSelection() - 2).getDoctorID(), model.getDoctorName(), model.getPracticeName(), model.getPracticeAddress(), model.getPhone());
+        }
         long medID;
         if(index == -1){
             model.setsMedID(medID = mainModel.insert(model.getMedication()));
